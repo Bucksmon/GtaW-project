@@ -223,7 +223,7 @@
           box.addEventListener("click", () => {
             container.style.opacity = "0.5";
             overlay.classList.add("show");
-            checkUsername();
+            checkUsername(index);
           });
 
           container.appendChild(box);
@@ -238,7 +238,7 @@
     // -----------------------
     // API CALL
     // -----------------------
-    async function checkUsername() {
+    async function checkUsername(index) {
       try {
         const token = localStorage.getItem("token");
         console.log("Checking username with token:", token);
@@ -249,7 +249,7 @@
             "Content-Type": "application/json",
             "Authorization": "Bearer " + token
           },
-          body: JSON.stringify({})
+          body: JSON.stringify({index})
         });
 
         if (!res.ok) {
