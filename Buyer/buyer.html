@@ -11,35 +11,201 @@
       padding: 40px;
     }
 
-    .characters {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 16px;
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 240px;
+      height: 100%;
+      background: #111827;
+      color: #fff;
+      transition: transform 0.3s ease-in-out;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      padding-top: 20px;
     }
 
-    .char-box {
-      background: #121a2a;
-      border: 1px solid rgba(255,255,255,0.1);
-      padding: 16px;
-      border-radius: 12px;
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 1.3rem;
+      color: #e5e7eb;
+    }
+
+    .nav-links {
+      list-style: none;
+      flex: 1;
+    }
+
+    .nav-links li {
+      margin: 10px 0;
+    }
+
+    .nav-links a {
+      display: block;
+      padding: 12px 20px;
+      color: #d1d5db;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      background: #374151;
+      color: #fff;
+    }
+
+    /* Main content */
+    .main {
+      flex: 1;
+      margin-left: 240px;
+      transition: margin-left 0.3s ease-in-out;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    /* Topbar */
+    .topbar {
+      background: #fff;
+      padding: 15px 20px;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 1100;
+    }
+
+    .menu-btn {
+      font-size: 1.5rem;
       cursor: pointer;
-      transition: transform 0.15s ease;
+      background: none;
+      border: none;
+      outline: none;
+      z-index: 1101;
+      position: relative;
+      display: none; /* hidden on big screens */
     }
 
-    .char-box:hover {
-      transform: translateY(-3px);
-      border-color: #4f8cff;
+    .search-bar {
+      flex: 1;
+      margin: 0 20px;
+      display: flex;
     }
 
-    .name {
+    .search-bar input {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+    }
+
+    /* Content area */
+    .content {
+      padding: 25px;
+      overflow-y: auto;
+    }
+
+    .content h1 {
+      font-size: 1.6rem;
+      margin-bottom: 20px;
+      color: #111827;
+    }
+
+    /* Service grid */
+    .services {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .service-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+      padding: 15px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .service-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    }
+
+    .service-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+
+    .service-card h3 {
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+      color: #111827;
+      text-align: center;
+    }
+
+    .service-card p {
+      font-size: 0.9rem;
+      color: #6b7280;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .service-meta {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      font-size: 0.9rem;
+      margin-top: auto;
+    }
+
+    .service-meta .price {
       font-weight: bold;
-      font-size: 16px;
+      color: #10b981;
     }
 
-    .tag {
-      margin-top: 6px;
-      font-size: 12px;
-      color: #9aa4b8;
+    .service-meta .quantity {
+      color: #374151;
+    }
+
+    /* Overlay (mobile only) */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      display: none;
+      z-index: 900;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .main {
+        margin-left: 0;
+      }
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .menu-btn {
+        display: block;
+      }
     }
   </style>
 </head>
