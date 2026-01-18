@@ -56,6 +56,19 @@
   </div>
 
   <script>
+    document.getElementById("login").onclick = () => {
+    const clientId = "109";
+    const redirectUri = "https://gtaw-project.vercel.app/auth/gtaw/callback";
+
+    const authUrl =
+      `https://gtaw.net/oauth/authorize` +
+      `?client_id=${clientId}` +
+      `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+      `&response_type=code` +
+      `&scope=identify`;
+
+    window.location.href = authUrl;
+    };
   </script>
 </body>
 </html>
