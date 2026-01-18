@@ -1,14 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>Choose Character</title>
+
   <style>
+    :root {
+      --bg: #0b0f1a;
+      --panel: #111827;
+      --card: #121a2a;
+      --box: #1a2440;
+      --text: #e6e9f2;
+      --muted: #9aa4b8;
+      --accent: #4f8cff;
+      --shadow: rgba(0, 0, 0, 0.6);
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
     body {
-      background: #0b0f1a;
-      color: #e6e9f2;
-      font-family: Arial, sans-serif;
-      padding: 40px;
+      margin: 0;
+      background: radial-gradient(circle at top, #111827, #0b0f1a 60%, #070a10);
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
     }
 
     /* Sidebar */
@@ -18,105 +37,109 @@
       left: 0;
       width: 240px;
       height: 100%;
-      background: #111827;
-      color: #fff;
-      transition: transform 0.3s ease-in-out;
-      z-index: 1000;
+      background: var(--panel);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
       display: flex;
       flex-direction: column;
       padding-top: 20px;
+      z-index: 1000;
+      transition: transform 0.3s ease;
     }
 
     .sidebar h2 {
       text-align: center;
       margin-bottom: 25px;
       font-size: 1.3rem;
-      color: #e5e7eb;
+      color: var(--text);
     }
 
     .nav-links {
       list-style: none;
+      padding: 0;
+      margin: 0;
       flex: 1;
     }
 
     .nav-links li {
-      margin: 10px 0;
+      margin: 6px 10px;
     }
 
     .nav-links a {
       display: block;
-      padding: 12px 20px;
-      color: #d1d5db;
+      padding: 12px 16px;
+      color: white;
       text-decoration: none;
-      border-radius: 8px;
+      border-radius: 10px;
       transition: background 0.2s, color 0.2s;
     }
 
     .nav-links a:hover,
     .nav-links a.active {
-      background: #374151;
-      color: #fff;
+      background: rgba(96, 96, 96, 0.432);
     }
 
-    /* Main content */
+    /* Main */
     .main {
-      flex: 1;
       margin-left: 240px;
-      transition: margin-left 0.3s ease-in-out;
+      height: 100vh;
       display: flex;
       flex-direction: column;
-      height: 100vh;
     }
 
     /* Topbar */
     .topbar {
-      background: #fff;
-      padding: 15px 20px;
-      border-bottom: 1px solid #e5e7eb;
+      background: var(--card);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 14px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      position: relative;
-      z-index: 1100;
     }
 
     .menu-btn {
       font-size: 1.5rem;
-      cursor: pointer;
       background: none;
       border: none;
-      outline: none;
-      z-index: 1101;
-      position: relative;
-      display: none; /* hidden on big screens */
+      color: var(--text);
+      cursor: pointer;
+      display: none;
     }
 
     .search-bar {
       flex: 1;
       margin: 0 20px;
-      display: flex;
     }
 
     .search-bar input {
       width: 100%;
-      padding: 8px 12px;
-      border-radius: 6px;
-      border: 1px solid #d1d5db;
+      padding: 10px 14px;
+      background: var(--box);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      color: var(--text);
     }
 
-    /* Content area */
+    .search-bar input::placeholder {
+      color: var(--muted);
+    }
+    .search-bar input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+    }
+    /* Content */
     .content {
       padding: 25px;
       overflow-y: auto;
+      flex: 1;
     }
 
     .content h1 {
-      font-size: 1.6rem;
       margin-bottom: 20px;
-      color: #111827;
+      font-size: 1.6rem;
     }
 
-    /* Service grid */
+    /* Services */
     .services {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -124,66 +147,56 @@
     }
 
     .service-card {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.05);
-      padding: 15px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 16px;
       cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease;
       display: flex;
       flex-direction: column;
-      align-items: center;
     }
 
     .service-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+      transform: translateY(-4px);
     }
 
     .service-card img {
       width: 100%;
       height: 150px;
       object-fit: cover;
-      border-radius: 8px;
+      border-radius: 10px;
       margin-bottom: 12px;
+      opacity: 0.9;
     }
 
     .service-card h3 {
-      margin-bottom: 8px;
+      margin: 8px 0;
       font-size: 1.1rem;
-      color: #111827;
-      text-align: center;
     }
 
     .service-card p {
       font-size: 0.9rem;
-      color: #6b7280;
-      margin-bottom: 10px;
-      text-align: center;
+      color: var(--muted);
+      margin-bottom: 12px;
     }
 
     .service-meta {
+      margin-top: auto;
       display: flex;
       justify-content: space-between;
-      width: 100%;
-      font-size: 0.9rem;
-      margin-top: auto;
+      font-weight: 600;
     }
 
-    .service-meta .price {
-      font-weight: bold;
-      color: #10b981;
+    .price {
+      color: var(--accent);
     }
 
-    .service-meta .quantity {
-      color: #374151;
-    }
-
-    /* Overlay (mobile only) */
+    /* Overlay (mobile) */
     .overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.4);
+      background: rgba(0, 0, 0, 0.5);
       display: none;
       z-index: 900;
     }
@@ -197,50 +210,55 @@
       .main {
         margin-left: 0;
       }
+
       .sidebar {
         transform: translateX(-100%);
       }
+
       .sidebar.open {
         transform: translateX(0);
       }
+
       .menu-btn {
         display: block;
       }
     }
   </style>
 </head>
+
 <body>
 
- <!-- Sidebar -->
+  <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
     <h2>Buyer Panel</h2>
     <ul class="nav-links">
-      <li><a href="buyer.html" class="active">Browse Services</a></li>
-      <li><a href="orders.html ">Orders</a></li>
+      <li><a class="active" href="#">Browse Services</a></li>
+      <li><a href="#">Orders</a></li>
       <li><a href="#">Messages</a></li>
-      <li><a href="settings.html">Settings</a></li>
-      <li><a href="buyer.html">Logout</a></li>
+      <li><a href="#">Settings</a></li>
+      <li><a href="#">Logout</a></li>
     </ul>
   </aside>
 
-  <!-- Overlay -->
   <div class="overlay" id="overlay"></div>
 
   <!-- Main -->
-  <main class="main" id="main">
+  <main class="main">
     <div class="topbar">
       <button class="menu-btn" id="menuBtn">☰</button>
+
       <div class="search-bar">
-        <input type="text" placeholder="Search services...">
+        <input placeholder="Search services..." />
       </div>
       <span>Welcome, Buyer 👋</span>
     </div>
 
     <div class="content">
       <h1>Browse Services</h1>
+
       <div class="services">
         <div class="service-card">
-          <img src="https://via.placeholder.com/300x150" alt="Logo Design">
+          <img src="https://via.placeholder.com/300x150">
           <h3>Logo Design</h3>
           <p>Professional logo design tailored for your brand.</p>
           <div class="service-meta">
@@ -249,38 +267,35 @@
         </div>
 
         <div class="service-card">
-          <img src="https://via.placeholder.com/300x150" alt="Web Development">
+          <img src="https://via.placeholder.com/300x150">
           <h3>Web Development</h3>
           <p>Custom responsive websites built to your needs.</p>
           <div class="service-meta">
             <span class="price">$300</span>
           </div>
         </div>
-
-        <div class="service-card">
-          <img src="https://via.placeholder.com/300x150" alt="SEO Optimization">
-          <h3>SEO Optimization</h3>
-          <p>Boost your search engine rankings and visibility.</p>
-          <div class="service-meta">
-            <span class="price">$120</span>
-          </div>
-        </div>
-
-        <div class="service-card">
-          <img src="https://via.placeholder.com/300x150" alt="Social Media Marketing">
-          <h3>Social Media Marketing</h3>
-          <p>Grow your audience and increase engagement.</p>
-          <div class="service-meta">
-            <span class="price">$200</span>
-          </div>
-        </div>
       </div>
     </div>
   </main>
 
-<script>
-  
-</script>
+  <script>
+    const menuBtn = document.getElementById("menuBtn");
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+
+    if (menuBtn) {
+      menuBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("open");
+        overlay.classList.toggle("active");
+      });
+    }
+
+    overlay.addEventListener("click", () => {
+      sidebar.classList.remove("open");
+      overlay.classList.remove("active");
+    });
+  </script>
 
 </body>
+
 </html>
