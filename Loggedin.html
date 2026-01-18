@@ -234,14 +234,10 @@
       document.getElementById("empty").style.display = "block";
       document.getElementById("empty").innerText = err.message;
     }
-
-    // -----------------------
-    // API CALL
-    // -----------------------
+    
     async function checkUsername(index) {
       try {
         const token = localStorage.getItem("token");
-        console.log("Checking username with token:", token);
 
         const res = await fetch("https://gtaw-project.vercel.app/users", {
           method: "POST",
