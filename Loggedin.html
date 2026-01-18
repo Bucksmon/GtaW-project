@@ -243,7 +243,7 @@
         const token = localStorage.getItem("token");
         console.log("Checking username with token:", token);
 
-        const res = await fetch("https://gtaw-project.vercel.app/users/login", {
+        const res = await fetch("https://gtaw-project.vercel.app/users", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
