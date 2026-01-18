@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Choose Character</title>
+  <style>
+    body {
+      background: #0b0f1a;
+      color: #e6e9f2;
+      font-family: Arial, sans-serif;
+      padding: 40px;
+    }
+
+    .characters {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .char-box {
+      background: #121a2a;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .char-box:hover {
+      transform: translateY(-3px);
+      border-color: #4f8cff;
+    }
+
+    .name {
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .tag {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #9aa4b8;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Select Character</h1>
+<p id="status">Loading...</p>
+
+<div id="characters" class="characters">Buyer</div>
+
+<script>
+  
+</script>
+
+</body>
+</html>
