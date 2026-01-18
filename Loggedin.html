@@ -5,62 +5,153 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Logged In</title>
   <style>
+    :root {
+      --bg: #0b0f1a;
+      --card: #121a2a;
+      --text: #e6e9f2;
+      --muted: #9aa4b8;
+      --accent: #4f8cff;
+      --box: #1a2440;
+      --shadow: rgba(0, 0, 0, 0.6);
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #111;
-      color: #fff;
-      padding: 20px;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: radial-gradient(circle at top, #111827, #0b0f1a 60%, #070a10);
+      color: var(--text);
+      margin: 0;
+      padding: 30px;
     }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
     .card {
-      background: #222;
-      padding: 20px;
-      border-radius: 12px;
-      max-width: 900px;
-      margin: auto;
-      box-shadow: 0 0 15px rgba(0,0,0,0.6);
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px var(--shadow);
     }
-    pre {
-      background: #111;
-      padding: 12px;
-      border-radius: 10px;
-      overflow-x: auto;
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 26px;
+      letter-spacing: 0.5px;
+    }
+
+    .subtitle {
+      margin: 0 0 20px;
+      color: var(--muted);
+    }
+
+    .characters {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 14px;
+    }
+
+    .char-box {
+      background: var(--box);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 14px 16px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+
+    .char-box:hover {
+      transform: translateY(-2px);
+      border-color: rgba(79, 140, 255, 0.8);
+    }
+
+    .name {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .tag {
+      background: rgba(79, 140, 255, 0.18);
+      color: var(--accent);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .empty {
+      color: var(--muted);
+      padding: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px dashed rgba(255,255,255,0.15);
+      border-radius: 12px;
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Logged In</h1>
-    <p id="status">Decoding token...</p>
-    <pre id="output"></pre>
+  <div class="container">
+    <div class="card">
+      <h1>Logged In</h1>
+      <p class="subtitle" id="status">Decoding token...</p>
+
+      <div id="characters" class="characters"></div>
+      <div id="empty" class="empty" style="display:none;">
+        No character data found in your token.
+      </div>
+    </div>
   </div>
 
   <script>
-    // 1. Get token from URL
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get("token");
 
     if (!token) {
       document.getElementById("status").innerText = "No token found in URL.";
-      document.getElementById("output").innerText = "Redirect back to login.";
+      document.getElementById("empty").style.display = "block";
+      document.getElementById("empty").innerText = "Please login again to receive a token.";
       throw new Error("No token found");
     }
 
-    // 2. Decode JWT payload
     function decodeJWT(token) {
       const payload = token.split(".")[1];
       const decoded = atob(payload);
       return JSON.parse(decoded);
     }
 
-    // 3. Display user data
     try {
       const userData = decodeJWT(token);
 
       document.getElementById("status").innerText = "Token decoded successfully!";
-      document.getElementById("output").innerText = JSON.stringify(userData, null, 2);
+
+      const chars = userData.character || [];
+      const container = document.getElementById("characters");
+
+      if (chars.length === 0) {
+        document.getElementById("empty").style.display = "block";
+      }
+
+      chars.forEach((c, index) => {
+        // only show if both firstname + lastname exist
+        if (c.firstname && c.lastname) {
+          const box = document.createElement("div");
+          box.className = "char-box";
+
+          box.innerHTML = `
+            <div class="name">${c.firstname} ${c.lastname}</div>
+            <div class="tag">Character ${index + 1}</div>
+          `;
+
+          container.appendChild(box);
+        }
+      });
     } catch (err) {
       document.getElementById("status").innerText = "Failed to decode token.";
-      document.getElementById("output").innerText = err.message;
+      document.getElementById("empty").style.display = "block";
+      document.getElementById("empty").innerText = err.message;
     }
   </script>
 </body>
