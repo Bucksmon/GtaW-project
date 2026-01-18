@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -57,7 +58,6 @@
       gap: 14px;
     }
 
-    /* Two boxes per row on larger screens */
     @media (min-width: 768px) {
       .characters {
         grid-template-columns: repeat(2, 1fr);
@@ -73,6 +73,7 @@
       align-items: center;
       justify-content: space-between;
       transition: transform 0.15s ease, border-color 0.15s ease;
+      cursor: pointer;
     }
 
     .char-box:hover {
@@ -97,12 +98,60 @@
     .empty {
       color: var(--muted);
       padding: 16px;
-      background: rgba(255,255,255,0.05);
-      border: 1px dashed rgba(255,255,255,0.15);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px dashed rgba(255, 255, 255, 0.15);
       border-radius: 12px;
+    }
+
+    /* Loading Popup */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      display: none;
+      justify-content: center;
+      align-items: flex-end;
+      padding-bottom: 40px;
+      z-index: 999;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .overlay.show {
+      display: flex;
+      opacity: 1;
+    }
+
+    .popup {
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 16px 20px;
+      box-shadow: 0 10px 25px var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 320px;
+      justify-content: center;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.25);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <div class="card">
@@ -116,9 +165,22 @@
     </div>
   </div>
 
+
+  <!-- Loading Popup -->
+  <div class="overlay" id="overlay">
+    <div class="popup">
+      <div class="spinner"></div>
+      <div>Loading...</div>
+    </div>
+  </div>
+
   <script>
     const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get("token");
+    const container = document.getElementById("container");
+    const overlay = document.getElementById("overlay");
+    localStorage.setItem("token", urlParams.get("token"));
+
+    const token = localStorage.getItem("token");
 
     if (!token) {
       document.getElementById("status").innerText = "No token found in URL.";
@@ -150,10 +212,19 @@
           const box = document.createElement("div");
           box.className = "char-box";
 
+          const username = `${c.firstname}${c.lastname}`; // <-- username
+
           box.innerHTML = `
             <div class="name">${c.firstname} ${c.lastname}</div>
             <div class="tag">Character ${index + 1}</div>
           `;
+
+          // Click event
+          box.addEventListener("click", () => {
+            container.style.opacity = "0.5";
+            overlay.classList.add("show");
+            checkUsername();
+          });
 
           container.appendChild(box);
         }
@@ -163,6 +234,41 @@
       document.getElementById("empty").style.display = "block";
       document.getElementById("empty").innerText = err.message;
     }
+
+    // -----------------------
+    // API CALL
+    // -----------------------
+    async function checkUsername() {
+      try {
+        const token = localStorage.getItem("token");
+        console.log("Checking username with token:", token);
+
+        const res = await fetch("https://gtaw-project.vercel.app/users/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: JSON.stringify({})
+        });
+
+        if (!res.ok) {
+          throw new Error("Server responded with status " + res.status);
+        }
+
+        const data = await res.json();
+
+        if (data.exists) {
+          alert("User exists! Proceed.");
+        } else {
+          alert("User not found. Please create account.");
+        }
+      } catch (err) {
+        alert("API error: " + err.message);
+      }
+    }
+
   </script>
 </body>
+
 </html>
