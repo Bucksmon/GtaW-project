@@ -45,10 +45,72 @@
 </head>
 <body>
 
-<h1>Select Character</h1>
-<p id="status">Loading...</p>
+ <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <h2>Buyer Panel</h2>
+    <ul class="nav-links">
+      <li><a href="buyer.html" class="active">Browse Services</a></li>
+      <li><a href="orders.html ">Orders</a></li>
+      <li><a href="#">Messages</a></li>
+      <li><a href="settings.html">Settings</a></li>
+      <li><a href="buyer.html">Logout</a></li>
+    </ul>
+  </aside>
 
-<div id="characters" class="characters">Buyer</div>
+  <!-- Overlay -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Main -->
+  <main class="main" id="main">
+    <div class="topbar">
+      <button class="menu-btn" id="menuBtn">☰</button>
+      <div class="search-bar">
+        <input type="text" placeholder="Search services...">
+      </div>
+      <span>Welcome, Buyer 👋</span>
+    </div>
+
+    <div class="content">
+      <h1>Browse Services</h1>
+      <div class="services">
+        <div class="service-card">
+          <img src="https://via.placeholder.com/300x150" alt="Logo Design">
+          <h3>Logo Design</h3>
+          <p>Professional logo design tailored for your brand.</p>
+          <div class="service-meta">
+            <span class="price">$50</span>
+          </div>
+        </div>
+
+        <div class="service-card">
+          <img src="https://via.placeholder.com/300x150" alt="Web Development">
+          <h3>Web Development</h3>
+          <p>Custom responsive websites built to your needs.</p>
+          <div class="service-meta">
+            <span class="price">$300</span>
+          </div>
+        </div>
+
+        <div class="service-card">
+          <img src="https://via.placeholder.com/300x150" alt="SEO Optimization">
+          <h3>SEO Optimization</h3>
+          <p>Boost your search engine rankings and visibility.</p>
+          <div class="service-meta">
+            <span class="price">$120</span>
+          </div>
+        </div>
+
+        <div class="service-card">
+          <img src="https://via.placeholder.com/300x150" alt="Social Media Marketing">
+          <h3>Social Media Marketing</h3>
+          <p>Grow your audience and increase engagement.</p>
+          <div class="service-meta">
+            <span class="price">$200</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 
 <script>
   
