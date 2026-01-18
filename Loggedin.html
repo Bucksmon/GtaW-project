@@ -258,8 +258,8 @@
 
         const data = await res.json();
 
-        if (data.exists) {
-          alert("User exists! Proceed.");
+        if (data.redirect) {
+          window.location.href = data.redirect;
         } else {
           alert("User not found. Please create account.");
         }
