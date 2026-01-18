@@ -1,74 +1,265 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <title>Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LK Import Trading - Login</title>
+
   <style>
+    :root {
+      --card: #121a2a;
+      --text: #e6e9f2;
+      --muted: #9aa4b8;
+      --accent: #4f8cff;
+      --shadow: rgba(0, 0, 0, 0.6);
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      display: flex;
+      margin: 0;
       height: 100vh;
-      justify-content: center;
+      background: linear-gradient(120deg, #0f172a, #1e293b, #020617);
+      background-size: 300% 300%;
+      animation: bgMove 12s ease infinite;
+      display: flex;
       align-items: center;
-      background: #f4f4f4;
-    }
-    .login-box {
-      background: white;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      width: 300px;
-      text-align: center;
-    }
-    .login-box input {
-      width: 100%;
-      padding: 0.5rem;
-      margin: 0.5rem 0;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    .login-box button {
-      width: 100%;
-      padding: 0.7rem;
-      margin: 0.5rem 0;
-      border: none;
-      border-radius: 5px;
-      background: #007BFF;
+      justify-content: center;
       color: white;
+      overflow: hidden;
+    }
+
+    @keyframes bgMove {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .hero {
+      text-align: center;
+      animation: fadeUp 1.2s ease forwards;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .logo {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-weight: bold;
+      letter-spacing: 1px;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    h1 {
+      font-size: clamp(36px, 6vw, 64px);
+      margin: 0;
+      letter-spacing: 1px;
+    }
+
+    h2 {
+      margin-top: 12px;
+      font-size: clamp(18px, 3vw, 26px);
+      font-weight: 400;
+      color: #e5e7eb;
+      animation: glow 2.5s ease-in-out infinite;
+      margin-bottom: 0;
+    }
+
+    @keyframes glow {
+
+      0%,
+      100% {
+        opacity: 0.7;
+      }
+
+      50% {
+        opacity: 1;
+      }
+    }
+
+    .lines {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: repeating-linear-gradient(90deg,
+          rgba(255, 255, 255, 0.03) 0px,
+          rgba(255, 255, 255, 0.03) 1px,
+          transparent 1px,
+          transparent 80px);
+    }
+
+    /* Login Button */
+    .btn {
+      width: 260px;
+      padding: 12px 0;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 12px;
+      background: rgba(18, 26, 42, 0.7);
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 700;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: transform 0.15s ease, background 0.15s ease;
     }
-    .login-box button:hover {
-      background: #0056b3;
+
+    .btn:hover {
+      transform: translateY(-2px);
+      background: rgba(18, 26, 42, 0.9);
     }
-    .oauth-btn {
-      background: #2c2c2c;
+
+    .btn:active {
+      transform: translateY(0px);
     }
-    .oauth-btn:hover {
-      background: #1b1b1b;
+
+    .logo-small {
+      height: 24px;
+      object-fit: cover;
+      opacity: 0.9;
+    }
+
+    /* Loading Popup */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      display: none;
+      justify-content: center;
+      align-items: flex-end;
+      padding-bottom: 40px;
+      z-index: 999;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .overlay.show {
+      display: flex;
+      opacity: 1;
+    }
+
+    .popup {
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 16px 20px;
+      box-shadow: 0 10px 25px var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 320px;
+      justify-content: center;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.25);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
     }
   </style>
 </head>
+
 <body>
-  <div class="login-box">
-    <h2>Login</h2>
-    <button id="login" class="oauth-btn" >Login with GTA:W</button>
+  <div class="lines"></div>
+
+  <div class="hero">
+    <img class="logo" src="import.png" alt="Logo">
+
+    <h1>LK Import Trading</h1>
+    <h2>Import Foreign Products Today</h2>
+
+    <button id="login" class="btn">
+      <img class="logo-small"
+        src="https://forum.gta.world/en/uploads/monthly_2023_06/logo.png.ded779ccdcb73451bf5069c10b16855b.png"
+        alt="GTAW Logo" />
+      Login with GTA:W
+    </button>
+  </div>
+
+  <!-- Loading Popup -->
+  <div class="overlay" id="overlay">
+    <div class="popup">
+      <div class="spinner"></div>
+      <div>Connecting...</div>
+    </div>
   </div>
 
   <script>
-    document.getElementById("login").onclick = () => {
-    const clientId = "109";
-    const redirectUri = "https://gtaw-project.vercel.app/auth/gtaw/callback";
+    const loginBtn = document.getElementById("login");
+    const overlay = document.getElementById("overlay");
 
-    const authUrl =
-      `https://ucp.gta.world/oauth/authorize` +
-      `?client_id=${clientId}` +
-      `&redirect_uri=${encodeURIComponent(redirectUri)}` +
-      `&response_type=code` +
-      `&scope=identify`;
+    loginBtn.onclick = () => {
+      loginBtn.style.opacity = "0.5";
+      overlay.classList.add("show");
 
-    window.location.href = authUrl;
+      const clientId = "109";
+      const redirectUri = "https://gtaw-project.vercel.app/auth/gtaw/callback";
+
+      const authUrl =
+        `https://ucp.gta.world/oauth/authorize` +
+        `?client_id=${clientId}` +
+        `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+        `&response_type=code` +
+        `&scope=identify`;
+
+      window.location.href = authUrl;
     };
   </script>
 </body>
+
 </html>
