@@ -276,27 +276,31 @@
         status.style.color = "red";
         return;
       }
-
       try {
-        const res = await fetch("/api/add-credits", {
+        const token = localStorage.getItem("token");
+
+        const res = await fetch("https://gtaw-project.vercel.app/discord/request-approval", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            routingNumber,
-            discordTag,
-            credits: Number(credits)
-          })
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: JSON.stringify({routing_number: routingNumber, amount_credits: credits, discord_tag: discordTag})
         });
 
-        if (!res.ok) throw new Error("Request failed");
+        if (!res.ok) {
+          throw new Error("Server responded with status " + res.status);
+        }
 
-        status.textContent = "Credits request submitted successfully.";
-        status.style.color = "lightgreen";
-        form.reset();
+        const data = await res.json();
 
+        if (data.redirect) {
+          window.location.href = data.redirect;
+        } else {
+          alert("User not found. Please create account.");
+        }
       } catch (err) {
-        status.textContent = "Server error. Try again.";
-        status.style.color = "red";
+        alert("API error: " + err.message);
       }
     });
   </script>
