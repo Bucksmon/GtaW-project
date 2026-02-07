@@ -247,7 +247,7 @@
           },
           body: JSON.stringify({index})
         });
-
+        localStorage.setItem("token", res.token);
         if (!res.ok) {
           throw new Error("Server responded with status " + res.status);
         }
