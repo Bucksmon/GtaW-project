@@ -340,12 +340,7 @@
         if (!res.ok) throw new Error("Server error " + res.status);
 
         const data = await res.json();
-
-        if (data.redirect) {
-          window.location.href = data.redirect;
-        } else {
-          status.textContent = "User not found. Please create account.";
-        }
+        console.log(data);
 
       } catch (err) {
         status.textContent = "API error: " + err.message;
