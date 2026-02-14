@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>Buyer Panel – Add Credits</title>
@@ -261,49 +262,101 @@
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const routingNumber = document.getElementById("routingNumber").value;
-      const discordTag = document.getElementById("discordTag").value;
-      const credits = document.getElementById("credits").value;
+      status.textContent = "";
+      status.style.color = "red";
 
+      const routingNumber = document.getElementById("routingNumber").value.trim();
+      const discordTag = document.getElementById("discordTag").value.trim();
+      const credits = document.getElementById("credits").value.trim();
+
+      // ===== PRECHECKS =====
+
+      // 1. Empty checks
+      if (!routingNumber || !discordTag || !credits) {
+        status.textContent = "All fields are required.";
+        return;
+      }
+
+      // 2. Routing number numeric + length check
       if (!/^\d+$/.test(routingNumber)) {
         status.textContent = "Routing number must be numeric.";
-        status.style.color = "red";
         return;
       }
 
+      if (routingNumber.length !== 9) {
+        status.textContent = "Routing number must be 9 digits.";
+        return;
+      }
+
+      // 3. Discord tag format
       if (!/^[a-zA-Z0-9_]+$/.test(discordTag)) {
         status.textContent = "Invalid Discord tag format.";
-        status.style.color = "red";
         return;
       }
+
+      // 4. Credit amount validation
+      const creditAmount = Number(credits);
+
+      if (isNaN(creditAmount) || creditAmount <= 0) {
+        status.textContent = "Enter a valid credit amount.";
+        return;
+      }
+
+      if (creditAmount > 10000) {
+        if (!confirm("Large credit request. Continue?")) return;
+      }
+
+      // 5. Auth token check
+      const token = localStorage.getItem("token");
+      if (!token) {
+        status.textContent = "You must be logged in.";
+        return;
+      }
+
+      // Disable button to prevent spam
+      const submitBtn = form.querySelector("button[type='submit']");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Submitting...";
+
+      // ===== API CALL =====
+
       try {
-        const token = localStorage.getItem("token");
+        const res = await fetch(
+          "https://gtaw-project.vercel.app/discord/request-approval",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify({
+              routing_number: routingNumber,
+              amount_credits: creditAmount,
+              discord_tag: discordTag
+            })
+          }
+        );
 
-        const res = await fetch("https://gtaw-project.vercel.app/discord/request-approval", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
-          },
-          body: JSON.stringify({routing_number: routingNumber, amount_credits: credits, discord_tag: discordTag})
-        });
-
-        if (!res.ok) {
-          throw new Error("Server responded with status " + res.status);
-        }
+        if (!res.ok) throw new Error("Server error " + res.status);
 
         const data = await res.json();
 
         if (data.redirect) {
           window.location.href = data.redirect;
         } else {
-          alert("User not found. Please create account.");
+          status.textContent = "User not found. Please create account.";
         }
+
       } catch (err) {
-        alert("API error: " + err.message);
+        status.textContent = "API error: " + err.message;
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit";
       }
     });
+
   </script>
 
 </body>
+
 </html>
