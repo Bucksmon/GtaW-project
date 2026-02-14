@@ -257,44 +257,61 @@
     });
 
     const form = document.getElementById("creditForm");
+    const routingInput = document.getElementById("routingNumber");
+    const discordInput = document.getElementById("discordTag");
+    const creditsInput = document.getElementById("credits");
     const status = document.getElementById("status");
+    const submitBtn = document.querySelector("#creditForm button");
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
+    // Disable initially
+    submitBtn.disabled = true;
 
-      status.textContent = "";
+    function validateFormRealtime() {
+      const routing = routingInput.value.trim();
+      const discord = discordInput.value.trim();
+      const credits = creditsInput.value.trim();
+
       status.style.color = "red";
+      submitBtn.disabled = true;
 
-      const routingNumber = document.getElementById("routingNumber").value.trim();
-      const discordTag = document.getElementById("discordTag").value.trim();
-      const credits = document.getElementById("credits").value.trim();
-
-      // ===== PRECHECKS =====
-
-      // 1. Empty checks
-      if (!routingNumber || !discordTag || !credits) {
-        status.textContent = "All fields are required.";
+      // ===== Routing Number =====
+      if (!routing) {
+        status.textContent = "Routing number required.";
         return;
       }
 
-      // 2. Routing number numeric + length check
-      if (!/^\d+$/.test(routingNumber)) {
+      if (!/^\d+$/.test(routing)) {
         status.textContent = "Routing number must be numeric.";
         return;
       }
 
-      if (routingNumber.length !== 9) {
+      if (routing.length !== 9) {
         status.textContent = "Routing number must be 9 digits.";
         return;
       }
 
-      // 3. Discord tag format
-      if (!/^[a-zA-Z0-9_]+$/.test(discordTag)) {
-        status.textContent = "Invalid Discord tag format.";
+      // ===== Discord Tag =====
+      if (!discord) {
+        status.textContent = "Discord tag required.";
         return;
       }
 
-      // 4. Credit amount validation
+      if (discord.includes(" ")) {
+        status.textContent = "Discord tag cannot contain spaces.";
+        return;
+      }
+
+      if (!/^[a-zA-Z0-9_]+$/.test(discord)) {
+        status.textContent = "Discord tag format invalid.";
+        return;
+      }
+
+      // ===== Credits =====
+      if (!credits) {
+        status.textContent = "Credit amount required.";
+        return;
+      }
+
       const creditAmount = Number(credits);
 
       if (isNaN(creditAmount) || creditAmount <= 0) {
@@ -302,23 +319,32 @@
         return;
       }
 
-      if (creditAmount > 10000) {
-        if (!confirm("Large credit request. Continue?")) return;
-      }
+      // ✅ All checks passed
+      status.style.color = "limegreen";
+      status.textContent = "All fields valid ✓";
+      submitBtn.disabled = false;
+    }
 
-      // 5. Auth token check
+    // Real-time listeners
+    routingInput.addEventListener("input", validateFormRealtime);
+    discordInput.addEventListener("input", validateFormRealtime);
+    creditsInput.addEventListener("input", validateFormRealtime);
+    
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      // Extra safety — do not submit if still disabled
+      if (submitBtn.disabled) return;
+
+      // Get fresh values
+      const routingNumber = routingInput.value.trim();
+      const discordTag = discordInput.value.trim();
+      const creditAmount = Number(creditsInput.value.trim());
       const token = localStorage.getItem("token");
-      if (!token) {
-        status.textContent = "You must be logged in.";
-        return;
-      }
 
       // Disable button to prevent spam
-      const submitBtn = form.querySelector("button[type='submit']");
       submitBtn.disabled = true;
       submitBtn.textContent = "Submitting...";
-
-      // ===== API CALL =====
 
       try {
         const res = await fetch(
@@ -340,15 +366,21 @@
         if (!res.ok) throw new Error("Server error " + res.status);
 
         const data = await res.json();
+
+        status.style.color = "limegreen";
+        status.textContent = "Request submitted successfully ✓";
+
         console.log(data);
 
       } catch (err) {
+        status.style.color = "red";
         status.textContent = "API error: " + err.message;
       } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = "Submit";
       }
     });
+
 
   </script>
 
