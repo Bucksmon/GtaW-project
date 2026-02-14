@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8" />
-    <title>Add Buyer</title>
+    <title>Add Remove</title>
 
     <!-- Use your SAME CSS (unchanged) -->
     <style>
@@ -201,7 +201,7 @@
 
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
-        <h2>Buyer Panel</h2>
+        <h2>Admin Panel</h2>
         <ul class="nav-links">
             <li><a href="addBuyer.html">Add Buyer</a></li>
             <li><a href="addSeller.html">Add Seller</a></li>
@@ -217,21 +217,21 @@
     <main class="main">
         <div class="topbar">
             <button class="menu-btn" id="menuBtn">☰</button>
-            <span>Add Buyer</span>
+            <span>Add Seller</span>
         </div>
 
         <div class="content">
             <div class="card">
                 <h2>Add Buyer</h2>
 
-                <form id="buyerForm">
-                    <label>Buyer Username</label>
+                <form id="sellerForm">
+                    <label>Seller Username</label>
                     <input id="username" placeholder="Firstname_Lastname" autocomplete="off" />
 
                     <div id="status" class="status"></div>
                     
                     <button id="submitBtn" type="submit" disabled>
-                        Create Buyer
+                        Create Seller
                     </button>
 
                 </form>
@@ -308,7 +308,7 @@
         });
 
         /* Prevent submit if invalid (extra safety) */
-        document.getElementById("buyerForm").addEventListener("submit", (e) => {
+        document.getElementById("sellerForm").addEventListener("submit", (e) => {
             if (submitBtn.disabled) {
                 e.preventDefault();
             } else {
