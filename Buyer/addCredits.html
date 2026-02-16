@@ -347,7 +347,7 @@
 
       try {
         const res = await fetch(
-          "https://gtaw-project.vercel.app/discord/request-approval",
+          "https://gtaw-project.vercel.app/discord/credits-request",
           {
             method: "POST",
             headers: {
@@ -355,6 +355,7 @@
               "Authorization": "Bearer " + token
             },
             body: JSON.stringify({
+              type: "buy",
               routing_number: routingNumber,
               amount_credits: creditAmount,
               discord_tag: discordTag
