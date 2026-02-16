@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Seller Panel – Sell Credits</title>
+
+    <style>
+        :root {
+            --bg: #0b0f1a;
+            --panel: #111827;
+            --card: #121a2a;
+            --box: #1a2440;
+            --text: #e6e9f2;
+            --muted: #9aa4b8;
+            --accent: #4f8cff;
+            --shadow: rgba(0, 0, 0, 0.6);
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: radial-gradient(circle at top, #111827, #0b0f1a 60%, #070a10);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 240px;
+            height: 100%;
+            background: var(--panel);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            padding-top: 20px;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.3rem;
+        }
+
+        .nav-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex: 1;
+        }
+
+        .nav-links li {
+            margin: 6px 10px;
+        }
+
+        .nav-links a {
+            display: block;
+            padding: 12px 16px;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: rgba(96, 96, 96, 0.432);
+        }
+
+        /* Main */
+        .main {
+            margin-left: 240px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Topbar */
+        .topbar {
+            background: var(--card);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .menu-btn {
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            display: none;
+        }
+
+        /* Content */
+        .content {
+            padding: 25px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 20px;
+            max-width: 420px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        label {
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        input {
+            padding: 10px 14px;
+            background: var(--box);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            color: var(--text);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 6px var(--accent);
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 12px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .status {
+            font-size: 0.9rem;
+            margin-top: 6px;
+        }
+
+        /* Overlay (mobile) */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 900;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .main {
+                margin-left: 0;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .menu-btn {
+                display: block;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <h2>Buyer Panel</h2>
+        <ul class="nav-links">
+            <li><a href="seller.html">Browse Services</a></li>
+            <li><a href="sellerOrder.html">Orders</a></li>
+            <li><a class="active" href="sellCredits.html">Sell Credits</a></li>
+            <li><a href="addService.html">Add Services</a></li>
+            <li><a href="../index.html">Logout</a></li>
+        </ul>
+    </aside>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Main -->
+    <main class="main">
+        <div class="topbar">
+            <button class="menu-btn" id="menuBtn">☰</button>
+            <span>Sell Credits</span>
+        </div>
+
+        <div class="content">
+            <div class="card">
+                <h2>Sell Credits</h2>
+
+                <form id="creditForm">
+                    <label>Routing Number</label>
+                    <input id="routingNumber" placeholder="Numbers only" />
+
+                    <label>Discord Tag</label>
+                    <input id="discordTag" placeholder="angel_nunez4" />
+
+                    <label>Credit Amount</label>
+                    <input id="credits" type="number" min="1" placeholder="100" />
+
+                    <button type="submit">Submit</button>
+                    <div id="status" class="status"></div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const menuBtn = document.getElementById("menuBtn");
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+
+        menuBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("open");
+            overlay.classList.toggle("active");
+        });
+
+        overlay.addEventListener("click", () => {
+            sidebar.classList.remove("open");
+            overlay.classList.remove("active");
+        });
+
+        const form = document.getElementById("creditForm");
+        const routingInput = document.getElementById("routingNumber");
+        const discordInput = document.getElementById("discordTag");
+        const creditsInput = document.getElementById("credits");
+        const status = document.getElementById("status");
+        const submitBtn = document.querySelector("#creditForm button");
+
+        // Disable initially
+        submitBtn.disabled = true;
+
+        function validateFormRealtime() {
+            const routing = routingInput.value.trim();
+            const discord = discordInput.value.trim();
+            const credits = creditsInput.value.trim();
+
+            status.style.color = "red";
+            submitBtn.disabled = true;
+
+            // ===== Routing Number =====
+            if (!routing) {
+                status.textContent = "Routing number required.";
+                return;
+            }
+
+            if (!/^\d+$/.test(routing)) {
+                status.textContent = "Routing number must be numeric.";
+                return;
+            }
+
+            if (routing.length !== 9) {
+                status.textContent = "Routing number must be 9 digits.";
+                return;
+            }
+
+            // ===== Discord Tag =====
+            if (!discord) {
+                status.textContent = "Discord tag required.";
+                return;
+            }
+
+            if (discord.includes(" ")) {
+                status.textContent = "Discord tag cannot contain spaces.";
+                return;
+            }
+
+            if (!/^[a-zA-Z0-9_]+$/.test(discord)) {
+                status.textContent = "Discord tag format invalid.";
+                return;
+            }
+
+            // ===== Credits =====
+            if (!credits) {
+                status.textContent = "Credit amount required.";
+                return;
+            }
+
+            const creditAmount = Number(credits);
+
+            if (isNaN(creditAmount) || creditAmount <= 0) {
+                status.textContent = "Enter a valid credit amount.";
+                return;
+            }
+
+            // ✅ All checks passed
+            status.style.color = "limegreen";
+            status.textContent = "All fields valid ✓";
+            submitBtn.disabled = false;
+        }
+
+        // Real-time listeners
+        routingInput.addEventListener("input", validateFormRealtime);
+        discordInput.addEventListener("input", validateFormRealtime);
+        creditsInput.addEventListener("input", validateFormRealtime);
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            // Extra safety — do not submit if still disabled
+            if (submitBtn.disabled) return;
+
+            // Get fresh values
+            const routingNumber = routingInput.value.trim();
+            const discordTag = discordInput.value.trim();
+            const creditAmount = Number(creditsInput.value.trim());
+            const token = localStorage.getItem("token");
+
+            // Disable button to prevent spam
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Submitting...";
+
+            try {
+                const res = await fetch(
+                    "https://gtaw-project.vercel.app/discord/credits-request",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer " + token
+                        },
+                        body: JSON.stringify({
+                            type: "sell",
+                            routing_number: routingNumber,
+                            amount_credits: creditAmount,
+                            discord_tag: discordTag
+                        })
+                    }
+                );
+
+                if (!res.ok) throw new Error("Server error " + res.status);
+
+                const data = await res.json();
+
+                status.style.color = "limegreen";
+                status.textContent = "Request submitted successfully ✓";
+
+                console.log(data);
+
+            } catch (err) {
+                status.style.color = "red";
+                status.textContent = "API error: " + err.message;
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Submit";
+            }
+        });
+
+
+    </script>
+
+</body>
+
+</html>
