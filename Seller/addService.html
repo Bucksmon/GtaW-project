@@ -3,9 +3,8 @@
 
 <head>
     <meta charset="UTF-8" />
-    <title>Add Buyer</title>
+    <title>Seller Panel – Sell Credits</title>
 
-    <!-- Use your SAME CSS (unchanged) -->
     <style>
         :root {
             --bg: #0b0f1a;
@@ -201,12 +200,13 @@
 
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
-        <h2>Admin Panel</h2>
+        <h2>Seller Panel</h2>
         <ul class="nav-links">
-            <li><a href="addBuyer.html">Add Buyer</a></li>
-            <li><a href="addSeller.html">Add Seller</a></li>
-            <li><a href="removeSeller.html">Remove Seller</a></li>
-            <li><a href="removeBuyer.html">Remove Buyer</a></li>
+            <li><a href="seller.html">Browse Services</a></li>
+            <li><a href="sellerOrder.html">Orders</a></li>
+            <li><a href="sellCredits.html">Sell Credits</a></li>
+            <li><a class="active" href="addService.html">Add Services</a></li>
+            <li><a href="removeService.html">Remove Services</a></li>
             <li><a href="../index.html">Logout</a></li>
         </ul>
     </aside>
@@ -217,30 +217,31 @@
     <main class="main">
         <div class="topbar">
             <button class="menu-btn" id="menuBtn">☰</button>
-            <span>Add Buyer</span>
+            <span>Sell Credits</span>
         </div>
 
         <div class="content">
             <div class="card">
-                <h2>Add Buyer</h2>
+                <h2>Sell Credits</h2>
 
-                <form id="buyerForm">
-                    <label>Buyer Username</label>
-                    <input id="username" placeholder="Firstname_Lastname" autocomplete="off" />
+                <form id="creditForm">
+                    <label>Routing Number</label>
+                    <input id="routingNumber" placeholder="Numbers only" />
 
+                    <label>Discord Tag</label>
+                    <input id="discordTag" placeholder="angel_nunez4" />
+
+                    <label>Credit Amount</label>
+                    <input id="credits" type="number" min="1" placeholder="100" />
+
+                    <button type="submit">Submit</button>
                     <div id="status" class="status"></div>
-
-                    <button id="submitBtn" type="submit" disabled>
-                        Create Buyer
-                    </button>
-
                 </form>
             </div>
         </div>
     </main>
 
     <script>
-        /* Sidebar toggle (same as your page) */
         const menuBtn = document.getElementById("menuBtn");
         const sidebar = document.getElementById("sidebar");
         const overlay = document.getElementById("overlay");
@@ -255,66 +256,133 @@
             overlay.classList.remove("active");
         });
 
-        /* ===== REAL-TIME USERNAME VALIDATION ===== */
-
-        const usernameInput = document.getElementById("username");
+        const form = document.getElementById("creditForm");
+        const routingInput = document.getElementById("routingNumber");
+        const discordInput = document.getElementById("discordTag");
+        const creditsInput = document.getElementById("credits");
         const status = document.getElementById("status");
-        const submitBtn = document.getElementById("submitBtn");
+        const submitBtn = document.querySelector("#creditForm button");
 
-        usernameInput.addEventListener("input", () => {
-            const value = usernameInput.value.trim();
+        // Disable initially
+        submitBtn.disabled = true;
 
-            // Default state
+        function validateFormRealtime() {
+            const routing = routingInput.value.trim();
+            const discord = discordInput.value.trim();
+            const credits = creditsInput.value.trim();
+
             status.style.color = "red";
             submitBtn.disabled = true;
 
-            if (!value) {
-                status.textContent = "Username required.";
+            // ===== Routing Number =====
+            if (!routing) {
+                status.textContent = "Routing number required.";
                 return;
             }
 
-            // ❌ No spaces allowed
-            if (value.includes(" ")) {
-                status.textContent = "No spaces allowed.";
+            if (!/^\d+$/.test(routing)) {
+                status.textContent = "Routing number must be numeric.";
                 return;
             }
 
-            // ❌ Only letters and underscore allowed
-            if (!/^[A-Za-z_]+$/.test(value)) {
-                status.textContent = "Only letters and one underscore allowed.";
+            if (routing.length !== 9) {
+                status.textContent = "Routing number must be 9 digits.";
                 return;
             }
 
-            // ❌ Must contain exactly ONE underscore
-            const parts = value.split("_");
-
-            if (parts.length !== 2) {
-                status.textContent = "Must contain exactly one underscore.";
+            // ===== Discord Tag =====
+            if (!discord) {
+                status.textContent = "Discord tag required.";
                 return;
             }
 
-            const [first, last] = parts;
-
-            // ❌ First and last must exist
-            if (!first || !last) {
-                status.textContent = "Firstname and Lastname required.";
+            if (discord.includes(" ")) {
+                status.textContent = "Discord tag cannot contain spaces.";
                 return;
             }
 
-            // ✅ Passed all checks
+            if (!/^[a-zA-Z0-9_]+$/.test(discord)) {
+                status.textContent = "Discord tag format invalid.";
+                return;
+            }
+
+            // ===== Credits =====
+            if (!credits) {
+                status.textContent = "Credit amount required.";
+                return;
+            }
+
+            const creditAmount = Number(credits);
+
+            if (isNaN(creditAmount) || creditAmount <= 0) {
+                status.textContent = "Enter a valid credit amount.";
+                return;
+            }
+
+            // ✅ All checks passed
             status.style.color = "limegreen";
-            status.textContent = "Valid username ✓";
+            status.textContent = "All fields valid ✓";
             submitBtn.disabled = false;
-        });
+        }
 
-        /* Prevent submit if invalid (extra safety) */
-        document.getElementById("buyerForm").addEventListener("submit", (e) => {
-            if (submitBtn.disabled) {
-                e.preventDefault();
-            } else {
-                alert("Buyer created successfully.");
+        // Real-time listeners
+        routingInput.addEventListener("input", validateFormRealtime);
+        discordInput.addEventListener("input", validateFormRealtime);
+        creditsInput.addEventListener("input", validateFormRealtime);
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            // Extra safety — do not submit if still disabled
+            if (submitBtn.disabled) return;
+
+            // Get fresh values
+            const routingNumber = routingInput.value.trim();
+            const discordTag = discordInput.value.trim();
+            const creditAmount = Number(creditsInput.value.trim());
+            const token = localStorage.getItem("token");
+
+            // Disable button to prevent spam
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Submitting...";
+
+            try {
+                const res = await fetch(
+                    "https://gtaw-project.vercel.app/discord/credits-request",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer " + token
+                        },
+                        body: JSON.stringify({
+                            type: "sell",
+                            routing_number: routingNumber,
+                            amount_credits: creditAmount,
+                            discord_tag: discordTag
+                        })
+                    }
+                );
+
+                if (!res.ok) throw new Error("Server error " + res.status);
+
+                const data = await res.json();
+
+                status.style.color = "limegreen";
+                status.textContent = "Request submitted successfully ✓";
+
+                console.log(data);
+
+            } catch (err) {
+                status.style.color = "red";
+                status.textContent = "API error: " + err.message;
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Submit";
             }
         });
+
+
     </script>
 
 </body>
