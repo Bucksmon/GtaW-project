@@ -78,35 +78,29 @@
 
         /* Main */
         .main {
-            flex: 1;
             margin-left: 240px;
-            transition: margin-left 0.3s ease-in-out;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            height: 100vh;
         }
 
+        /* Topbar */
         .topbar {
-            background: #fff;
-            padding: 15px 20px;
-            border-bottom: 1px solid #e5e7eb;
+            background: var(--card);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 14px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            z-index: 1100;
         }
 
         .menu-btn {
             font-size: 1.5rem;
-            cursor: pointer;
             background: none;
             border: none;
+            color: var(--text);
+            cursor: pointer;
             display: none;
-        }
-
-        .content {
-            padding: 25px;
-            overflow-y: auto;
         }
 
         .content h1 {
