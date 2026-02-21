@@ -221,167 +221,115 @@
         </div>
 
         <div class="content">
-            <div class="card">
-                <h2>Sell Credits</h2>
+            <h1>My Services</h1>
+            <button id="addServiceBtn">+ Add New Service</button>
 
-                <form id="creditForm">
-                    <label>Routing Number</label>
-                    <input id="routingNumber" placeholder="Numbers only" />
-
-                    <label>Discord Tag</label>
-                    <input id="discordTag" placeholder="angel_nunez4" />
-
-                    <label>Credit Amount</label>
-                    <input id="credits" type="number" min="1" placeholder="100" />
-
-                    <button type="submit">Submit</button>
-                    <div id="status" class="status"></div>
-                </form>
-            </div>
+            <div class="services" id="serviceList"></div>
         </div>
     </main>
+    <div class="modal" id="serviceModal">
+        <div class="modal-content">
+            <h2>Add New Service</h2>
+            <input type="text" id="serviceName" placeholder="Service Name" required />
+            <textarea id="serviceDesc" placeholder="Description" rows="3" required></textarea>
+            <input type="number" id="servicePrice" placeholder="Price ($)" required />
+            <small style="display:block; margin-bottom:10px; color:#6b7280;">Upload an image (jpg, png, etc.)</small>
 
+            <div style="text-align: right;">
+                <button class="save-btn" id="saveService">Save</button>
+                <button class="cancel-btn" id="cancelService">Cancel</button>
+            </div>
+        </div>
+    </div>
     <script>
         const menuBtn = document.getElementById("menuBtn");
         const sidebar = document.getElementById("sidebar");
         const overlay = document.getElementById("overlay");
+        const addBtn = document.getElementById("addServiceBtn");
+        const modal = document.getElementById("serviceModal");
+        const cancelBtn = document.getElementById("cancelService");
+        const saveBtn = document.getElementById("saveService");
+        const serviceList = document.getElementById("serviceList");
 
         menuBtn.addEventListener("click", () => {
             sidebar.classList.toggle("open");
             overlay.classList.toggle("active");
         });
 
-        overlay.addEventListener("click", () => {
-            sidebar.classList.remove("open");
-            overlay.classList.remove("active");
+        addBtn.addEventListener("click", () => {
+            modal.classList.add("active");
         });
 
-        const form = document.getElementById("creditForm");
-        const routingInput = document.getElementById("routingNumber");
-        const discordInput = document.getElementById("discordTag");
-        const creditsInput = document.getElementById("credits");
-        const status = document.getElementById("status");
-        const submitBtn = document.querySelector("#creditForm button");
+        cancelBtn.addEventListener("click", () => {
+            modal.classList.remove("active");
+        });
 
-        // Disable initially
-        submitBtn.disabled = true;
+        saveBtn.addEventListener("click", async () => {
+            const name = document.getElementById("serviceName").value.trim();
+            const desc = document.getElementById("serviceDesc").value.trim();
+            const price = document.getElementById("servicePrice").value.trim();
 
-        function validateFormRealtime() {
-            const routing = routingInput.value.trim();
-            const discord = discordInput.value.trim();
-            const credits = creditsInput.value.trim();
-
-            status.style.color = "red";
-            submitBtn.disabled = true;
-
-            // ===== Routing Number =====
-            if (!routing) {
-                status.textContent = "Routing number required.";
+            if (!name || !desc || !price) {
+                alert("Please fill all fields and upload an image.");
                 return;
             }
 
-            if (!/^\d+$/.test(routing)) {
-                status.textContent = "Routing number must be numeric.";
-                return;
-            }
+            const username = "john_doe";
 
-            if (routing.length !== 9) {
-                status.textContent = "Routing number must be 9 digits.";
-                return;
-            }
-
-            // ===== Discord Tag =====
-            if (!discord) {
-                status.textContent = "Discord tag required.";
-                return;
-            }
-
-            if (discord.includes(" ")) {
-                status.textContent = "Discord tag cannot contain spaces.";
-                return;
-            }
-
-            if (!/^[a-zA-Z0-9_]+$/.test(discord)) {
-                status.textContent = "Discord tag format invalid.";
-                return;
-            }
-
-            // ===== Credits =====
-            if (!credits) {
-                status.textContent = "Credit amount required.";
-                return;
-            }
-
-            const creditAmount = Number(credits);
-
-            if (isNaN(creditAmount) || creditAmount <= 0) {
-                status.textContent = "Enter a valid credit amount.";
-                return;
-            }
-
-            // ✅ All checks passed
-            status.style.color = "limegreen";
-            status.textContent = "All fields valid ✓";
-            submitBtn.disabled = false;
-        }
-
-        // Real-time listeners
-        routingInput.addEventListener("input", validateFormRealtime);
-        discordInput.addEventListener("input", validateFormRealtime);
-        creditsInput.addEventListener("input", validateFormRealtime);
-
-        form.addEventListener("submit", async (e) => {
-            e.preventDefault();
-
-            // Extra safety — do not submit if still disabled
-            if (submitBtn.disabled) return;
-
-            // Get fresh values
-            const routingNumber = routingInput.value.trim();
-            const discordTag = discordInput.value.trim();
-            const creditAmount = Number(creditsInput.value.trim());
-            const token = localStorage.getItem("token");
-
-            // Disable button to prevent spam
-            submitBtn.disabled = true;
-            submitBtn.textContent = "Submitting...";
+            const payload = {
+                service_title: name,
+                service_description: desc,
+                service_price: Number(price),
+                service_sellerId: username
+            };
 
             try {
-                const res = await fetch(
-                    "https://gtaw-project.vercel.app/discord/credits-request",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": "Bearer " + token
-                        },
-                        body: JSON.stringify({
-                            type: "sell",
-                            routing_number: routingNumber,
-                            amount_credits: creditAmount,
-                            discord_tag: discordTag
-                        })
-                    }
-                );
-
-                if (!res.ok) throw new Error("Server error " + res.status);
-
+                const res = await fetch("https://gtaw-project.vercel.app/services", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload),
+                });
                 const data = await res.json();
-
-                status.style.color = "limegreen";
-                status.textContent = "Request submitted successfully ✓";
-
-                console.log(data);
-
+                console.log("✅ Service created:", data);
+                alert("Service added: " + data.title);
             } catch (err) {
-                status.style.color = "red";
-                status.textContent = "API error: " + err.message;
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = "Submit";
+                console.error("❌ Error adding service:", err);
+                alert("Failed to add service.");
             }
-        });
 
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const newCard = document.createElement("div");
+                newCard.classList.add("service-card");
+                newCard.innerHTML = `
+          <img src="${e.target.result}" alt="${name}">
+          <h3>${name}</h3>
+          <p>${desc}</p>
+          <div class="service-meta">
+            <span class="price">$${price}</span>
+            <button class="delete-btn" title="Delete">🗑️</button>
+          </div>
+        `;
+
+                // delete handler
+                newCard.querySelector(".delete-btn").addEventListener("click", () => {
+                    if (confirm("Are you sure you want to delete this service?")) {
+                        newCard.remove();
+                    }
+                });
+
+                serviceList.appendChild(newCard);
+            }
+            // reset fields
+            document.getElementById("serviceName").value = "";
+            document.getElementById("serviceDesc").value = "";
+            document.getElementById("servicePrice").value = "";
+
+            modal.classList.remove("active");
+        });
 
     </script>
 
