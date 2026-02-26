@@ -289,8 +289,14 @@
     async function loadServices(page = 1) {
       try {
         const res = await fetch(
-          `${API_BASE}/services?page=${page}&limit=8`
+          `${API_BASE}/services?page=${page}&limit=8`,
+          { cache: "no-store" } // ← disables browser cache
         );
+
+        if (!res.ok) {
+          console.error("Failed:", res.status);
+          return;
+        }
 
         const data = await res.json();
 
@@ -301,7 +307,6 @@
         console.error("Error loading services:", err);
       }
     }
-
 
     /*
     ====================================================
