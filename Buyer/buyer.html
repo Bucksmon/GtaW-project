@@ -61,9 +61,11 @@
       color: white;
       text-decoration: none;
       border-radius: 10px;
+      transition: background 0.2s ease;
     }
 
-    .nav-links a:hover {
+    .nav-links a:hover,
+    .nav-links a.active {
       background: rgba(96, 96, 96, 0.432);
     }
 
@@ -109,8 +111,6 @@
       margin: 4px;
       padding: 6px 10px;
     }
-
-
   </style>
 </head>
 
@@ -137,28 +137,43 @@
     const API_BASE = "https://gtaw-project.vercel.app";
     const token = localStorage.getItem("token");
 
+    console.log("Buyer page loaded");
+
     if (!token) {
-      log("No token found. Redirecting...", null, true);
+      console.warn("No token found. Redirecting...");
       window.location.href = "../index.html";
     } else {
-      log("Token found.");
+      console.log("Token found");
     }
+
+    // Restore active class logic
+    const currentPagePath = window.location.pathname.split("/").pop();
+    document.querySelectorAll(".nav-links a").forEach(link => {
+      if (link.getAttribute("href") === currentPagePath) {
+        link.classList.add("active");
+      }
+    });
 
     let currentPage = 1;
 
     async function loadServices(page = 1) {
+      console.log("Loading services page:", page);
 
       try {
         const url = `${API_BASE}/services?page=${page}&limit=8`;
+        console.log("Fetching:", url);
 
         const res = await fetch(url, {
           cache: "no-store"
         });
 
+        console.log("Response status:", res.status);
+
         const text = await res.text();
-       
+        console.log("Raw response:", text);
+
         if (!res.ok) {
-          console.log("Response not OK", null, true);
+          console.error("Response not OK:", res.status);
           return;
         }
 
@@ -166,11 +181,14 @@
         try {
           data = JSON.parse(text);
         } catch (e) {
-          console.log("JSON parse error", e.message, true);
+          console.error("JSON parse error:", e);
           return;
         }
 
+        console.log("Parsed data:", data);
+
         if (!data.services || !Array.isArray(data.services)) {
+          console.error("Invalid services format");
           return;
         }
 
@@ -178,11 +196,12 @@
         renderPagination(data.page || 1, data.totalPages || 1);
 
       } catch (err) {
-        console.log("Fetch error:", err.message, true);
+        console.error("Fetch error:", err);
       }
     }
 
     function renderServices(services) {
+      console.log("Rendering services count:", services.length);
 
       const container = document.getElementById("servicesContainer");
       container.innerHTML = "";
@@ -225,6 +244,7 @@
     }
 
     async function buyService(serviceId) {
+      console.log("Buying service:", serviceId);
 
       try {
         const res = await fetch(`${API_BASE}/orders/buy-service`, {
@@ -237,6 +257,7 @@
         });
 
         const data = await res.json();
+        console.log("Purchase response:", data);
 
         if (!res.ok) {
           alert(data.error || "Purchase failed");
@@ -247,15 +268,17 @@
         updateCreditsUI(data.buyerCredits);
 
       } catch (err) {
-        console.log("Purchase error:", err.message, true);
+        console.error("Purchase error:", err);
       }
     }
 
     function updateCreditsUI(credits) {
       document.getElementById("creditsDisplay").textContent = credits;
+      console.log("Credits updated:", credits);
     }
 
     document.addEventListener("DOMContentLoaded", () => {
+      console.log("DOM fully loaded");
       loadServices(currentPage);
     });
   </script>
