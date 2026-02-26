@@ -122,11 +122,13 @@
     .search-bar input::placeholder {
       color: var(--muted);
     }
+
     .search-bar input:focus {
       outline: none;
       border-color: var(--accent);
       box-shadow: 0 0 8px var(--accent);
     }
+
     /* Content */
     .content {
       padding: 25px;
@@ -232,7 +234,7 @@
   <aside class="sidebar" id="sidebar">
     <h2>Buyer Panel</h2>
     <ul class="nav-links">
-      <li><a class="active" href="buyer.html" >Browse Services</a></li>
+      <li><a class="active" href="buyer.html">Browse Services</a></li>
       <li><a href="buyerOrder.html">Orders</a></li>
       <li><a href="addCredits.html">Add Credits</a></li>
       <li><a href="../index.html">Logout</a></li>
@@ -294,7 +296,148 @@
       overlay.classList.remove("active");
     });
   </script>
+  <script>
+    const API_BASE = "https://gtaw-project.vercel.app"; // replace with your deployed backend
+    const token = localStorage.getItem("token");
 
+    if (!token) {
+      window.location.href = "/index.html";
+    }
+
+    /*
+    ====================================================
+    Load Services (Paginated)
+    ====================================================
+    */
+    let currentPage = 1;
+
+    async function loadServices(page = 1) {
+      try {
+        const res = await fetch(
+          `${API_BASE}/services?page=${page}&limit=8`
+        );
+
+        const data = await res.json();
+
+        renderServices(data.services);
+        renderPagination(data.page, data.totalPages);
+
+      } catch (err) {
+        console.error("Error loading services:", err);
+      }
+    }
+
+
+    /*
+    ====================================================
+    Render Services
+    ====================================================
+    */
+    function renderServices(services) {
+      const container = document.getElementById("servicesContainer");
+      container.innerHTML = "";
+
+      services.forEach(service => {
+        const card = document.createElement("div");
+        card.className = "service-card";
+
+        card.innerHTML = `
+      <h3>${service.service_title}</h3>
+      <p>${service.service_description}</p>
+      <p><strong>Price:</strong> ${service.service_price} credits</p>
+      <p><strong>Seller:</strong> ${service.service_sellerId.username}</p>
+      <button onclick="buyService('${service._id}')">
+        Buy
+      </button>
+    `;
+
+        container.appendChild(card);
+      });
+    }
+
+
+    /*
+    ====================================================
+    Pagination
+    ====================================================
+    */
+    function renderPagination(current, total) {
+      const pagination = document.getElementById("pagination");
+      pagination.innerHTML = "";
+
+      for (let i = 1; i <= total; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+
+        if (i === current) {
+          btn.disabled = true;
+        }
+
+        btn.onclick = () => {
+          currentPage = i;
+          loadServices(i);
+        };
+
+        pagination.appendChild(btn);
+      }
+    }
+
+
+    /*
+    ====================================================
+    Buy Service
+    ====================================================
+    */
+    async function buyService(serviceId) {
+      try {
+        const res = await fetch(`${API_BASE}/orders/buy-service`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({ serviceId })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          alert(data.error || "Purchase failed");
+          return;
+        }
+
+        alert("Service purchased successfully!");
+
+        updateCreditsUI(data.buyerCredits);
+
+      } catch (err) {
+        console.error("Purchase error:", err);
+      }
+    }
+
+
+    /*
+    ====================================================
+    Update Credits Display
+    ====================================================
+    */
+    function updateCreditsUI(credits) {
+      const creditsElement = document.getElementById("creditsDisplay");
+      if (creditsElement) {
+        creditsElement.textContent = credits;
+      }
+    }
+
+
+    /*
+    ====================================================
+    Init
+    ====================================================
+    */
+    document.addEventListener("DOMContentLoaded", () => {
+      loadServices(currentPage);
+    });
+  </script>
 </body>
 
 </html>
