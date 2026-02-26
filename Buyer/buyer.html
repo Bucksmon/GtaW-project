@@ -110,25 +110,7 @@
       padding: 6px 10px;
     }
 
-    /* Debug panel */
-    .debug-panel {
-      position: fixed;
-      bottom: 0;
-      right: 0;
-      width: 420px;
-      max-height: 250px;
-      overflow-y: auto;
-      background: #000;
-      color: #00ff88;
-      font-size: 12px;
-      padding: 10px;
-      border-top-left-radius: 10px;
-      z-index: 9999;
-    }
 
-    .error-log {
-      color: var(--danger);
-    }
   </style>
 </head>
 
@@ -151,22 +133,9 @@
     <div id="pagination"></div>
   </main>
 
-  <div class="debug-panel" id="debugPanel"></div>
-
   <script>
     const API_BASE = "https://gtaw-project.vercel.app";
     const token = localStorage.getItem("token");
-    const debugPanel = document.getElementById("debugPanel");
-
-    function log(message, data = null, isError = false) {
-      console.log(message, data || "");
-      const entry = document.createElement("div");
-      entry.className = isError ? "error-log" : "";
-      entry.textContent = data
-        ? `${message} ${JSON.stringify(data)}`
-        : message;
-      debugPanel.appendChild(entry);
-    }
 
     if (!token) {
       log("No token found. Redirecting...", null, true);
@@ -178,23 +147,18 @@
     let currentPage = 1;
 
     async function loadServices(page = 1) {
-      log("Loading services for page:", page);
 
       try {
         const url = `${API_BASE}/services?page=${page}&limit=8`;
-        log("Fetching:", url);
 
         const res = await fetch(url, {
           cache: "no-store"
         });
 
-        log("Response status:", res.status);
-
         const text = await res.text();
-        log("Raw response:", text);
-
+       
         if (!res.ok) {
-          log("Response not OK", null, true);
+          console.log("Response not OK", null, true);
           return;
         }
 
@@ -202,14 +166,11 @@
         try {
           data = JSON.parse(text);
         } catch (e) {
-          log("JSON parse error", e.message, true);
+          console.log("JSON parse error", e.message, true);
           return;
         }
 
-        log("Parsed data:", data);
-
         if (!data.services || !Array.isArray(data.services)) {
-          log("Invalid services format", null, true);
           return;
         }
 
@@ -217,12 +178,11 @@
         renderPagination(data.page || 1, data.totalPages || 1);
 
       } catch (err) {
-        log("Fetch error:", err.message, true);
+        console.log("Fetch error:", err.message, true);
       }
     }
 
     function renderServices(services) {
-      log("Rendering services:", services.length);
 
       const container = document.getElementById("servicesContainer");
       container.innerHTML = "";
@@ -265,7 +225,6 @@
     }
 
     async function buyService(serviceId) {
-      log("Buying service:", serviceId);
 
       try {
         const res = await fetch(`${API_BASE}/orders/buy-service`, {
@@ -278,7 +237,6 @@
         });
 
         const data = await res.json();
-        log("Purchase response:", data);
 
         if (!res.ok) {
           alert(data.error || "Purchase failed");
@@ -289,17 +247,15 @@
         updateCreditsUI(data.buyerCredits);
 
       } catch (err) {
-        log("Purchase error:", err.message, true);
+        console.log("Purchase error:", err.message, true);
       }
     }
 
     function updateCreditsUI(credits) {
       document.getElementById("creditsDisplay").textContent = credits;
-      log("Credits updated:", credits);
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      log("DOM fully loaded.");
       loadServices(currentPage);
     });
   </script>
