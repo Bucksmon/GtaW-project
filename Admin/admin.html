@@ -268,9 +268,27 @@
                 display: block;
             }
 
+            .content {
+                padding: 16px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
             .user-info {
                 flex-direction: column;
-                align-items: flex-start;
+                align-items: stretch;
+                /* 🔥 Important fix */
+                gap: 16px;
+            }
+
+            .user-details {
+                width: 100%;
+            }
+
+            .role-select-wrapper {
+                width: 100%;
             }
 
             .role-select {
