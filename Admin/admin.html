@@ -165,6 +165,62 @@
                 display: block;
             }
         }
+
+        /* Loading Popup */
+        .loader-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            display: none;
+            justify-content: center;
+            align-items: flex-end;
+            padding-bottom: 40px;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .loader-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .popup {
+            background: var(--card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 16px 20px;
+            box-shadow: 0 10px 25px var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            width: 320px;
+            justify-content: center;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.25);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Credits Badge */
+        .credits-badge {
+            background: var(--box);
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 
@@ -197,32 +253,19 @@
         </div>
 
     </main>
-
+    <!-- Loading Popup -->
+    <div class="loader-overlay" id="loaderOverlay">
+        <div class="popup">
+            <div class="spinner"></div>
+            <div>Loading...</div>
+        </div>
+    </div>
     <script>
-        const credits = localStorage.getItem("credits");
-        console.log("Credits", credits);
         const sidebar = document.getElementById("sidebar");
-        const overlay = document.getElementById("overlay");
+        const sidebarOverlay = document.getElementById("sidebarOverlay");
+        const loaderOverlay = document.getElementById("loaderOverlay");
         const menuBtn = document.getElementById("menuBtn");
-
-        if (menuBtn) {
-            menuBtn.addEventListener("click", () => {
-                sidebar.classList.toggle("open");
-                overlay.classList.toggle("active");
-            });
-        }
-
-        overlay.addEventListener("click", () => {
-            sidebar.classList.remove("open");
-            overlay.classList.remove("active");
-        });
-
-        const currentPagePath = window.location.pathname.split("/").pop();
-        document.querySelectorAll(".nav-links a").forEach(link => {
-            if (link.getAttribute("href") === currentPagePath) {
-                link.classList.add("active");
-            }
-        });
+        const creditsDisplay = document.getElementById("creditsDisplay");
 
         const API_BASE = "https://gtaw-project.vercel.app";
         const token = localStorage.getItem("token");
@@ -231,21 +274,53 @@
             window.location.href = "../index.html";
         }
 
+        /* ===============================
+           CREDITS DISPLAY
+        =============================== */
+        function loadCredits() {
+            const credits = localStorage.getItem("credits") || 0;
+            creditsDisplay.textContent = `Credits: ${credits}`;
+        }
+
+        /* ===============================
+           LOADER CONTROLS
+        =============================== */
+        function showLoader() {
+            loaderOverlay.classList.add("show");
+        }
+
+        function hideLoader() {
+            loaderOverlay.classList.remove("show");
+        }
+
+        /* ===============================
+           SIDEBAR
+        =============================== */
+        if (menuBtn) {
+            menuBtn.addEventListener("click", () => {
+                sidebar.classList.toggle("open");
+                sidebarOverlay.classList.toggle("active");
+            });
+        }
+
+        sidebarOverlay.addEventListener("click", () => {
+            sidebar.classList.remove("open");
+            sidebarOverlay.classList.remove("active");
+        });
+
+        /* ===============================
+           PAGINATION
+        =============================== */
         let currentPage = 1;
         let totalPages = 1;
         const LIMIT = 5;
 
-        /*
-        ====================================================
-        Load Users (Paginated)
-        ====================================================
-        */
         async function loadUsers(page = 1) {
+            showLoader();
+
             try {
                 const res = await fetch(`${API_BASE}/users?page=${page}&limit=${LIMIT}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    },
+                    headers: { Authorization: `Bearer ${token}` },
                     cache: "no-store"
                 });
 
@@ -253,6 +328,7 @@
 
                 if (!res.ok) {
                     alert(data.error || "Access denied");
+                    hideLoader();
                     return;
                 }
 
@@ -264,14 +340,11 @@
 
             } catch (err) {
                 console.error("Load users error:", err);
+            } finally {
+                hideLoader();
             }
         }
 
-        /*
-        ====================================================
-        Render Users
-        ====================================================
-        */
         function renderUsers(users) {
             const container = document.getElementById("usersContainer");
             container.innerHTML = "";
@@ -303,11 +376,6 @@
             });
         }
 
-        /*
-        ====================================================
-        Render Pagination Controls
-        ====================================================
-        */
         function renderPagination() {
             const container = document.getElementById("usersContainer");
 
@@ -338,14 +406,11 @@
             }
         }
 
-        /*
-        ====================================================
-        Update Role
-        ====================================================
-        */
         async function updateRole(userId, role) {
             if (!role) return;
             if (!confirm(`Change role to ${role}?`)) return;
+
+            showLoader();
 
             try {
                 const res = await fetch(`${API_BASE}/users/role`, {
@@ -369,10 +434,17 @@
 
             } catch (err) {
                 console.error("Role update error:", err);
+            } finally {
+                hideLoader();
             }
         }
 
+        /* ===============================
+           INIT
+        =============================== */
         document.addEventListener("DOMContentLoaded", () => {
+            showLoader();
+            loadCredits();
             loadUsers();
         });
     </script>
