@@ -2,303 +2,274 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <title>Choose Character</title>
+<meta charset="UTF-8" />
+<title>Seller Panel - Add Service</title>
 
-  <style>
-    :root {
-      --bg: #0b0f1a;
-      --panel: #111827;
-      --card: #121a2a;
-      --box: #1a2440;
-      --text: #e6e9f2;
-      --muted: #9aa4b8;
-      --accent: #4f8cff;
-      --shadow: rgba(0, 0, 0, 0.6);
-    }
+<style>
+:root {
+  --bg:#0b0f1a;
+  --panel:#111827;
+  --card:#121a2a;
+  --box:#1a2440;
+  --text:#e6e9f2;
+  --muted:#9aa4b8;
+  --accent:#4f8cff;
+  --danger:#ff4f4f;
+}
 
-    * {
-      box-sizing: border-box;
-      font-family: "Segoe UI", Arial, sans-serif;
-    }
+*{
+  box-sizing:border-box;
+  font-family:"Segoe UI", Arial, sans-serif;
+}
 
-    body {
-      margin: 0;
-      background: radial-gradient(circle at top, #111827, #0b0f1a 60%, #070a10);
-      color: var(--text);
-      height: 100vh;
-      overflow: hidden;
-    }
+body{
+  margin:0;
+  background:radial-gradient(circle at top,#111827,#0b0f1a 60%,#070a10);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
 
-    /* Sidebar */
-    .sidebar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 240px;
-      height: 100%;
-      background: var(--panel);
-      border-right: 1px solid rgba(255, 255, 255, 0.08);
-      display: flex;
-      flex-direction: column;
-      padding-top: 20px;
-      z-index: 1000;
-      transition: transform 0.3s ease;
-    }
+/* Sidebar */
+.sidebar{
+  position:fixed;
+  top:0;
+  left:0;
+  width:240px;
+  height:100%;
+  background:var(--panel);
+  border-right:1px solid rgba(255,255,255,0.08);
+  padding-top:25px;
+  box-shadow:4px 0 20px rgba(0,0,0,0.5);
+}
 
-    .sidebar h2 {
-      text-align: center;
-      margin-bottom: 25px;
-      font-size: 1.3rem;
-      color: var(--text);
-    }
+.sidebar h2{
+  text-align:center;
+  margin-bottom:25px;
+}
 
-    .nav-links {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      flex: 1;
-    }
+.nav-links{
+  list-style:none;
+  padding:0;
+}
 
-    .nav-links li {
-      margin: 6px 10px;
-    }
+.nav-links li{
+  margin:6px 15px;
+}
 
-    .nav-links a {
-      display: block;
-      padding: 12px 16px;
-      color: white;
-      text-decoration: none;
-      border-radius: 10px;
-      transition: background 0.2s, color 0.2s;
-    }
+.nav-links a{
+  display:block;
+  padding:12px 16px;
+  color:white;
+  text-decoration:none;
+  border-radius:10px;
+  transition:.2s;
+}
 
-    .nav-links a:hover,
-    .nav-links a.active {
-      background: rgba(96, 96, 96, 0.432);
-    }
+.nav-links a:hover,
+.nav-links a.active{
+  background:rgba(96,96,96,0.4);
+}
 
-    /* Main */
-    .main {
-      margin-left: 240px;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+/* Main */
+.main{
+  margin-left:240px;
+  padding:30px;
+}
 
-    /* Topbar */
-    .topbar {
-      background: var(--card);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+/* Card Form */
+.form-card{
+  background:var(--card);
+  padding:25px;
+  border-radius:16px;
+  max-width:600px;
+}
 
-    .menu-btn {
-      font-size: 1.5rem;
-      background: none;
-      border: none;
-      color: var(--text);
-      cursor: pointer;
-      display: none;
-    }
+.form-group{
+  margin-bottom:20px;
+  display:flex;
+  flex-direction:column;
+}
 
-    .search-bar {
-      flex: 1;
-      margin: 0 20px;
-    }
+.form-group label{
+  margin-bottom:8px;
+  font-weight:600;
+}
 
-    .search-bar input {
-      width: 100%;
-      padding: 10px 14px;
-      background: var(--box);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 10px;
-      color: var(--text);
-    }
+.form-group input,
+.form-group textarea{
+  padding:10px 14px;
+  background:var(--box);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:10px;
+  color:var(--text);
+}
 
-    .search-bar input::placeholder {
-      color: var(--muted);
-    }
+.form-group textarea{
+  resize:none;
+  height:100px;
+}
 
-    .search-bar input:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 8px var(--accent);
-    }
+/* Modern Image Upload */
+.image-upload{
+  border:2px dashed rgba(255,255,255,0.15);
+  border-radius:14px;
+  padding:25px;
+  text-align:center;
+  cursor:pointer;
+  transition:.2s;
+  background:var(--box);
+  position:relative;
+}
 
-    /* Content */
-    .content {
-      padding: 25px;
-      overflow-y: auto;
-      flex: 1;
-    }
+.image-upload:hover{
+  border-color:var(--accent);
+}
 
-    .content h1 {
-      margin-bottom: 20px;
-      font-size: 1.6rem;
-    }
+.image-upload i{
+  font-size:2rem;
+  display:block;
+  margin-bottom:10px;
+}
 
-    /* Services */
-    .services {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 20px;
-    }
+.image-preview{
+  margin-top:15px;
+  max-height:180px;
+  object-fit:cover;
+  border-radius:10px;
+  display:none;
+  width:100%;
+}
 
-    .service-card {
-      background: var(--card);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 14px;
-      padding: 16px;
-      cursor: pointer;
-      transition: transform 0.15s ease, border-color 0.15s ease;
-      display: flex;
-      flex-direction: column;
-    }
+.helper-text{
+  font-size:0.8rem;
+  color:var(--muted);
+  margin-top:6px;
+}
 
-    .service-card:hover {
-      transform: translateY(-4px);
-    }
+/* Button */
+.submit-btn{
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:var(--accent);
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+  transition:.2s;
+}
 
-    .service-card img {
-      width: 100%;
-      height: 150px;
-      object-fit: cover;
-      border-radius: 10px;
-      margin-bottom: 12px;
-      opacity: 0.9;
-    }
+.submit-btn:hover{
+  opacity:.9;
+}
 
-    .service-card h3 {
-      margin: 8px 0;
-      font-size: 1.1rem;
-    }
+/* Loader */
+.loader{
+  margin-top:15px;
+  display:none;
+}
 
-    .service-card p {
-      font-size: 0.9rem;
-      color: var(--muted);
-      margin-bottom: 12px;
-    }
+.spinner{
+  width:20px;
+  height:20px;
+  border:3px solid rgba(255,255,255,0.25);
+  border-top-color:var(--accent);
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+}
 
-    .service-meta {
-      margin-top: auto;
-      display: flex;
-      justify-content: space-between;
-      font-weight: 600;
-    }
+@keyframes spin{
+  to{ transform:rotate(360deg); }
+}
 
-    .price {
-      color: var(--accent);
-    }
-
-    /* Overlay (mobile) */
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.5);
-      display: none;
-      z-index: 900;
-    }
-
-    .overlay.active {
-      display: block;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .main {
-        margin-left: 0;
-      }
-
-      .sidebar {
-        transform: translateX(-100%);
-      }
-
-      .sidebar.open {
-        transform: translateX(0);
-      }
-
-      .menu-btn {
-        display: block;
-      }
-    }
-  </style>
+/* Responsive */
+@media(max-width:768px){
+  .main{
+    margin-left:0;
+    padding:20px;
+  }
+  .sidebar{
+    position:relative;
+    width:100%;
+    height:auto;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar">
-    <h2>Seller Panel</h2>
-    <ul class="nav-links">
-      <li><a class="active" href="seller.html">Browse Services</a></li>
-      <li><a href="sellerOrder.html">Orders</a></li>
-      <li><a href="sellCredits.html">Sell Credits</a></li>
-      <li><a href="addService.html">Add Services</a></li>
-      <li><a href="removeService.html">Remove Services</a></li>
-      <li><a href="../index.html">Logout</a></li>
-    </ul>
-  </aside>
+<aside class="sidebar">
+  <h2>Seller Panel</h2>
+  <ul class="nav-links">
+    <li><a href="seller.html">Browse Services</a></li>
+    <li><a href="sellerOrder.html">Orders</a></li>
+    <li><a href="sellCredits.html">Sell Credits</a></li>
+    <li><a class="active" href="#">Add Service</a></li>
+  </ul>
+</aside>
 
-  <div class="overlay" id="overlay"></div>
+<main class="main">
+  <div class="form-card">
+    <h2>Add New Service</h2>
 
-  <!-- Main -->
-  <main class="main">
-    <div class="topbar">
-      <button class="menu-btn" id="menuBtn">☰</button>
-
-      <div class="search-bar">
-        <input placeholder="Search services..." />
-      </div>
-      <span>Welcome, Seller</span>
+    <div class="form-group">
+      <label>Service Title</label>
+      <input type="text" id="title">
     </div>
 
-    <div class="content">
-      <h1>Browse Services</h1>
-
-      <div class="services">
-        <div class="service-card">
-          <img src="https://via.placeholder.com/300x150">
-          <h3>Logo Design</h3>
-          <p>Professional logo design tailored for your brand.</p>
-          <div class="service-meta">
-            <span class="price">$50</span>
-          </div>
-        </div>
-
-        <div class="service-card">
-          <img src="https://via.placeholder.com/300x150">
-          <h3>Web Development</h3>
-          <p>Custom responsive websites built to your needs.</p>
-          <div class="service-meta">
-            <span class="price">$300</span>
-          </div>
-        </div>
-      </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea id="description"></textarea>
     </div>
-  </main>
 
-  <script>
-    const menuBtn = document.getElementById("menuBtn");
-    const sidebar = document.getElementById("sidebar");
-    const overlay = document.getElementById("overlay");
+    <div class="form-group">
+      <label>Price (credits)</label>
+      <input type="number" id="price">
+    </div>
 
-    if (menuBtn) {
-      menuBtn.addEventListener("click", () => {
-        sidebar.classList.toggle("open");
-        overlay.classList.toggle("active");
-      });
-    }
+    <div class="form-group">
+      <label>Service Image (Imgur Link)</label>
+      <div class="image-upload" onclick="document.getElementById('imageInput').focus()">
+        <i>🖼️</i>
+        Click to paste image URL
+        <input type="text" id="imageInput" style="opacity:0; position:absolute; inset:0; cursor:pointer;">
+      </div>
+      <div class="helper-text">
+        Example: https://i.imgur.com/placeholder.png
+      </div>
+      <img id="preview" class="image-preview">
+    </div>
 
-    overlay.addEventListener("click", () => {
-      sidebar.classList.remove("open");
-      overlay.classList.remove("active");
-    });
-  </script>
+    <button class="submit-btn" onclick="submitService()">Add Service</button>
+
+    <div class="loader" id="loader">
+      <div class="spinner"></div>
+    </div>
+  </div>
+</main>
+
+<script>
+const preview=document.getElementById("preview");
+const imageInput=document.getElementById("imageInput");
+const loader=document.getElementById("loader");
+
+imageInput.addEventListener("input",()=>{
+  if(imageInput.value){
+    preview.src=imageInput.value;
+    preview.style.display="block";
+  }
+});
+
+async function submitService(){
+  loader.style.display="block";
+
+  setTimeout(()=>{
+    loader.style.display="none";
+    alert("Service Added (Demo)");
+  },1000);
+}
+</script>
 
 </body>
-
 </html>
