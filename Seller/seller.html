@@ -30,7 +30,8 @@ body{
   overflow-x:hidden;
 }
 
-/* Sidebar */
+/* ================= SIDEBAR ================= */
+
 .sidebar{
   position:fixed;
   top:0;
@@ -41,11 +42,8 @@ body{
   border-right:1px solid rgba(255,255,255,0.08);
   padding-top:25px;
   box-shadow:4px 0 20px rgba(0,0,0,0.5);
-}
-
-.sidebar h2{
-  text-align:center;
-  margin-bottom:25px;
+  transition:transform .3s ease;
+  z-index:1000;
 }
 
 .nav-links{
@@ -71,13 +69,44 @@ body{
   background:rgba(96,96,96,0.4);
 }
 
-/* Main */
+/* Overlay */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.5);
+  display:none;
+  z-index:900;
+}
+
+.overlay.active{
+  display:block;
+}
+
+/* ================= MAIN ================= */
+
 .main{
   margin-left:240px;
   padding:30px;
 }
 
-/* Card Form */
+.topbar{
+  display:flex;
+  align-items:center;
+  gap:20px;
+  margin-bottom:20px;
+}
+
+.menu-btn{
+  font-size:1.6rem;
+  background:none;
+  border:none;
+  color:var(--text);
+  cursor:pointer;
+  display:none;
+}
+
+/* ================= FORM ================= */
+
 .form-card{
   background:var(--card);
   padding:25px;
@@ -110,28 +139,13 @@ body{
   height:100px;
 }
 
-/* Modern Image Upload */
-.image-upload{
-  border:2px dashed rgba(255,255,255,0.15);
-  border-radius:14px;
-  padding:25px;
-  text-align:center;
-  cursor:pointer;
-  transition:.2s;
-  background:var(--box);
-  position:relative;
+.helper-text{
+  font-size:0.8rem;
+  color:var(--muted);
+  margin-top:6px;
 }
 
-.image-upload:hover{
-  border-color:var(--accent);
-}
-
-.image-upload i{
-  font-size:2rem;
-  display:block;
-  margin-bottom:10px;
-}
-
+/* Preview */
 .image-preview{
   margin-top:15px;
   max-height:180px;
@@ -139,12 +153,7 @@ body{
   border-radius:10px;
   display:none;
   width:100%;
-}
-
-.helper-text{
-  font-size:0.8rem;
-  color:var(--muted);
-  margin-top:6px;
+  border:1px solid rgba(255,255,255,0.08);
 }
 
 /* Button */
@@ -182,16 +191,25 @@ body{
   to{ transform:rotate(360deg); }
 }
 
-/* Responsive */
+/* ================= RESPONSIVE ================= */
+
 @media(max-width:768px){
+
+  .sidebar{
+    transform:translateX(-100%);
+  }
+
+  .sidebar.open{
+    transform:translateX(0);
+  }
+
   .main{
     margin-left:0;
     padding:20px;
   }
-  .sidebar{
-    position:relative;
-    width:100%;
-    height:auto;
+
+  .menu-btn{
+    display:block;
   }
 }
 </style>
@@ -199,8 +217,8 @@ body{
 
 <body>
 
-<aside class="sidebar">
-  <h2>Seller Panel</h2>
+<aside class="sidebar" id="sidebar">
+  <h2 style="text-align:center;">Seller Panel</h2>
   <ul class="nav-links">
     <li><a href="seller.html">Browse Services</a></li>
     <li><a href="sellerOrder.html">Orders</a></li>
@@ -209,9 +227,16 @@ body{
   </ul>
 </aside>
 
+<div class="overlay" id="overlay"></div>
+
 <main class="main">
+
+  <div class="topbar">
+    <button class="menu-btn" id="menuBtn">☰</button>
+    <h2>Add Service</h2>
+  </div>
+
   <div class="form-card">
-    <h2>Add New Service</h2>
 
     <div class="form-group">
       <label>Service Title</label>
@@ -230,11 +255,7 @@ body{
 
     <div class="form-group">
       <label>Service Image (Imgur Link)</label>
-      <div class="image-upload" onclick="document.getElementById('imageInput').focus()">
-        <i>🖼️</i>
-        Click to paste image URL
-        <input type="text" id="imageInput" style="opacity:0; position:absolute; inset:0; cursor:pointer;">
-      </div>
+      <input type="text" id="imageInput" placeholder="https://i.imgur.com/example.png">
       <div class="helper-text">
         Example: https://i.imgur.com/placeholder.png
       </div>
@@ -246,18 +267,35 @@ body{
     <div class="loader" id="loader">
       <div class="spinner"></div>
     </div>
+
   </div>
 </main>
 
 <script>
+const sidebar=document.getElementById("sidebar");
+const overlay=document.getElementById("overlay");
+const menuBtn=document.getElementById("menuBtn");
+
+menuBtn.addEventListener("click",()=>{
+  sidebar.classList.toggle("open");
+  overlay.classList.toggle("active");
+});
+
+overlay.addEventListener("click",()=>{
+  sidebar.classList.remove("open");
+  overlay.classList.remove("active");
+});
+
 const preview=document.getElementById("preview");
 const imageInput=document.getElementById("imageInput");
 const loader=document.getElementById("loader");
 
 imageInput.addEventListener("input",()=>{
-  if(imageInput.value){
+  if(imageInput.value.trim()!==""){
     preview.src=imageInput.value;
     preview.style.display="block";
+  }else{
+    preview.style.display="none";
   }
 });
 
