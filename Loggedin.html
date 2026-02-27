@@ -252,6 +252,7 @@
         }
 
         const data = await res.json();
+        localStorage.setItem("credits", data.user.credits);
         localStorage.setItem("token", data.token);
         if (data.redirect) {
           window.location.href = data.redirect;
