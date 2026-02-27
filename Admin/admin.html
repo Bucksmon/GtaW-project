@@ -3,9 +3,8 @@
 
 <head>
     <meta charset="UTF-8" />
-    <title>Add Buyer</title>
+    <title>Admin Panel - Manage Users</title>
 
-    <!-- Use your SAME CSS (unchanged) -->
     <style>
         :root {
             --bg: #0b0f1a;
@@ -70,6 +69,7 @@
             color: white;
             text-decoration: none;
             border-radius: 10px;
+            transition: background 0.2s ease;
         }
 
         .nav-links a:hover,
@@ -116,55 +116,26 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 14px;
             padding: 20px;
-            max-width: 420px;
+            margin-bottom: 20px;
         }
 
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        label {
-            font-size: 0.9rem;
-            color: var(--muted);
-        }
-
-        input {
-            padding: 10px 14px;
+        .user-row {
             background: var(--box);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 14px;
             border-radius: 10px;
+            margin-bottom: 12px;
+        }
+
+        select {
+            margin-top: 8px;
+            padding: 8px;
+            border-radius: 8px;
+            background: var(--card);
             color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 6px var(--accent);
-        }
-
-        button {
-            margin-top: 10px;
-            padding: 12px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        button:hover {
-            opacity: 0.9;
-        }
-
-        .status {
-            font-size: 0.9rem;
-            margin-top: 6px;
-        }
-
-        /* Overlay (mobile) */
+        /* Overlay */
         .overlay {
             position: fixed;
             inset: 0;
@@ -203,7 +174,7 @@
     <aside class="sidebar" id="sidebar">
         <h2>Admin Panel</h2>
         <ul class="nav-links">
-            <li><a class="active" href="admin.html">Add Buyer</a></li>
+            <li><a href="admin.html">Add Buyer</a></li>
             <li><a href="addSeller.html">Add Seller</a></li>
             <li><a href="removeSeller.html">Remove Seller</a></li>
             <li><a href="removeBuyer.html">Remove Buyer</a></li>
@@ -215,105 +186,157 @@
 
     <!-- Main -->
     <main class="main">
+
         <div class="topbar">
             <button class="menu-btn" id="menuBtn">☰</button>
-            <span>Add Buyer</span>
+            <h2>Manage Users</h2>
         </div>
 
         <div class="content">
-            <div class="card">
-                <h2>Add Buyer</h2>
-
-                <form id="buyerForm">
-                    <label>Buyer Username</label>
-                    <input id="username" placeholder="Firstname_Lastname" autocomplete="off" />
-
-                    <div id="status" class="status"></div>
-
-                    <button id="submitBtn" type="submit" disabled>
-                        Create Buyer
-                    </button>
-
-                </form>
-            </div>
+            <div id="usersContainer"></div>
         </div>
+
     </main>
 
     <script>
-        /* Sidebar toggle (same as your page) */
-        const menuBtn = document.getElementById("menuBtn");
         const sidebar = document.getElementById("sidebar");
         const overlay = document.getElementById("overlay");
+        const menuBtn = document.getElementById("menuBtn");
 
-        menuBtn.addEventListener("click", () => {
-            sidebar.classList.toggle("open");
-            overlay.classList.toggle("active");
-        });
+        // Sidebar toggle
+        if (menuBtn) {
+            menuBtn.addEventListener("click", () => {
+                sidebar.classList.toggle("open");
+                overlay.classList.toggle("active");
+            });
+        }
 
         overlay.addEventListener("click", () => {
             sidebar.classList.remove("open");
             overlay.classList.remove("active");
         });
 
-        /* ===== REAL-TIME USERNAME VALIDATION ===== */
-
-        const usernameInput = document.getElementById("username");
-        const status = document.getElementById("status");
-        const submitBtn = document.getElementById("submitBtn");
-
-        usernameInput.addEventListener("input", () => {
-            const value = usernameInput.value.trim();
-
-            // Default state
-            status.style.color = "red";
-            submitBtn.disabled = true;
-
-            if (!value) {
-                status.textContent = "Username required.";
-                return;
+        // Active link logic
+        const currentPage = window.location.pathname.split("/").pop();
+        document.querySelectorAll(".nav-links a").forEach(link => {
+            if (link.getAttribute("href") === currentPage) {
+                link.classList.add("active");
             }
-
-            // ❌ No spaces allowed
-            if (value.includes(" ")) {
-                status.textContent = "No spaces allowed.";
-                return;
-            }
-
-            // ❌ Only letters and underscore allowed
-            if (!/^[A-Za-z_]+$/.test(value)) {
-                status.textContent = "Only letters and one underscore allowed.";
-                return;
-            }
-
-            // ❌ Must contain exactly ONE underscore
-            const parts = value.split("_");
-
-            if (parts.length !== 2) {
-                status.textContent = "Must contain exactly one underscore.";
-                return;
-            }
-
-            const [first, last] = parts;
-
-            // ❌ First and last must exist
-            if (!first || !last) {
-                status.textContent = "Firstname and Lastname required.";
-                return;
-            }
-
-            // ✅ Passed all checks
-            status.style.color = "limegreen";
-            status.textContent = "Valid username ✓";
-            submitBtn.disabled = false;
         });
 
-        /* Prevent submit if invalid (extra safety) */
-        document.getElementById("buyerForm").addEventListener("submit", (e) => {
-            if (submitBtn.disabled) {
-                e.preventDefault();
-            } else {
-                alert("Buyer created successfully.");
+        const API_BASE = "https://gtaw-project.vercel.app";
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            window.location.href = "../index.html";
+        }
+
+        /*
+        ====================================================
+        Load Users
+        ====================================================
+        */
+        async function loadUsers() {
+            console.log("Loading users...");
+
+            try {
+                const res = await fetch(`${API_BASE}/users`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    },
+                    cache: "no-store"
+                });
+
+                console.log("Users response status:", res.status);
+
+                const data = await res.json();
+                console.log("Users response data:", data);
+
+                if (!res.ok) {
+                    alert(data.error || "Access denied");
+                    return;
+                }
+
+                renderUsers(data);
+
+            } catch (err) {
+                console.error("Load users error:", err);
             }
+        }
+
+        /*
+        ====================================================
+        Render Users
+        ====================================================
+        */
+        function renderUsers(users) {
+            const container = document.getElementById("usersContainer");
+            container.innerHTML = "";
+
+            if (!Array.isArray(users) || users.length === 0) {
+                container.innerHTML = "<div class='card'>No users found.</div>";
+                return;
+            }
+
+            users.forEach(user => {
+                const card = document.createElement("div");
+                card.className = "card";
+
+                card.innerHTML = `
+                    <div class="user-row">
+                        <p><strong>${user.username}</strong></p>
+                        <p>Role: ${user.role}</p>
+                        <p>Credits: ${user.credits}</p>
+                        <select onchange="updateRole('${user._id}', this.value)">
+                            <option value="">Change Role</option>
+                            <option value="buyer">Buyer</option>
+                            <option value="seller">Seller</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        /*
+        ====================================================
+        Update Role
+        ====================================================
+        */
+        async function updateRole(userId, role) {
+            if (!role) return;
+
+            if (!confirm(`Change role to ${role}?`)) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/users/role`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ userId, role })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    alert(data.error || "Failed to update role");
+                    return;
+                }
+
+                alert("Role updated successfully");
+                loadUsers();
+
+            } catch (err) {
+                console.error("Role update error:", err);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadUsers();
         });
     </script>
 
