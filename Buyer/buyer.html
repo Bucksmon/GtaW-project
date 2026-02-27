@@ -318,7 +318,7 @@ function renderPagination(current,total){
 
 async function buyService(serviceId){
   try{
-    const res=await fetch(`${API_BASE}/orders/buy-service`,{
+    const res=await fetch(`${API_BASE}/orders/buyservice`,{
       method:"POST",
       headers:{
         "Content-Type":"application/json",
