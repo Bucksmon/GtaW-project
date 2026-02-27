@@ -379,12 +379,14 @@
             <strong>${user.username}</strong><br>
             Role: ${user.role}<br>
             Credits: ${user.credits}<br><br>
-            <select onchange="updateRole('${user._id}', this.value)">
-                <option value="">Change Role</option>
-                <option value="buyer">Buyer</option>
-                <option value="seller">Seller</option>
-                <option value="admin">Admin</option>
-            </select>
+            <div class="role-select-wrapper">
+                <select class="role-select" onchange="updateRole('${user._id}', this.value)">
+                    <option value="">Change Role</option>
+                    <option value="buyer">Buyer</option>
+                    <option value="seller">Seller</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
         `;
 
                 container.appendChild(card);
