@@ -203,7 +203,6 @@
         const overlay = document.getElementById("overlay");
         const menuBtn = document.getElementById("menuBtn");
 
-        // Sidebar toggle
         if (menuBtn) {
             menuBtn.addEventListener("click", () => {
                 sidebar.classList.toggle("open");
@@ -216,10 +215,9 @@
             overlay.classList.remove("active");
         });
 
-        // Active link logic
-        const currentPage = window.location.pathname.split("/").pop();
+        const currentPagePath = window.location.pathname.split("/").pop();
         document.querySelectorAll(".nav-links a").forEach(link => {
-            if (link.getAttribute("href") === currentPage) {
+            if (link.getAttribute("href") === currentPagePath) {
                 link.classList.add("active");
             }
         });
@@ -231,33 +229,36 @@
             window.location.href = "../index.html";
         }
 
+        let currentPage = 1;
+        let totalPages = 1;
+        const LIMIT = 5;
+
         /*
         ====================================================
-        Load Users
+        Load Users (Paginated)
         ====================================================
         */
-        async function loadUsers() {
-            console.log("Loading users...");
-
+        async function loadUsers(page = 1) {
             try {
-                const res = await fetch(`${API_BASE}/users`, {
+                const res = await fetch(`${API_BASE}/users?page=${page}&limit=${LIMIT}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     },
                     cache: "no-store"
                 });
 
-                console.log("Users response status:", res.status);
-
                 const data = await res.json();
-                console.log("Users response data:", data);
 
                 if (!res.ok) {
                     alert(data.error || "Access denied");
                     return;
                 }
 
-                renderUsers(data);
+                currentPage = data.pagination.currentPage;
+                totalPages = data.pagination.totalPages;
+
+                renderUsers(data.users);
+                renderPagination();
 
             } catch (err) {
                 console.error("Load users error:", err);
@@ -283,21 +284,56 @@
                 card.className = "card";
 
                 card.innerHTML = `
-                    <div class="user-row">
-                        <p><strong>${user.username}</strong></p>
-                        <p>Role: ${user.role}</p>
-                        <p>Credits: ${user.credits}</p>
-                        <select onchange="updateRole('${user._id}', this.value)">
-                            <option value="">Change Role</option>
-                            <option value="buyer">Buyer</option>
-                            <option value="seller">Seller</option>
-                            <option value="admin">Admin</option>
-                        </select>
-                    </div>
-                `;
+                <div class="user-row">
+                    <p><strong>${user.username}</strong></p>
+                    <p>Role: ${user.role}</p>
+                    <p>Credits: ${user.credits}</p>
+                    <select onchange="updateRole('${user._id}', this.value)">
+                        <option value="">Change Role</option>
+                        <option value="buyer">Buyer</option>
+                        <option value="seller">Seller</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+            `;
 
                 container.appendChild(card);
             });
+        }
+
+        /*
+        ====================================================
+        Render Pagination Controls
+        ====================================================
+        */
+        function renderPagination() {
+            const container = document.getElementById("usersContainer");
+
+            const paginationDiv = document.createElement("div");
+            paginationDiv.className = "card";
+            paginationDiv.style.textAlign = "center";
+
+            paginationDiv.innerHTML = `
+            <button onclick="prevPage()" ${currentPage === 1 ? "disabled" : ""}>Previous</button>
+            <span style="margin: 0 15px;">
+                Page ${currentPage} of ${totalPages}
+            </span>
+            <button onclick="nextPage()" ${currentPage === totalPages ? "disabled" : ""}>Next</button>
+        `;
+
+            container.appendChild(paginationDiv);
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                loadUsers(currentPage - 1);
+            }
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages) {
+                loadUsers(currentPage + 1);
+            }
         }
 
         /*
@@ -307,7 +343,6 @@
         */
         async function updateRole(userId, role) {
             if (!role) return;
-
             if (!confirm(`Change role to ${role}?`)) return;
 
             try {
@@ -328,7 +363,7 @@
                 }
 
                 alert("Role updated successfully");
-                loadUsers();
+                loadUsers(currentPage);
 
             } catch (err) {
                 console.error("Role update error:", err);
@@ -339,7 +374,6 @@
             loadUsers();
         });
     </script>
-
 </body>
 
 </html>
