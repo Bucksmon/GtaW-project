@@ -188,6 +188,66 @@
                 transform: rotate(360deg);
             }
         }
+
+        /* ===============================
+   Role Dropdown Styling
+================================ */
+
+        .role-select {
+            margin-top: 10px;
+            padding: 10px 14px;
+            width: 180px;
+
+            background: linear-gradient(145deg, var(--box), #131c33);
+            color: var(--text);
+
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+
+            font-size: 0.9rem;
+            font-weight: 500;
+
+            cursor: pointer;
+            outline: none;
+
+            transition: all 0.25s ease;
+        }
+
+        /* Hover */
+        .role-select:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 8px rgba(79, 140, 255, 0.4);
+        }
+
+        /* Focus */
+        .role-select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(79, 140, 255, 0.25);
+        }
+
+        /* Remove ugly default arrow */
+        .role-select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        /* Custom arrow */
+        .role-select-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .role-select-wrapper::after {
+            content: "▾";
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
     </style>
 </head>
 
