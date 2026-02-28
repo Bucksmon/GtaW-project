@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8" />
-    <title>Seller Orders</title>
+    <title>Buyer Orders</title>
 
     <style>
         :root {
@@ -101,19 +101,17 @@
 <body>
 
     <aside class="sidebar">
-        <h2>Seller Panel</h2>
+        <h2>Buyer Panel</h2>
         <ul class="nav-links">
-            <li><a href="seller.html">Browse Services</a></li>
-            <li><a class="active" href="#">Orders</a></li>
-            <li><a href="sellCredits.html">Sell Credits</a></li>
-            <li><a href="addService.html">Add Services</a></li>
-            <li><a href="removeService.html">Remove Services</a></li>
+            <li><a href="buyer.html">Browse Services</a></li>
+            <li><a class="active" href="buyerOrder.html">Orders</a></li>
+            <li><a href="addCredits.html">Add Credits</a></li>
             <li><a href="../index.html">Logout</a></li>
         </ul>
     </aside>
 
     <main class="main">
-        <h2>My Orders</h2>
+        <h2>My Purchases</h2>
         <div id="servicesContainer" class="services"></div>
     </main>
 
@@ -125,7 +123,7 @@
             window.location.href = "../index.html";
         }
 
-        async function loadSellerOrders() {
+        async function loadBuyerOrders() {
             try {
                 const res = await fetch(`${API_BASE}/orders/buyer`, {
                     headers: {
@@ -148,7 +146,7 @@
             container.innerHTML = "";
 
             if (!orders.length) {
-                container.innerHTML = "<p>No orders yet.</p>";
+                container.innerHTML = "<p>No purchases yet.</p>";
                 return;
             }
 
@@ -157,21 +155,20 @@
                 card.className = "service-card";
 
                 card.innerHTML = `
-      <img class="service-image"
-           src="${order.service?.service_image || 'https://i.imgur.com/placeholder.png'}"
-           alt="Service Image">
-      <h3>${order.service?.service_title || "Unknown Service"}</h3>
-      <p><strong>Buyer:</strong> ${order.buyer?.username || "Unknown"}</p>
-      <p><strong>Total Price:</strong> ${order.totalPrice} credits</p>
-      <p><strong>You Received:</strong> ${order.sellerAmount} credits</p>
-      <p><strong>Status:</strong> ${order.status}</p>
-    `;
+                    <img class="service-image"
+                        src="${order.service?.service_image || 'https://i.imgur.com/placeholder.png'}"
+                        alt="Service Image">
+                    <h3>${order.service?.service_title || "Unknown Service"}</h3>
+                    <p><strong>Seller:</strong> ${order.seller?.username || "Unknown"}</p>
+                    <p><strong>Paid:</strong> ${order.totalPrice} credits</p>
+                    <p><strong>Status:</strong> ${order.status}</p>
+                `;
 
                 container.appendChild(card);
             });
         }
 
-        document.addEventListener("DOMContentLoaded", loadSellerOrders);
+        document.addEventListener("DOMContentLoaded", loadBuyerOrders);
     </script>
 
 </body>
