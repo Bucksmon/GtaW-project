@@ -424,8 +424,6 @@
     <div class="role-select-wrapper">
         <select class="role-select"
             onchange="updateRole('${user._id}', this.value)">
-            
-            <option value="">Change Role</option>
 
             <option value="guest" ${user.role === "guest" ? "selected" : ""}>Guest</option>
             <option value="buyer" ${user.role === "buyer" ? "selected" : ""}>Buyer</option>
