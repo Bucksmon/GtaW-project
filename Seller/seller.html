@@ -161,11 +161,25 @@
     }
 
     @media (max-width:768px) {
-      .sidebar { transform: translateX(-100%); }
-      .sidebar.open { transform: translateX(0); }
-      .main { margin-left: 0; }
-      .menu-btn { display: block; }
-      .services { grid-template-columns: 1fr; }
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main {
+        margin-left: 0;
+      }
+
+      .menu-btn {
+        display: block;
+      }
+
+      .services {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -196,77 +210,77 @@
     <div id="pagination"></div>
   </main>
 
-<script>
-const API_BASE = "https://gtaw-project.vercel.app";
-const token = localStorage.getItem("token");
+  <script>
+    const API_BASE = "https://gtaw-project.vercel.app";
+    const token = localStorage.getItem("token");
 
-if (!token) {
-  window.location.href = "../index.html";
-}
+    if (!token) {
+      window.location.href = "../index.html";
+    }
 
-/* Sidebar */
-const sidebar = document.getElementById("sidebar");
-const overlay = document.getElementById("overlay");
-const menuBtn = document.getElementById("menuBtn");
+    /* Sidebar */
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    const menuBtn = document.getElementById("menuBtn");
 
-menuBtn.addEventListener("click", () => {
-  sidebar.classList.toggle("open");
-  overlay.classList.toggle("active");
-});
+    menuBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("open");
+      overlay.classList.toggle("active");
+    });
 
-overlay.addEventListener("click", () => {
-  sidebar.classList.remove("open");
-  overlay.classList.remove("active");
-});
+    overlay.addEventListener("click", () => {
+      sidebar.classList.remove("open");
+      overlay.classList.remove("active");
+    });
 
-/* Highlight active link */
-const currentPagePath = window.location.pathname.split("/").pop();
-document.querySelectorAll(".nav-links a").forEach(link => {
-  if (link.getAttribute("href") === currentPagePath) {
-    link.classList.add("active");
-  }
-});
-
-let currentPage = 1;
-
-/* Load seller marketplace (exclude own services) */
-async function loadServices(page = 1) {
-  try {
-    const res = await fetch(
-      `${API_BASE}/services/browse?page=${page}&limit=8`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
-        cache: "no-store"
+    /* Highlight active link */
+    const currentPagePath = window.location.pathname.split("/").pop();
+    document.querySelectorAll(".nav-links a").forEach(link => {
+      if (link.getAttribute("href") === currentPagePath) {
+        link.classList.add("active");
       }
-    );
+    });
 
-    const data = await res.json();
-    if (!res.ok) return alert(data.error || "Failed to load services");
+    let currentPage = 1;
 
-    renderServices(data.services || []);
-    renderPagination(data.page || 1, data.totalPages || 1);
+    /* Load seller marketplace (exclude own services) */
+    async function loadServices(page = 1) {
+      try {
+        const res = await fetch(
+          `${API_BASE}/services/browse?page=${page}&limit=8`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
+            cache: "no-store"
+          }
+        );
 
-  } catch (err) {
-    console.error(err);
-  }
-}
+        const data = await res.json();
+        if (!res.ok) return alert(data.error || "Failed to load services");
 
-function renderServices(services) {
-  const container = document.getElementById("servicesContainer");
-  container.innerHTML = "";
+        renderServices(data.services || []);
+        renderPagination(data.page || 1, data.totalPages || 1);
 
-  if (!services.length) {
-    container.innerHTML = "<p>No services found.</p>";
-    return;
-  }
+      } catch (err) {
+        console.error(err);
+      }
+    }
 
-  services.forEach(service => {
-    const card = document.createElement("div");
-    card.className = "service-card";
+    function renderServices(services) {
+      const container = document.getElementById("servicesContainer");
+      container.innerHTML = "";
 
-    card.innerHTML = `
+      if (!services.length) {
+        container.innerHTML = "<p>No services found.</p>";
+        return;
+      }
+
+      services.forEach(service => {
+        const card = document.createElement("div");
+        card.className = "service-card";
+
+        card.innerHTML = `
       <img class="service-image"
            src="${service.service_image || 'https://i.imgur.com/placeholder.png'}"
            alt="Service Image">
@@ -277,52 +291,69 @@ function renderServices(services) {
       <button onclick="buyService('${service._id}')">Buy</button>
     `;
 
-    container.appendChild(card);
-  });
-}
+        container.appendChild(card);
+      });
+    }
 
-function renderPagination(current, total) {
-  const pagination = document.getElementById("pagination");
-  pagination.innerHTML = "";
+    function renderPagination(current, total) {
+      const pagination = document.getElementById("pagination");
+      pagination.innerHTML = "";
 
-  for (let i = 1; i <= total; i++) {
-    const btn = document.createElement("button");
-    btn.textContent = i;
-    if (i === current) btn.disabled = true;
-    btn.onclick = () => {
-      currentPage = i;
-      loadServices(i);
-    };
-    pagination.appendChild(btn);
-  }
-}
+      for (let i = 1; i <= total; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        if (i === current) btn.disabled = true;
+        btn.onclick = () => {
+          currentPage = i;
+          loadServices(i);
+        };
+        pagination.appendChild(btn);
+      }
+    }
 
-async function buyService(serviceId) {
-  try {
-    const res = await fetch(`${API_BASE}/orders/buyservice`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify({ serviceId })
+    async function buyService(serviceId) {
+      try {
+        const res = await fetch(`${API_BASE}/orders/buyservice`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({ serviceId })
+        });
+
+        const data = await res.json();
+        if (!res.ok) return alert(data.error || "Purchase failed");
+
+        alert("Service purchased!");
+        document.getElementById("creditsDisplay").textContent = data.buyerCredits;
+
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    function parseJWT(token) {
+      try {
+        const payload = token.split('.')[1];
+        return JSON.parse(atob(payload));
+      } catch (err) {
+        return null;
+      }
+    }
+
+    function loadCreditsFromToken() {
+      const decoded = parseJWT(token);
+      if (!decoded) return;
+
+      document.getElementById("creditsDisplay").textContent =
+        decoded.credits ?? 0;
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+      loadCreditsFromToken();
+      loadServices(currentPage);
     });
-
-    const data = await res.json();
-    if (!res.ok) return alert(data.error || "Purchase failed");
-
-    alert("Service purchased!");
-    document.getElementById("creditsDisplay").textContent = data.buyerCredits;
-
-  } catch (err) {
-    console.error(err);
-  }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  loadServices(currentPage);
-});
-</script>
+  </script>
 
 </body>
+
 </html>

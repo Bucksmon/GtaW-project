@@ -2,206 +2,225 @@
 <html lang="en">
 
 <head>
-<meta charset="UTF-8" />
-<title>Buyer Orders</title>
+    <meta charset="UTF-8" />
+    <title>Buyer Orders</title>
 
-<style>
-:root {
-  --bg:#0b0f1a;
-  --panel:#111827;
-  --card:#121a2a;
-  --box:#1a2440;
-  --text:#e6e9f2;
-  --muted:#9aa4b8;
-  --accent:#4f8cff;
-  --danger:#ff4f4f;
-}
+    <style>
+        :root {
+            --bg: #0b0f1a;
+            --panel: #111827;
+            --card: #121a2a;
+            --box: #1a2440;
+            --text: #e6e9f2;
+            --muted: #9aa4b8;
+            --accent: #4f8cff;
+            --danger: #ff4f4f;
+        }
 
-* {
-  box-sizing:border-box;
-  font-family:"Segoe UI", Arial, sans-serif;
-}
+        * {
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
 
-body {
-  margin:0;
-  background: radial-gradient(circle at top,#111827,#0b0f1a 60%,#070a10);
-  color:var(--text);
-  min-height:100vh;
-}
+        body {
+            margin: 0;
+            background: radial-gradient(circle at top, #111827, #0b0f1a 60%, #070a10);
+            color: var(--text);
+            min-height: 100vh;
+        }
 
-/* SIDEBAR */
-.sidebar {
-  position:fixed;
-  top:0;
-  left:0;
-  width:240px;
-  height:100%;
-  background:var(--panel);
-  padding-top:25px;
-  transition:transform .3s ease;
-  z-index:1000;
-}
+        /* SIDEBAR */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 240px;
+            height: 100%;
+            background: var(--panel);
+            padding-top: 25px;
+            transition: transform .3s ease;
+            z-index: 1000;
+        }
 
-.sidebar h2 {
-  text-align:center;
-  margin-bottom:25px;
-}
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
 
-.nav-links { list-style:none; padding:0; }
-.nav-links li { margin:6px 15px; }
+        .nav-links {
+            list-style: none;
+            padding: 0;
+        }
 
-.nav-links a {
-  display:block;
-  padding:12px 16px;
-  color:white;
-  text-decoration:none;
-  border-radius:10px;
-}
+        .nav-links li {
+            margin: 6px 15px;
+        }
 
-.nav-links a:hover,
-.nav-links a.active {
-  background:rgba(96,96,96,0.4);
-}
+        .nav-links a {
+            display: block;
+            padding: 12px 16px;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+        }
 
-/* OVERLAY */
-.overlay {
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.5);
-  display:none;
-  z-index:900;
-}
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: rgba(96, 96, 96, 0.4);
+        }
 
-.overlay.active { display:block; }
+        /* OVERLAY */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 900;
+        }
 
-/* MAIN */
-.main {
-  margin-left:240px;
-  padding:20px;
-  min-height:100vh;
-}
+        .overlay.active {
+            display: block;
+        }
 
-/* TOPBAR */
-.topbar {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:20px;
-}
+        /* MAIN */
+        .main {
+            margin-left: 240px;
+            padding: 20px;
+            min-height: 100vh;
+        }
 
-.menu-btn {
-  font-size:1.6rem;
-  background:none;
-  border:none;
-  color:var(--text);
-  cursor:pointer;
-  display:none;
-}
+        /* TOPBAR */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
 
-/* CARDS */
-.services {
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
-  gap:20px;
-}
+        .menu-btn {
+            font-size: 1.6rem;
+            background: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            display: none;
+        }
 
-.service-card {
-  background:var(--card);
-  border-radius:14px;
-  padding:16px;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
+        /* CARDS */
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
 
-.service-image {
-  width:100%;
-  height:150px;
-  object-fit:cover;
-  border-radius:10px;
-  background:var(--box);
-}
+        .service-card {
+            background: var(--card);
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
 
-/* RESPONSIVE */
-@media(max-width:768px){
-  .sidebar { transform:translateX(-100%); }
-  .sidebar.open { transform:translateX(0); }
-  .main { margin-left:0; }
-  .menu-btn { display:block; }
-}
-</style>
+        .service-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            background: var(--box);
+        }
+
+        /* RESPONSIVE */
+        @media(max-width:768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<aside class="sidebar" id="sidebar">
-  <h2>Buyer Panel</h2>
-  <ul class="nav-links">
-    <li><a href="buyer.html">Browse Services</a></li>
-    <li><a class="active" href="#">Orders</a></li>
-    <li><a href="addCredits.html">Add Credits</a></li>
-    <li><a href="../index.html">Logout</a></li>
-  </ul>
-</aside>
+    <aside class="sidebar" id="sidebar">
+        <h2>Buyer Panel</h2>
+        <ul class="nav-links">
+            <li><a href="buyer.html">Browse Services</a></li>
+            <li><a class="active" href="#">Orders</a></li>
+            <li><a href="addCredits.html">Add Credits</a></li>
+            <li><a href="../index.html">Logout</a></li>
+        </ul>
+    </aside>
 
-<div class="overlay" id="overlay"></div>
+    <div class="overlay" id="overlay"></div>
 
-<main class="main">
+    <main class="main">
 
-  <div class="topbar">
-    <button class="menu-btn" id="menuBtn">☰</button>
-    <h2>Your Credits: <span id="creditsDisplay">0</span></h2>
-  </div>
+        <div class="topbar">
+            <button class="menu-btn" id="menuBtn">☰</button>
+            <h2>Your Credits: <span id="creditsDisplay">0</span></h2>
+        </div>
 
-  <div id="servicesContainer" class="services"></div>
-</main>
+        <div id="servicesContainer" class="services"></div>
+    </main>
 
-<script>
-const API_BASE="https://gtaw-project.vercel.app";
-const token=localStorage.getItem("token");
+    <script>
+        const API_BASE = "https://gtaw-project.vercel.app";
+        const token = localStorage.getItem("token");
 
-if(!token){ window.location.href="../index.html"; }
+        if (!token) { window.location.href = "../index.html"; }
 
-/* Sidebar toggle */
-const sidebar=document.getElementById("sidebar");
-const overlay=document.getElementById("overlay");
-const menuBtn=document.getElementById("menuBtn");
+        /* Sidebar toggle */
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+        const menuBtn = document.getElementById("menuBtn");
 
-menuBtn.addEventListener("click",()=>{
-  sidebar.classList.toggle("open");
-  overlay.classList.toggle("active");
-});
+        menuBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("open");
+            overlay.classList.toggle("active");
+        });
 
-overlay.addEventListener("click",()=>{
-  sidebar.classList.remove("open");
-  overlay.classList.remove("active");
-});
+        overlay.addEventListener("click", () => {
+            sidebar.classList.remove("open");
+            overlay.classList.remove("active");
+        });
 
-/* Load buyer orders */
-async function loadBuyerOrders(){
-  const res=await fetch(`${API_BASE}/orders/buyer`,{
-    headers:{ Authorization:`Bearer ${token}` }
-  });
-  const data=await res.json();
-  if(!res.ok) return;
+        /* Load buyer orders */
+        async function loadBuyerOrders() {
+            const res = await fetch(`${API_BASE}/orders/buyer`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const data = await res.json();
+            if (!res.ok) return;
 
-  renderOrders(data);
-}
+            renderOrders(data);
+        }
 
-function renderOrders(orders){
-  const container=document.getElementById("servicesContainer");
-  container.innerHTML="";
+        function renderOrders(orders) {
+            const container = document.getElementById("servicesContainer");
+            container.innerHTML = "";
 
-  if(!orders.length){
-    container.innerHTML="<p>No purchases yet.</p>";
-    return;
-  }
+            if (!orders.length) {
+                container.innerHTML = "<p>No purchases yet.</p>";
+                return;
+            }
 
-  orders.forEach(order=>{
-    const card=document.createElement("div");
-    card.className="service-card";
+            orders.forEach(order => {
+                const card = document.createElement("div");
+                card.className = "service-card";
 
-    card.innerHTML=`
+                card.innerHTML = `
       <img class="service-image"
         src="${order.service?.service_image || 'https://i.imgur.com/placeholder.png'}">
       <h3>${order.service?.service_title}</h3>
@@ -210,12 +229,31 @@ function renderOrders(orders){
       <p><strong>Status:</strong> ${order.status}</p>
     `;
 
-    container.appendChild(card);
-  });
-}
+                container.appendChild(card);
+            });
+        }
+        function parseJWT(token) {
+            try {
+                const payload = token.split('.')[1];
+                return JSON.parse(atob(payload));
+            } catch (err) {
+                return null;
+            }
+        }
 
-document.addEventListener("DOMContentLoaded",loadBuyerOrders);
-</script>
+        function loadCreditsFromToken() {
+            const decoded = parseJWT(token);
+            if (!decoded) return;
+
+            document.getElementById("creditsDisplay").textContent =
+                decoded.credits ?? 0;
+        }
+        document.addEventListener("DOMContentLoaded", () => {
+            loadCreditsFromToken();
+            loadBuyerOrders();
+        });
+    </script>
 
 </body>
+
 </html>

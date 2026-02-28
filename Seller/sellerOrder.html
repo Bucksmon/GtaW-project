@@ -229,7 +229,26 @@
             });
         }
 
-        document.addEventListener("DOMContentLoaded", loadSellerOrders);
+        function parseJWT(token) {
+            try {
+                const payload = token.split('.')[1];
+                return JSON.parse(atob(payload));
+            } catch (err) {
+                return null;
+            }
+        }
+
+        function loadCreditsFromToken() {
+            const decoded = parseJWT(token);
+            if (!decoded) return;
+
+            document.getElementById("creditsDisplay").textContent =
+                decoded.credits ?? 0;
+        }
+        document.addEventListener("DOMContentLoaded", () => {
+            loadSellerOrders();
+            loadCreditsFromToken();
+        });
     </script>
 
 </body>
