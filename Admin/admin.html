@@ -332,6 +332,15 @@
     </div>
 
     <script>
+        function parseJWT(token) {
+            try {
+                return JSON.parse(atob(token.split('.')[1]));
+            } catch {
+                return null;
+            }
+        }
+
+        const currentUser = parseJWT(token);
         const sidebar = document.querySelector(".sidebar");
         const overlay = document.querySelector(".overlay");
         const menuBtn = document.getElementById("menuBtn");
@@ -365,7 +374,12 @@
         function hideLoader() { loaderOverlay.classList.remove("show"); }
 
         function loadCredits() {
-            creditsDisplay.textContent = `Credits: ${localStorage.getItem("credits") || 0}`;
+            if (currentUser?.role === "superadmin") {
+                creditsDisplay.textContent = `Credits: ${currentUser.credits || 0}`;
+                creditsDisplay.style.display = "block";
+            } else {
+                creditsDisplay.style.display = "none";
+            }
         }
 
         let currentPage = 1;
@@ -398,23 +412,33 @@
             users.forEach(user => {
                 const card = document.createElement("div");
                 card.className = "card";
+                const canAssignAdmin = currentUser?.role === "superadmin";
+
                 card.innerHTML = `
-        <div class="user-info">
-            <div class="user-details">
-                <strong>${user.username}</strong>
-                <span>Role: ${user.role}</span>
-                <span>Credits: ${user.credits}</span>
-            </div>
-            <div class="role-select-wrapper">
-                <select class="role-select" onchange="updateRole('${user._id}', this.value)">
-                    <option value="">Change Role</option>
-                    <option value="buyer" ${user.role === "buyer" ? "selected" : ""}>Buyer</option>
-                    <option value="seller" ${user.role === "seller" ? "selected" : ""}>Seller</option>
-                    <option value="admin" ${user.role === "admin" ? "selected" : ""}>Admin</option>
-                </select>
-            </div>
-        </div>
-        `;
+<div class="user-info">
+    <div class="user-details">
+        <strong>${user.username}</strong>
+        <span>Role: ${user.role}</span>
+        <span>Credits: ${user.credits ?? 0}</span>
+    </div>
+    <div class="role-select-wrapper">
+        <select class="role-select"
+            onchange="updateRole('${user._id}', this.value)">
+            
+            <option value="">Change Role</option>
+
+            <option value="guest" ${user.role === "guest" ? "selected" : ""}>Guest</option>
+            <option value="buyer" ${user.role === "buyer" ? "selected" : ""}>Buyer</option>
+            <option value="seller" ${user.role === "seller" ? "selected" : ""}>Seller</option>
+
+            ${canAssignAdmin ? `
+                <option value="admin" ${user.role === "admin" ? "selected" : ""}>Admin</option>
+            ` : ""}
+
+        </select>
+    </div>
+</div>
+`;
                 container.appendChild(card);
             });
         }
