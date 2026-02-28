@@ -272,12 +272,18 @@
 
         async function loadServices(page = 1) {
             try {
-                const res = await fetch(`${API_BASE}/services?page=${page}&limit=8`, {
-                    cache: "no-store"
-                });
+                const res = await fetch(
+                    `${API_BASE}/services/mine?page=${page}&limit=8`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        },
+                        cache: "no-store"
+                    }
+                );
 
                 const data = await res.json();
-                if (!res.ok) return;
+                if (!res.ok) return alert(data.error || "Failed to load services");
 
                 renderServices(data.services || []);
                 renderPagination(data.page || 1, data.totalPages || 1);
