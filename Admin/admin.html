@@ -332,15 +332,7 @@
     </div>
 
     <script>
-        function parseJWT(token) {
-            try {
-                return JSON.parse(atob(token.split('.')[1]));
-            } catch {
-                return null;
-            }
-        }
 
-        const currentUser = parseJWT(token);
         const sidebar = document.querySelector(".sidebar");
         const overlay = document.querySelector(".overlay");
         const menuBtn = document.getElementById("menuBtn");
@@ -363,7 +355,15 @@
         const token = localStorage.getItem("token");
 
         if (!token) window.location.href = "../index.html";
+        function parseJWT(token) {
+            try {
+                return JSON.parse(atob(token.split('.')[1]));
+            } catch {
+                return null;
+            }
+        }
 
+        const currentUser = parseJWT(token);
         /* Logout */
         function logout() {
             localStorage.clear();
