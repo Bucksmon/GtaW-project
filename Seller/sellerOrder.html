@@ -6,6 +6,7 @@
     <title>Seller Orders</title>
 
     <style>
+        /* EXACT SAME CSS AS ABOVE */
         :root {
             --bg: #0b0f1a;
             --panel: #111827;
@@ -37,6 +38,7 @@
             height: 100%;
             background: var(--panel);
             padding-top: 25px;
+            transition: transform .3s ease;
             z-index: 1000;
         }
 
@@ -67,16 +69,44 @@
             background: rgba(96, 96, 96, 0.4);
         }
 
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 900;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
         .main {
             margin-left: 240px;
             padding: 20px;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .menu-btn {
+            font-size: 1.6rem;
+            background: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            display: none;
         }
 
         .services {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
-            margin-top: 20px;
         }
 
         .service-card {
@@ -95,12 +125,30 @@
             border-radius: 10px;
             background: var(--box);
         }
+
+        @media(max-width:768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+        }
     </style>
 </head>
 
 <body>
 
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
         <h2>Seller Panel</h2>
         <ul class="nav-links">
             <li><a href="seller.html">Browse Services</a></li>
@@ -112,8 +160,15 @@
         </ul>
     </aside>
 
+    <div class="overlay" id="overlay"></div>
+
     <main class="main">
-        <h2>My Orders</h2>
+
+        <div class="topbar">
+            <button class="menu-btn" id="menuBtn">☰</button>
+            <h2>Your Credits: <span id="creditsDisplay">0</span></h2>
+        </div>
+
         <div id="servicesContainer" class="services"></div>
     </main>
 
@@ -121,26 +176,30 @@
         const API_BASE = "https://gtaw-project.vercel.app";
         const token = localStorage.getItem("token");
 
-        if (!token) {
-            window.location.href = "../index.html";
-        }
+        if (!token) { window.location.href = "../index.html"; }
+
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+        const menuBtn = document.getElementById("menuBtn");
+
+        menuBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("open");
+            overlay.classList.toggle("active");
+        });
+
+        overlay.addEventListener("click", () => {
+            sidebar.classList.remove("open");
+            overlay.classList.remove("active");
+        });
 
         async function loadSellerOrders() {
-            try {
-                const res = await fetch(`${API_BASE}/orders/seller`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
+            const res = await fetch(`${API_BASE}/orders/seller`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const data = await res.json();
+            if (!res.ok) return;
 
-                const data = await res.json();
-                if (!res.ok) return alert(data.error || "Failed to load orders");
-
-                renderOrders(data);
-
-            } catch (err) {
-                console.error(err);
-            }
+            renderOrders(data);
         }
 
         function renderOrders(orders) {
@@ -158,10 +217,9 @@
 
                 card.innerHTML = `
       <img class="service-image"
-           src="${order.service?.service_image || 'https://i.imgur.com/placeholder.png'}"
-           alt="Service Image">
-      <h3>${order.service?.service_title || "Unknown Service"}</h3>
-      <p><strong>Buyer:</strong> ${order.buyer?.username || "Unknown"}</p>
+        src="${order.service?.service_image || 'https://i.imgur.com/placeholder.png'}">
+      <h3>${order.service?.service_title}</h3>
+      <p><strong>Buyer:</strong> ${order.buyer?.username}</p>
       <p><strong>Total Price:</strong> ${order.totalPrice} credits</p>
       <p><strong>You Received:</strong> ${order.sellerAmount} credits</p>
       <p><strong>Status:</strong> ${order.status}</p>
