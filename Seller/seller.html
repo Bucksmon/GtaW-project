@@ -332,25 +332,31 @@
         console.error(err);
       }
     }
-    function parseJWT(token) {
-      try {
-        const payload = token.split('.')[1];
-        return JSON.parse(atob(payload));
-      } catch (err) {
-        return null;
+    function loadCredits() {
+      async function loadCredits() {
+        try {
+          const res = await fetch(`${API_BASE}/users/me`, {
+            headers: {
+              Authorization: "Bearer " + token
+            }
+          });
+
+          if (!res.ok) throw new Error();
+
+          const user = await res.json();
+
+          document.getElementById("creditsDisplay").textContent =
+            user.credits ?? 0;
+
+        } catch {
+          console.log("Failed to load credits");
+        }
       }
     }
-
-    function loadCreditsFromToken() {
-      const decoded = parseJWT(token);
-      if (!decoded) return;
-
-      document.getElementById("creditsDisplay").textContent =
-        decoded.credits ?? 0;
-    }
     document.addEventListener("DOMContentLoaded", () => {
-      loadCreditsFromToken();
       loadServices(currentPage);
+      loadCredits();
+      setInterval(loadCredits, 15000);
     });
   </script>
 

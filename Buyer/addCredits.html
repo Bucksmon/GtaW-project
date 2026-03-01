@@ -323,10 +323,25 @@
     }
 
     function loadCredits() {
-      const decoded = parseJWT(token);
-      if (!decoded) return;
-      document.getElementById("creditsDisplay").textContent =
-        decoded.credits ?? 0;
+      async function loadCredits() {
+        try {
+          const res = await fetch(`${API_BASE}/users/me`, {
+            headers: {
+              Authorization: "Bearer " + token
+            }
+          });
+
+          if (!res.ok) throw new Error();
+
+          const user = await res.json();
+
+          document.getElementById("creditsDisplay").textContent =
+            user.credits ?? 0;
+
+        } catch {
+          console.log("Failed to load credits");
+        }
+      }
     }
 
     /* Form */
@@ -421,7 +436,10 @@
       }
     });
 
-    document.addEventListener("DOMContentLoaded", loadCredits);
+    document.addEventListener("DOMContentLoaded", () => {
+      loadCredits();
+      setInterval(loadCredits, 15000); // refresh every 15 seconds
+    });
   </script>
 </body>
 

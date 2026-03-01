@@ -373,15 +373,34 @@
         function showLoader() { loaderOverlay.classList.add("show"); }
         function hideLoader() { loaderOverlay.classList.remove("show"); }
 
-        function loadCredits() {
+        function toggleCreditVisibility() {
             if (currentUser?.role === "superadmin") {
-                creditsDisplay.textContent = `Credits: ${currentUser.credits || 0}`;
                 creditsDisplay.style.display = "block";
             } else {
                 creditsDisplay.style.display = "none";
             }
         }
 
+        async function loadCredits() {
+            if (currentUser?.role !== "superadmin") return;
+
+            try {
+                const res = await fetch(`${API_BASE}/users/me`, {
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                });
+
+                if (!res.ok) throw new Error();
+
+                const user = await res.json();
+
+                creditsDisplay.textContent = `Credits: ${user.credits ?? 0}`;
+
+            } catch {
+                console.log("Failed to load credits");
+            }
+        }
         let currentPage = 1;
         let totalPages = 1;
         const LIMIT = 5;
@@ -478,8 +497,12 @@
         }
 
         document.addEventListener("DOMContentLoaded", () => {
-            loadCredits();
             loadUsers();
+            toggleCreditVisibility();
+            loadCredits();
+
+            // optional realtime refresh
+            setInterval(loadCredits, 15000);
         });
     </script>
 
