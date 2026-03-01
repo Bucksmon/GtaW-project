@@ -233,25 +233,23 @@
             });
         }
 
-        function loadCredits() {
-            async function loadCredits() {
-                try {
-                    const res = await fetch(`${API_BASE}/users/me`, {
-                        headers: {
-                            Authorization: "Bearer " + token
-                        }
-                    });
+        async function loadCredits() {
+            try {
+                const res = await fetch(`${API_BASE}/users/me`, {
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                });
 
-                    if (!res.ok) throw new Error();
+                if (!res.ok) throw new Error();
 
-                    const user = await res.json();
+                const user = await res.json();
 
-                    document.getElementById("creditsDisplay").textContent =
-                        user.credits ?? 0;
+                document.getElementById("creditsDisplay").textContent =
+                    user.credits ?? 0;
 
-                } catch {
-                    console.log("Failed to load credits");
-                }
+            } catch (err) {
+                console.log("Failed to load credits", err);
             }
         }
         document.addEventListener("DOMContentLoaded", () => {
