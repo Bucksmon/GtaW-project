@@ -14,11 +14,7 @@
             --text: #e6e9f2;
             --muted: #9aa4b8;
             --accent: #4f8cff;
-            --danger: #ff4f4f;
-
-            --radius: 14px;
-            --radius-sm: 10px;
-            --transition: .25s ease;
+            --shadow: rgba(0, 0, 0, 0.6);
         }
 
         * {
@@ -30,11 +26,11 @@
             margin: 0;
             background: radial-gradient(circle at top, #111827, #0b0f1a 60%, #070a10);
             color: var(--text);
-            min-height: 100vh;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        /* ===== Layout ===== */
-
+        /* Sidebar */
         .sidebar {
             position: fixed;
             top: 0;
@@ -42,127 +38,148 @@
             width: 240px;
             height: 100%;
             background: var(--panel);
-            border-right: 1px solid rgba(255, 255, 255, .06);
-            padding: 25px 0;
-            transition: transform var(--transition);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            padding-top: 20px;
             z-index: 1000;
+            transition: transform 0.3s ease;
         }
 
         .sidebar h2 {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+            font-size: 1.3rem;
         }
 
         .nav-links {
             list-style: none;
             padding: 0;
+            margin: 0;
+            flex: 1;
         }
 
         .nav-links li {
-            margin: 6px 15px;
+            margin: 6px 10px;
         }
 
         .nav-links a {
             display: block;
             padding: 12px 16px;
-            border-radius: var(--radius-sm);
             color: white;
             text-decoration: none;
-            transition: var(--transition);
+            border-radius: 10px;
         }
 
         .nav-links a:hover,
         .nav-links a.active {
-            background: rgba(255, 255, 255, .08);
+            background: rgba(96, 96, 96, 0.432);
         }
 
+        /* Main */
         .main {
             margin-left: 240px;
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
+        /* Topbar */
         .topbar {
-            padding: 20px 30px;
+            background: var(--card);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 14px 20px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
         }
 
         .menu-btn {
-            display: none;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             background: none;
             border: none;
             color: var(--text);
             cursor: pointer;
+            display: none;
         }
 
+        /* Content */
         .content {
+            padding: 25px;
+            overflow-y: auto;
             flex: 1;
-            padding: 30px;
-            display: flex;
-            justify-content: flex-start;
         }
 
         .card {
             background: var(--card);
-            padding: 30px;
-            border-radius: var(--radius);
-            max-width: 480px;
-            width: 100%;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, .4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 20px;
+            max-width: 420px;
         }
 
         form {
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 12px;
         }
 
         label {
-            font-size: .85rem;
+            font-size: 0.9rem;
             color: var(--muted);
         }
 
         input {
-            padding: 12px;
+            padding: 10px 14px;
             background: var(--box);
-            border: 1px solid rgba(255, 255, 255, .08);
-            border-radius: var(--radius-sm);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
             color: var(--text);
-            outline: none;
-            transition: var(--transition);
         }
 
         input:focus {
+            outline: none;
             border-color: var(--accent);
+            box-shadow: 0 0 6px var(--accent);
         }
 
         button {
+            margin-top: 10px;
             padding: 12px;
-            border-radius: var(--radius-sm);
-            border: none;
             background: var(--accent);
             color: white;
+            border: none;
+            border-radius: 10px;
             font-weight: 600;
             cursor: pointer;
-            transition: var(--transition);
         }
 
         button:hover {
-            opacity: .9;
+            opacity: 0.9;
         }
 
         .status {
-            font-size: .85rem;
-            color: var(--muted);
+            font-size: 0.9rem;
+            margin-top: 6px;
         }
 
-        /* ===== Responsive ===== */
+        /* Overlay (mobile) */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 900;
+        }
 
-        @media (max-width:768px) {
+        .overlay.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .main {
+                margin-left: 0;
+            }
 
             .sidebar {
                 transform: translateX(-100%);
@@ -172,16 +189,43 @@
                 transform: translateX(0);
             }
 
-            .main {
-                margin-left: 0;
-            }
-
             .menu-btn {
                 display: block;
             }
+        }
 
-            .content {
-                padding: 20px;
+        /* ================= GLOBAL LOADER ================= */
+
+        .global-loader {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+        }
+
+        .loader-box {
+            background: var(--card);
+            padding: 35px 45px;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .spinner-large {
+            width: 45px;
+            height: 45px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            margin: auto;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
             }
         }
     </style>
