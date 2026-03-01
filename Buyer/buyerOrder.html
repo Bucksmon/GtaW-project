@@ -110,30 +110,111 @@
             cursor: pointer;
         }
 
-        /* ===== Order Cards ===== */
+        /* ================= GRID ================= */
 
         .services {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
         }
+
+        /* ================= CARD ================= */
 
         .service-card {
             background: var(--card);
+            padding: 22px;
             border-radius: var(--radius);
-            padding: 18px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, .35);
+            gap: 14px;
+            box-shadow: 0 20px 55px rgba(0, 0, 0, .4);
+            transition: var(--transition);
+        }
+
+        .service-card:hover {
+            transform: translateY(-6px);
         }
 
         .service-image {
             width: 100%;
-            height: 160px;
+            height: 180px;
             object-fit: cover;
             border-radius: var(--radius-sm);
             background: var(--box);
+        }
+
+        .service-card h3 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .service-card p {
+            margin: 0;
+            font-size: .9rem;
+            color: var(--muted);
+        }
+
+        .service-card strong {
+            color: var(--text);
+        }
+
+        /* ================= ORDER STATUS COLORS ================= */
+
+        .service-card p:last-child {
+            font-weight: 600;
+        }
+
+        .service-card p:last-child:contains("completed"),
+        .service-card p:last-child:contains("Completed") {
+            color: var(--success);
+        }
+
+        /* ================= ORDER ROW ================= */
+
+        .order-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            font-size: .9rem;
+            color: var(--muted);
+        }
+
+        .order-row span {
+            white-space: nowrap;
+        }
+
+        /* subtle divider between rows */
+        .order-row+.order-row {
+            padding-top: 6px;
+            border-top: 1px solid rgba(255, 255, 255, .06);
+        }
+
+        /* ================= STATUS COLORS ================= */
+
+        .order-status {
+            font-weight: 600;
+        }
+
+        .order-status.completed {
+            color: var(--success);
+        }
+
+        .order-status.pending {
+            color: orange;
+        }
+
+        .order-status.failed {
+            color: var(--danger);
+        }
+
+        /* ================= EMPTY STATE ================= */
+
+        .services p {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: var(--muted);
+            font-size: 1rem;
         }
 
         /* ===== Loader ===== */
@@ -305,13 +386,23 @@
                 card.className = "service-card";
 
                 card.innerHTML = `
-      <img class="service-image"
-        src="${order.service?.service_image || 'https://i.imgur.com/placeholder.png'}">
-      <h3>${order.service?.service_title}</h3>
-      <p><strong>Seller:</strong> ${order.seller?.username}</p>
-      <p><strong>Paid:</strong> ${order.totalPrice} credits</p>
-      <p><strong>Status:</strong> ${order.status}</p>
-    `;
+  <img class="service-image"
+    src="${order.service?.service_image || 'https://i.imgur.com/placeholder.png'}">
+  
+  <h3>${order.service?.service_title}</h3>
+
+  <div class="order-row">
+    <span><strong>Buyer:</strong> ${order.buyer?.username}</span>
+    <span><strong>Total Price:</strong> ${order.totalPrice} credits</span>
+  </div>
+
+  <div class="order-row">
+    <span><strong>You Received:</strong> ${order.sellerAmount} credits</span>
+    <span class="order-status ${order.status?.toLowerCase()}">
+      <strong>Status:</strong> ${order.status}
+    </span>
+  </div>
+`;
 
                 container.appendChild(card);
             });
