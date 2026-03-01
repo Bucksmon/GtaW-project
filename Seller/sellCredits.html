@@ -193,6 +193,35 @@
                 display: block;
             }
         }
+
+        /* ================= GLOBAL LOADER ================= */
+
+        .global-loader {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+        }
+
+        .loader-box {
+            background: var(--card);
+            padding: 35px 45px;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .spinner-large {
+            width: 45px;
+            height: 45px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            margin: auto;
+            animation: spin 0.8s linear infinite;
+        }
     </style>
 </head>
 
@@ -212,12 +241,22 @@
     </aside>
 
     <div class="overlay" id="overlay"></div>
-
+    <!-- GLOBAL LOADER -->
+    <div id="globalLoader" class="global-loader">
+        <div class="loader-box">
+            <div class="spinner-large"></div>
+            <p>Processing request...</p>
+        </div>
+    </div>
     <!-- Main -->
     <main class="main">
         <div class="topbar">
-            <button class="menu-btn" id="menuBtn">☰</button>
-            <span>Sell Credits</span>
+            <div style="display:flex; align-items:center; gap:15px;">
+                <button class="menu-btn" id="menuBtn">☰</button>
+                <span>Sell Credits</span>
+            </div>
+
+            <span>Your Credits: <strong id="creditsDisplay">0</strong></span>
         </div>
 
         <div class="content">
@@ -242,6 +281,44 @@
     </main>
 
     <script>
+        const API_BASE = "https://gtaw-project.vercel.app";
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            window.location.href = "../index.html";
+        }
+
+        async function loadCredits(showLoader = false) {
+            if (showLoader) showGlobalLoader();
+
+            try {
+                const res = await fetch(`${API_BASE}/users/me`, {
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                });
+
+                if (!res.ok) throw new Error();
+
+                const user = await res.json();
+                document.getElementById("creditsDisplay").textContent =
+                    user.credits ?? 0;
+
+            } catch (err) {
+                console.log("Failed to load credits", err);
+            } finally {
+                if (showLoader) hideGlobalLoader();
+            }
+        }
+        const globalLoader = document.getElementById("globalLoader");
+
+        function showGlobalLoader() {
+            globalLoader.style.display = "flex";
+        }
+
+        function hideGlobalLoader() {
+            globalLoader.style.display = "none";
+        }
         const menuBtn = document.getElementById("menuBtn");
         const sidebar = document.getElementById("sidebar");
         const overlay = document.getElementById("overlay");
@@ -333,22 +410,18 @@
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
 
-            // Extra safety — do not submit if still disabled
             if (submitBtn.disabled) return;
 
-            // Get fresh values
             const routingNumber = routingInput.value.trim();
             const discordTag = discordInput.value.trim();
             const creditAmount = Number(creditsInput.value.trim());
-            const token = localStorage.getItem("token");
 
-            // Disable button to prevent spam
             submitBtn.disabled = true;
-            submitBtn.textContent = "Submitting...";
+            showGlobalLoader();
 
             try {
                 const res = await fetch(
-                    "https://gtaw-project.vercel.app/discord/credits-request",
+                    `${API_BASE}/discord/credits-request`,
                     {
                         method: "POST",
                         headers: {
@@ -371,17 +444,23 @@
                 status.style.color = "limegreen";
                 status.textContent = "Request submitted successfully ✓";
 
-                console.log(data);
+                form.reset();
+                submitBtn.disabled = true;
+
+                // Optional: refresh credits immediately
+                await loadCredits();
 
             } catch (err) {
                 status.style.color = "red";
                 status.textContent = "API error: " + err.message;
             } finally {
+                hideGlobalLoader();
                 submitBtn.disabled = false;
-                submitBtn.textContent = "Submit";
             }
         });
-
+        document.addEventListener("DOMContentLoaded", () => {
+            loadCredits(true);
+        });
 
     </script>
 

@@ -193,6 +193,41 @@
       }
 
     }
+
+    /* ================= GLOBAL LOADER ================= */
+
+    .global-loader {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+    }
+
+    .loader-box {
+      background: var(--card);
+      padding: 30px 40px;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--box);
+      border-top: 4px solid var(--accent);
+      border-radius: 50%;
+      margin: auto;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
   </style>
 </head>
 
@@ -209,7 +244,13 @@
   </aside>
 
   <div class="overlay" id="overlay"></div>
-
+  <!-- Global Loader -->
+  <div id="globalLoader" class="global-loader">
+    <div class="loader-box">
+      <div class="spinner"></div>
+      <p>Loading...</p>
+    </div>
+  </div>
   <main class="main">
 
     <div class="topbar">
@@ -256,6 +297,8 @@
     let currentPage = 1;
 
     async function loadServices(page = 1) {
+      showLoader();
+
       try {
         const res = await fetch(`${API_BASE}/services?page=${page}&limit=8`, {
           cache: "no-store"
@@ -269,6 +312,8 @@
 
       } catch (err) {
         console.error(err);
+      } finally {
+        hideLoader();
       }
     }
 
@@ -338,7 +383,9 @@
       }
     }
 
-    async function loadCredits() {
+    async function loadCredits(show = false) {
+      if (show) showLoader();
+
       try {
         const res = await fetch(`${API_BASE}/users/me`, {
           headers: {
@@ -349,18 +396,19 @@
         if (!res.ok) throw new Error();
 
         const user = await res.json();
-
         document.getElementById("creditsDisplay").textContent =
           user.credits ?? 0;
 
       } catch (err) {
-        console.log("Failed to load credits", err);
+        console.log(err);
+      } finally {
+        if (show) hideLoader();
       }
     }
     document.addEventListener("DOMContentLoaded", () => {
       loadServices(currentPage);
-      loadCredits();
-      setInterval(loadCredits, 15000);
+      loadCredits(true); // show loader first time
+      setInterval(() => loadCredits(false), 15000);
     });
   </script>
 
