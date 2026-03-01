@@ -295,6 +295,35 @@
             }
 
         }
+
+        /* ================= PAGINATION ================= */
+
+        #pagination {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        #pagination button {
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: var(--box);
+            color: var(--text);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        #pagination button:hover {
+            background: var(--accent);
+        }
+
+        #pagination button:disabled {
+            background: var(--accent);
+            cursor: default;
+        }
     </style>
 </head>
 
@@ -326,12 +355,20 @@
         </div>
 
         <div id="servicesContainer" class="services"></div>
+        <div id="pagination"></div>
     </main>
 
     <script>
+        const API_BASE = "https://gtaw-project.vercel.app";
+        const token = localStorage.getItem("token");
+
+        if (!token) window.location.href = "../index.html";
+
         const globalLoader = document.getElementById("globalLoader");
 
         let activeRequests = 0;
+        let currentPage = 1;
+        const limit = 5;
 
         function showLoader() {
             activeRequests++;
@@ -345,39 +382,26 @@
                 globalLoader.style.display = "none";
             }
         }
-        const API_BASE = "https://gtaw-project.vercel.app";
-        const token = localStorage.getItem("token");
 
-        if (!token) { window.location.href = "../index.html"; }
+        /* ================= LOAD ORDERS ================= */
 
-        /* Sidebar toggle */
-        const sidebar = document.getElementById("sidebar");
-        const overlay = document.getElementById("overlay");
-        const menuBtn = document.getElementById("menuBtn");
-
-        menuBtn.addEventListener("click", () => {
-            sidebar.classList.toggle("open");
-            overlay.classList.toggle("active");
-        });
-
-        overlay.addEventListener("click", () => {
-            sidebar.classList.remove("open");
-            overlay.classList.remove("active");
-        });
-
-        /* Load buyer orders */
-        async function loadBuyerOrders() {
+        async function loadBuyerOrders(page = 1) {
             showLoader();
 
             try {
-                const res = await fetch(`${API_BASE}/orders/buyer`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                const res = await fetch(
+                    `${API_BASE}/orders/buyer?page=${page}&limit=${limit}`,
+                    {
+                        headers: { Authorization: `Bearer ${token}` }
+                    }
+                );
 
                 if (!res.ok) throw new Error();
 
                 const data = await res.json();
-                renderOrders(data);
+
+                renderOrders(data.orders || []);
+                renderPagination(data.pagination);
 
             } catch (err) {
                 console.log("Failed to load orders", err);
@@ -385,6 +409,8 @@
                 hideLoader();
             }
         }
+
+        /* ================= RENDER ORDERS ================= */
 
         function renderOrders(orders) {
             const container = document.getElementById("servicesContainer");
@@ -400,36 +426,60 @@
                 card.className = "service-card";
 
                 card.innerHTML = `
-  <img class="service-image"
-    src="${order.service?.service_image || 'https://i.imgur.com/placeholder.png'}">
-  
-  <h3>${order.service?.service_title}</h3>
+        <img class="service-image"
+            src="${order.service?.service_image || 'https://i.imgur.com/placeholder.png'}">
+        
+        <h3>${order.service?.service_title}</h3>
 
-  <div class="order-row">
-    <span><strong>Buyer:</strong> ${order.buyer?.username}</span>
-    <span><strong>Total Price:</strong> ${order.totalPrice} credits</span>
-  </div>
+        <div class="order-row">
+            <span><strong>Seller:</strong> ${order.seller?.username}</span>
+            <span><strong>Total:</strong> ${order.totalPrice} credits</span>
+        </div>
 
-  <div class="order-row">
-    <span><strong>You Received:</strong> ${order.sellerAmount} credits</span>
-    <span class="order-status ${order.status?.toLowerCase()}">
-      <strong>Status:</strong> ${order.status}
-    </span>
-  </div>
-`;
+        <div class="order-row">
+            <span class="order-status ${order.status?.toLowerCase()}">
+                <strong>Status:</strong> ${order.status}
+            </span>
+        </div>
+        `;
 
                 container.appendChild(card);
             });
         }
+
+        /* ================= PAGINATION ================= */
+
+        function renderPagination(pagination) {
+            const paginationDiv = document.getElementById("pagination");
+            paginationDiv.innerHTML = "";
+
+            if (!pagination || pagination.totalPages <= 1) return;
+
+            for (let i = 1; i <= pagination.totalPages; i++) {
+                const btn = document.createElement("button");
+                btn.textContent = i;
+
+                if (i === pagination.currentPage) {
+                    btn.disabled = true;
+                }
+
+                btn.onclick = () => {
+                    currentPage = i;
+                    loadBuyerOrders(i);
+                };
+
+                paginationDiv.appendChild(btn);
+            }
+        }
+
+        /* ================= LOAD CREDITS ================= */
 
         async function loadCredits(show = false) {
             if (show) showLoader();
 
             try {
                 const res = await fetch(`${API_BASE}/users/me`, {
-                    headers: {
-                        Authorization: "Bearer " + token
-                    }
+                    headers: { Authorization: "Bearer " + token }
                 });
 
                 if (!res.ok) throw new Error();
@@ -444,9 +494,12 @@
                 if (show) hideLoader();
             }
         }
+
+        /* ================= INIT ================= */
+
         document.addEventListener("DOMContentLoaded", () => {
-            loadBuyerOrders();
-            loadCredits(true); // show loader first time
+            loadBuyerOrders(currentPage);
+            loadCredits(true);
             setInterval(() => loadCredits(false), 15000);
         });
     </script>
