@@ -270,7 +270,22 @@
     if (!token) {
       window.location.href = "../index.html";
     }
+    const globalLoader = document.getElementById("globalLoader");
 
+    let activeRequests = 0;
+
+    function showLoader() {
+      activeRequests++;
+      globalLoader.style.display = "flex";
+    }
+
+    function hideLoader() {
+      activeRequests--;
+      if (activeRequests <= 0) {
+        activeRequests = 0;
+        globalLoader.style.display = "none";
+      }
+    }
     /* ===== Sidebar Toggle ===== */
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("overlay");
@@ -305,7 +320,7 @@
         });
 
         const data = await res.json();
-        if (!res.ok) return;
+        if (!res.ok) throw new Error("Failed to load services");
 
         renderServices(data.services || []);
         renderPagination(data.page || 1, data.totalPages || 1);
@@ -362,24 +377,29 @@
     }
 
     async function buyService(serviceId) {
+      showLoader();
       try {
-        const res = await fetch(`${API_BASE}/orders/buyservice`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify({ serviceId })
-        });
+        try {
+          const res = await fetch(`${API_BASE}/orders/buyservice`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ serviceId })
+          });
 
-        const data = await res.json();
-        if (!res.ok) return alert(data.error || "Purchase failed");
+          const data = await res.json();
+          if (!res.ok) return alert(data.error || "Purchase failed");
 
-        alert("Service purchased!");
-        document.getElementById("creditsDisplay").textContent = data.buyerCredits;
+          alert("Service purchased!");
+          document.getElementById("creditsDisplay").textContent = data.buyerCredits;
 
-      } catch (err) {
-        console.error(err);
+        } catch (err) {
+          console.error(err);
+        }
+      } finally {
+        hideLoader();
       }
     }
 
