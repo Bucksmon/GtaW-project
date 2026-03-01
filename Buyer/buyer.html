@@ -427,6 +427,7 @@
         const card = document.createElement("div");
         card.className = "service-card";
 
+        window.alert("Service id:", service._id);
         card.innerHTML = `
   <img class="service-image"
        src="${service.service_image || 'https://i.imgur.com/placeholder.png'}"
@@ -466,7 +467,6 @@
       showLoader();
       try {
         try {
-          window.alert("Serivce Id: ", serviceId);
           const res = await fetch(`${API_BASE}/orders/buyservice`, {
             method: "POST",
             headers: {
@@ -477,7 +477,6 @@
           });
 
           const data = await res.json();
-          window.alert(data);
           if (!res.ok) return alert(data.error || "Purchase failed");
 
           alert("Service purchased!");
