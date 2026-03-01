@@ -189,6 +189,45 @@
             color: var(--success);
         }
 
+        /* ================= ORDER ROW ================= */
+
+        .order-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            font-size: .9rem;
+            color: var(--muted);
+        }
+
+        .order-row span {
+            white-space: nowrap;
+        }
+
+        /* subtle divider between rows */
+        .order-row+.order-row {
+            padding-top: 6px;
+            border-top: 1px solid rgba(255, 255, 255, .06);
+        }
+
+        /* ================= STATUS COLORS ================= */
+
+        .order-status {
+            font-weight: 600;
+        }
+
+        .order-status.completed {
+            color: var(--success);
+        }
+
+        .order-status.pending {
+            color: orange;
+        }
+
+        .order-status.failed {
+            color: var(--danger);
+        }
+
         /* ================= EMPTY STATE ================= */
 
         .services p {
@@ -360,14 +399,23 @@
                 card.className = "service-card";
 
                 card.innerHTML = `
-      <img class="service-image"
-        src="${order.service?.service_image || 'https://i.imgur.com/placeholder.png'}">
-      <h3>${order.service?.service_title}</h3>
-      <p><strong>Buyer:</strong> ${order.buyer?.username}</p>
-      <p><strong>Total Price:</strong> ${order.totalPrice} credits</p>
-      <p><strong>You Received:</strong> ${order.sellerAmount} credits</p>
-      <p><strong>Status:</strong> ${order.status}</p>
-    `;
+  <img class="service-image"
+    src="${order.service?.service_image || 'https://i.imgur.com/placeholder.png'}">
+  
+  <h3>${order.service?.service_title}</h3>
+
+  <div class="order-row">
+    <span><strong>Buyer:</strong> ${order.buyer?.username}</span>
+    <span><strong>Total Price:</strong> ${order.totalPrice} credits</span>
+  </div>
+
+  <div class="order-row">
+    <span><strong>You Received:</strong> ${order.sellerAmount} credits</span>
+    <span class="order-status ${order.status?.toLowerCase()}">
+      <strong>Status:</strong> ${order.status}
+    </span>
+  </div>
+`;
 
                 container.appendChild(card);
             });
