@@ -24,8 +24,7 @@
       margin: 0;
       background: radial-gradient(circle at top, #111827, #0b0f1a 60%, #070a10);
       color: var(--text);
-      height: 100vh;
-      overflow: hidden;
+      min-height: 100vh;
     }
 
     /* Sidebar */
@@ -70,17 +69,18 @@
     /* Main */
     .main {
       margin-left: 240px;
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
     .topbar {
-      background: var(--card);
-      padding: 14px 20px;
+      padding: 18px 25px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      background: transparent;
+      /* removed background */
     }
 
     .menu-btn {
@@ -95,6 +95,8 @@
     .content {
       padding: 25px;
       flex: 1;
+      display: flex;
+      justify-content: center;
     }
 
     .card {
@@ -102,6 +104,7 @@
       border-radius: 14px;
       padding: 20px;
       max-width: 420px;
+      width: 100%;
     }
 
     form {
@@ -191,12 +194,14 @@
     }
 
     @media (max-width:768px) {
+
       .main {
         margin-left: 0;
       }
 
       .sidebar {
         transform: translateX(-100%);
+        z-index: 1500;
       }
 
       .sidebar.open {
@@ -206,6 +211,19 @@
       .menu-btn {
         display: block;
       }
+
+      .topbar {
+        padding: 15px 18px;
+      }
+
+      .content {
+        padding: 18px;
+      }
+
+      .card {
+        padding: 18px;
+      }
+
     }
   </style>
   <link rel="stylesheet" href="addCredits.css" />
