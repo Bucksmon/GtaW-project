@@ -403,7 +403,7 @@
 
         const data = await res.json();
         if (!res.ok) throw new Error("Failed to load services");
-        window.alert("data", data);
+  
         renderServices(data.services || []);
         renderPagination(data.page || 1, data.totalPages || 1);
 
@@ -426,7 +426,6 @@
       services.forEach(service => {
         const card = document.createElement("div");
 
-        window.alert(`Services: ${ service._id }`);
         card.className = "service-card";
 
         card.innerHTML = `
@@ -465,6 +464,9 @@
     }
 
     async function buyService(serviceId) {
+      window.alert("service:", serviceId);
+      
+      window.alert(`services: ${serviceId}`);
       showLoader();
       try {
         try {
