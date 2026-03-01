@@ -200,6 +200,20 @@
       cursor: not-allowed;
     }
 
+    /* ================= META ROW ================= */
+
+    .service-meta {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+      margin-top: 4px;
+    }
+
+    .service-meta span {
+      white-space: nowrap;
+    }
+
     /* ================= EMPTY STATE ================= */
 
     .services p {
@@ -423,15 +437,19 @@
         card.className = "service-card";
 
         card.innerHTML = `
-      <img class="service-image"
-           src="${service.service_image || 'https://i.imgur.com/placeholder.png'}"
-           alt="Service Image">
-      <h3>${service.service_title || "No title"}</h3>
-      <p>${service.service_description || "No description"}</p>
-      <p><strong>Price:</strong> ${service.service_price || 0} credits</p>
-      <p><strong>Seller:</strong> ${service.service_sellerId?.username || "Unknown"}</p>
-      <button onclick="buyService('${service._id}')">Buy</button>
-    `;
+  <img class="service-image"
+       src="${service.service_image || 'https://i.imgur.com/placeholder.png'}"
+       alt="Service Image">
+  <h3>${service.service_title || "No title"}</h3>
+  <p>${service.service_description || "No description"}</p>
+
+  <div class="service-meta">
+    <span><strong>Price:</strong> ${service.service_price || 0} credits</span>
+    <span><strong>Seller:</strong> ${service.service_sellerId?.username || "Unknown"}</span>
+  </div>
+
+  <button onclick="buyService('${service._id}')">Buy</button>
+`;
 
         container.appendChild(card);
       });
