@@ -9,21 +9,23 @@
     :root {
       --bg: #0b0f1a;
       --panel: #111827;
-      --card: #121a2a;
-      --box: #1a2440;
+      --card: #151e33;
+      --box: #1e2945;
       --text: #e6e9f2;
       --muted: #9aa4b8;
       --accent: #4f8cff;
       --danger: #ff4f4f;
 
-      --radius: 14px;
-      --radius-sm: 10px;
+      --radius: 16px;
+      --radius-sm: 12px;
       --transition: .25s ease;
     }
 
+    /* ================= BASE ================= */
+
     * {
       box-sizing: border-box;
-      font-family: "Segoe UI", Arial, sans-serif;
+      font-family: "Segoe UI", system-ui, sans-serif;
     }
 
     body {
@@ -31,20 +33,19 @@
       background: radial-gradient(circle at top, #111827, #0b0f1a 60%, #070a10);
       color: var(--text);
       min-height: 100vh;
-      overflow-x: hidden;
     }
 
-    /* ===== Layout ===== */
+    /* ================= SIDEBAR ================= */
 
     .sidebar {
       position: fixed;
       top: 0;
       left: 0;
-      width: 240px;
+      width: 250px;
       height: 100%;
       background: var(--panel);
       border-right: 1px solid rgba(255, 255, 255, .06);
-      padding: 25px 0;
+      padding: 30px 0;
       transition: transform var(--transition);
       z-index: 1000;
     }
@@ -52,6 +53,7 @@
     .sidebar h2 {
       text-align: center;
       margin-bottom: 30px;
+      font-weight: 600;
     }
 
     .nav-links {
@@ -60,15 +62,15 @@
     }
 
     .nav-links li {
-      margin: 6px 15px;
+      margin: 8px 18px;
     }
 
     .nav-links a {
       display: block;
       padding: 12px 16px;
       border-radius: var(--radius-sm);
-      color: white;
       text-decoration: none;
+      color: var(--text);
       transition: var(--transition);
     }
 
@@ -76,6 +78,8 @@
     .nav-links a.active {
       background: rgba(255, 255, 255, .08);
     }
+
+    /* ================= OVERLAY ================= */
 
     .overlay {
       position: fixed;
@@ -89,18 +93,31 @@
       display: block;
     }
 
+    /* ================= MAIN ================= */
+
     .main {
-      margin-left: 240px;
-      padding: 30px;
+      margin-left: 250px;
+      padding: 60px 40px;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
     }
+
+    /* ================= TOPBAR ================= */
 
     .topbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 50px;
+    }
+
+    .topbar h2 {
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .topbar span {
+      color: var(--accent);
+      font-weight: 600;
     }
 
     .menu-btn {
@@ -206,13 +223,14 @@
       font-size: 1rem;
     }
 
-    /* ===== Pagination ===== */
+    /* ================= PAGINATION ================= */
 
     #pagination {
-      margin-top: 30px;
+      margin-top: 40px;
       display: flex;
+      justify-content: center;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
     }
 
     #pagination button {
@@ -222,35 +240,42 @@
       background: var(--box);
       color: var(--text);
       cursor: pointer;
+      transition: var(--transition);
     }
 
-    /* ===== Global Loader ===== */
+    #pagination button:hover {
+      background: var(--accent);
+    }
+
+    #pagination button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    /* ================= GLOBAL LOADER ================= */
 
     .global-loader {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, .65);
+      background: rgba(0, 0, 0, .7);
       display: none;
       align-items: center;
       justify-content: center;
       z-index: 3000;
     }
 
-    .global-loader.active {
-      display: flex;
-    }
-
     .loader-box {
       background: var(--card);
-      padding: 35px;
+      padding: 40px;
       border-radius: var(--radius);
       text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .5);
     }
 
-    .spinner {
-      width: 42px;
-      height: 42px;
-      border: 4px solid var(--box);
+    .spinner-large {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255, 255, 255, .2);
       border-top: 4px solid var(--accent);
       border-radius: 50%;
       margin: auto;
@@ -263,7 +288,7 @@
       }
     }
 
-    /* ===== Responsive ===== */
+    /* ================= RESPONSIVE ================= */
 
     @media (max-width:768px) {
 
@@ -277,16 +302,13 @@
 
       .main {
         margin-left: 0;
-        padding: 20px;
+        padding: 30px 20px;
       }
 
       .menu-btn {
         display: block;
       }
 
-      .services {
-        grid-template-columns: 1fr;
-      }
     }
   </style>
 </head>
