@@ -111,12 +111,14 @@
             margin-bottom: 50px;
         }
 
-        .topbar span {
+        .topbar h2 {
+            margin: 0;
             font-weight: 600;
         }
 
-        .topbar strong {
+        .topbar span {
             color: var(--accent);
+            font-weight: 600;
         }
 
         .menu-btn {
@@ -300,12 +302,8 @@
     <!-- Main -->
     <main class="main">
         <div class="topbar">
-            <div style="display:flex; align-items:center; gap:15px;">
-                <button class="menu-btn" id="menuBtn">☰</button>
-                <span>Sell Credits</span>
-            </div>
-
-            <span>Your Credits: <strong id="creditsDisplay">0</strong></span>
+            <button class="menu-btn" id="menuBtn">☰</button>
+            <h2>Your Credits: <span id="creditsDisplay">0</span></h2>
         </div>
 
         <div class="content">
