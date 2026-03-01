@@ -21,7 +21,8 @@
       --transition: .25s ease;
     }
 
-    /* Base */
+    /* ================= BASE ================= */
+
     * {
       box-sizing: border-box;
       font-family: "Segoe UI", system-ui, sans-serif;
@@ -34,9 +35,12 @@
       min-height: 100vh;
     }
 
-    /* Sidebar */
+    /* ================= SIDEBAR ================= */
+
     .sidebar {
       position: fixed;
+      top: 0;
+      left: 0;
       width: 250px;
       height: 100%;
       background: var(--panel);
@@ -75,36 +79,66 @@
       background: rgba(255, 255, 255, .08);
     }
 
-    /* Main */
+    /* ================= OVERLAY ================= */
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .5);
+      display: none;
+      z-index: 900;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    /* ================= MAIN ================= */
+
     .main {
       margin-left: 250px;
-      padding: 40px;
+      padding: 60px 40px;
+      min-height: 100vh;
     }
+
+    /* ================= TOPBAR ================= */
 
     .topbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 40px;
+      margin-bottom: 50px;
+    }
+
+    .topbar h2 {
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .topbar span {
+      color: var(--accent);
+      font-weight: 600;
     }
 
     .menu-btn {
       display: none;
       background: none;
       border: none;
-      color: var(--text);
       font-size: 1.6rem;
+      color: var(--text);
       cursor: pointer;
     }
 
-    /* Grid */
+    /* ================= GRID ================= */
+
     .services {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 28px;
+      gap: 30px;
     }
 
-    /* Card */
+    /* ================= CARD ================= */
+
     .service-card {
       background: var(--card);
       border-radius: var(--radius);
@@ -112,7 +146,7 @@
       display: flex;
       flex-direction: column;
       gap: 14px;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, .35);
+      box-shadow: 0 20px 55px rgba(0, 0, 0, .4);
       transition: var(--transition);
     }
 
@@ -143,6 +177,8 @@
       color: var(--text);
     }
 
+    /* ================= BUTTON ================= */
+
     .service-card button {
       margin-top: auto;
       padding: 12px;
@@ -159,8 +195,89 @@
       opacity: .9;
     }
 
-    /* Responsive */
-    @media(max-width:768px) {
+    .service-card button:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    /* ================= EMPTY STATE ================= */
+
+    .services p {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    /* ================= PAGINATION ================= */
+
+    #pagination {
+      margin-top: 40px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    #pagination button {
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      border: none;
+      background: var(--box);
+      color: var(--text);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    #pagination button:hover {
+      background: var(--accent);
+    }
+
+    #pagination button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    /* ================= GLOBAL LOADER ================= */
+
+    .global-loader {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+    }
+
+    .loader-box {
+      background: var(--card);
+      padding: 40px;
+      border-radius: var(--radius);
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .5);
+    }
+
+    .spinner-large {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255, 255, 255, .2);
+      border-top: 4px solid var(--accent);
+      border-radius: 50%;
+      margin: auto;
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ================= RESPONSIVE ================= */
+
+    @media (max-width:768px) {
+
       .sidebar {
         transform: translateX(-100%);
       }
@@ -171,12 +288,13 @@
 
       .main {
         margin-left: 0;
-        padding: 20px;
+        padding: 30px 20px;
       }
 
       .menu-btn {
         display: block;
       }
+
     }
   </style>
 </head>

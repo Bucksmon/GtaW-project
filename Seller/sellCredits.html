@@ -15,13 +15,14 @@
             --muted: #9aa4b8;
             --accent: #4f8cff;
             --danger: #ff4f4f;
+            --success: #2ecc71;
 
             --radius: 16px;
             --radius-sm: 12px;
             --transition: .25s ease;
         }
 
-        /* ===== Base ===== */
+        /* ================= BASE ================= */
 
         * {
             box-sizing: border-box;
@@ -35,7 +36,7 @@
             min-height: 100vh;
         }
 
-        /* ===== Sidebar ===== */
+        /* ================= SIDEBAR ================= */
 
         .sidebar {
             position: fixed;
@@ -79,7 +80,21 @@
             background: rgba(255, 255, 255, .08);
         }
 
-        /* ===== Main Layout ===== */
+        /* ================= OVERLAY ================= */
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .5);
+            display: none;
+            z-index: 900;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* ================= MAIN ================= */
 
         .main {
             margin-left: 250px;
@@ -87,11 +102,21 @@
             min-height: 100vh;
         }
 
+        /* ================= TOPBAR ================= */
+
         .topbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
+        }
+
+        .topbar span {
+            font-weight: 600;
+        }
+
+        .topbar strong {
+            color: var(--accent);
         }
 
         .menu-btn {
@@ -103,27 +128,33 @@
             cursor: pointer;
         }
 
-        /* ===== Content Wrapper ===== */
+        /* ================= CONTENT ================= */
 
         .content {
             max-width: 520px;
         }
 
-        /* ===== Card ===== */
+        /* ================= CARD ================= */
 
         .card {
             background: var(--card);
-            padding: 36px;
+            padding: 40px;
             border-radius: var(--radius);
-            box-shadow: 0 18px 50px rgba(0, 0, 0, .4);
+            box-shadow: 0 20px 55px rgba(0, 0, 0, .4);
         }
 
-        /* ===== Form ===== */
+        .card h2 {
+            margin-top: 0;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        /* ================= FORM ================= */
 
         form {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 22px;
         }
 
         label {
@@ -146,6 +177,8 @@
             box-shadow: 0 0 0 2px rgba(79, 140, 255, .3);
         }
 
+        /* ================= BUTTON ================= */
+
         button {
             margin-top: 10px;
             padding: 14px;
@@ -162,13 +195,21 @@
             opacity: .9;
         }
 
-        .status {
-            font-size: .85rem;
-            color: var(--muted);
-            margin-top: 6px;
+        button:disabled {
+            opacity: .6;
+            cursor: not-allowed;
         }
 
-        /* ===== Global Loader ===== */
+        /* ================= STATUS ================= */
+
+        .status {
+            font-size: .9rem;
+            margin-top: 5px;
+            min-height: 20px;
+            transition: var(--transition);
+        }
+
+        /* ================= GLOBAL LOADER ================= */
 
         .global-loader {
             position: fixed;
@@ -180,16 +221,12 @@
             z-index: 3000;
         }
 
-        .global-loader.active {
-            display: flex;
-        }
-
         .loader-box {
             background: var(--card);
             padding: 40px;
             border-radius: var(--radius);
             text-align: center;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, .5);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .5);
         }
 
         .spinner-large {
@@ -208,23 +245,9 @@
             }
         }
 
-        /* ===== Overlay (Mobile Sidebar) ===== */
+        /* ================= RESPONSIVE ================= */
 
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, .5);
-            display: none;
-            z-index: 900;
-        }
-
-        .overlay.active {
-            display: block;
-        }
-
-        /* ===== Responsive ===== */
-
-        @media (max-width: 768px) {
+        @media (max-width:768px) {
 
             .sidebar {
                 transform: translateX(-100%);
