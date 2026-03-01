@@ -14,7 +14,11 @@
             --text: #e6e9f2;
             --muted: #9aa4b8;
             --accent: #4f8cff;
-            --shadow: rgba(0, 0, 0, 0.6);
+            --danger: #ff4f4f;
+
+            --radius: 14px;
+            --radius-sm: 10px;
+            --transition: .25s ease;
         }
 
         * {
@@ -26,11 +30,11 @@
             margin: 0;
             background: radial-gradient(circle at top, #111827, #0b0f1a 60%, #070a10);
             color: var(--text);
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
         }
 
-        /* Sidebar */
+        /* ===== Layout ===== */
+
         .sidebar {
             position: fixed;
             top: 0;
@@ -38,148 +42,127 @@
             width: 240px;
             height: 100%;
             background: var(--panel);
-            border-right: 1px solid rgba(255, 255, 255, 0.08);
-            display: flex;
-            flex-direction: column;
-            padding-top: 20px;
+            border-right: 1px solid rgba(255, 255, 255, .06);
+            padding: 25px 0;
+            transition: transform var(--transition);
             z-index: 1000;
-            transition: transform 0.3s ease;
         }
 
         .sidebar h2 {
             text-align: center;
-            margin-bottom: 25px;
-            font-size: 1.3rem;
+            margin-bottom: 30px;
         }
 
         .nav-links {
             list-style: none;
             padding: 0;
-            margin: 0;
-            flex: 1;
         }
 
         .nav-links li {
-            margin: 6px 10px;
+            margin: 6px 15px;
         }
 
         .nav-links a {
             display: block;
             padding: 12px 16px;
+            border-radius: var(--radius-sm);
             color: white;
             text-decoration: none;
-            border-radius: 10px;
+            transition: var(--transition);
         }
 
         .nav-links a:hover,
         .nav-links a.active {
-            background: rgba(96, 96, 96, 0.432);
+            background: rgba(255, 255, 255, .08);
         }
 
-        /* Main */
         .main {
             margin-left: 240px;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-        /* Topbar */
         .topbar {
-            background: var(--card);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 14px 20px;
+            padding: 20px 30px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
         }
 
         .menu-btn {
-            font-size: 1.5rem;
+            display: none;
+            font-size: 1.6rem;
             background: none;
             border: none;
             color: var(--text);
             cursor: pointer;
-            display: none;
         }
 
-        /* Content */
         .content {
-            padding: 25px;
-            overflow-y: auto;
             flex: 1;
+            padding: 30px;
+            display: flex;
+            justify-content: flex-start;
         }
 
         .card {
             background: var(--card);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 14px;
-            padding: 20px;
-            max-width: 420px;
+            padding: 30px;
+            border-radius: var(--radius);
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .4);
         }
 
         form {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
         }
 
         label {
-            font-size: 0.9rem;
+            font-size: .85rem;
             color: var(--muted);
         }
 
         input {
-            padding: 10px 14px;
+            padding: 12px;
             background: var(--box);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: var(--radius-sm);
             color: var(--text);
+            outline: none;
+            transition: var(--transition);
         }
 
         input:focus {
-            outline: none;
             border-color: var(--accent);
-            box-shadow: 0 0 6px var(--accent);
         }
 
         button {
-            margin-top: 10px;
             padding: 12px;
+            border-radius: var(--radius-sm);
+            border: none;
             background: var(--accent);
             color: white;
-            border: none;
-            border-radius: 10px;
             font-weight: 600;
             cursor: pointer;
+            transition: var(--transition);
         }
 
         button:hover {
-            opacity: 0.9;
+            opacity: .9;
         }
 
         .status {
-            font-size: 0.9rem;
-            margin-top: 6px;
+            font-size: .85rem;
+            color: var(--muted);
         }
 
-        /* Overlay (mobile) */
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            z-index: 900;
-        }
+        /* ===== Responsive ===== */
 
-        .overlay.active {
-            display: block;
-        }
-
-        @media (max-width: 768px) {
-            .main {
-                margin-left: 0;
-            }
+        @media (max-width:768px) {
 
             .sidebar {
                 transform: translateX(-100%);
@@ -189,43 +172,16 @@
                 transform: translateX(0);
             }
 
+            .main {
+                margin-left: 0;
+            }
+
             .menu-btn {
                 display: block;
             }
-        }
 
-        /* ================= GLOBAL LOADER ================= */
-
-        .global-loader {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 3000;
-        }
-
-        .loader-box {
-            background: var(--card);
-            padding: 35px 45px;
-            border-radius: 16px;
-            text-align: center;
-        }
-
-        .spinner-large {
-            width: 45px;
-            height: 45px;
-            border: 4px solid rgba(255, 255, 255, 0.2);
-            border-top: 4px solid var(--accent);
-            border-radius: 50%;
-            margin: auto;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
+            .content {
+                padding: 20px;
             }
         }
     </style>
