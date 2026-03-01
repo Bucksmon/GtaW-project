@@ -464,9 +464,6 @@
     }
 
     async function buyService(serviceId) {
-      window.alert("service:", serviceId);
-      
-      window.alert(`services: ${serviceId}`);
       showLoader();
       try {
         try {
@@ -476,7 +473,7 @@
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ serviceId })
+            body: JSON.stringify({ serviceId: serviceId })
           });
 
           const data = await res.json();
