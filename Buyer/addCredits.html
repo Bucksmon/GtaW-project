@@ -4,7 +4,6 @@
 <head>
   <meta charset="UTF-8" />
   <title>Buyer Panel – Add Credits</title>
-
   <style>
     :root {
       --bg: #0b0f1a;
@@ -14,7 +13,6 @@
       --text: #e6e9f2;
       --muted: #9aa4b8;
       --accent: #4f8cff;
-      --shadow: rgba(0, 0, 0, 0.6);
     }
 
     * {
@@ -38,25 +36,18 @@
       width: 240px;
       height: 100%;
       background: var(--panel);
-      border-right: 1px solid rgba(255, 255, 255, 0.08);
-      display: flex;
-      flex-direction: column;
       padding-top: 20px;
-      z-index: 1000;
       transition: transform 0.3s ease;
     }
 
     .sidebar h2 {
       text-align: center;
       margin-bottom: 25px;
-      font-size: 1.3rem;
     }
 
     .nav-links {
       list-style: none;
       padding: 0;
-      margin: 0;
-      flex: 1;
     }
 
     .nav-links li {
@@ -73,7 +64,7 @@
 
     .nav-links a:hover,
     .nav-links a.active {
-      background: rgba(96, 96, 96, 0.432);
+      background: rgba(96, 96, 96, 0.4);
     }
 
     /* Main */
@@ -84,35 +75,30 @@
       flex-direction: column;
     }
 
-    /* Topbar */
     .topbar {
       background: var(--card);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       padding: 14px 20px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
     }
 
     .menu-btn {
-      font-size: 1.5rem;
+      display: none;
       background: none;
       border: none;
+      font-size: 1.5rem;
       color: var(--text);
       cursor: pointer;
-      display: none;
     }
 
-    /* Content */
     .content {
       padding: 25px;
-      overflow-y: auto;
       flex: 1;
     }
 
     .card {
       background: var(--card);
-      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 14px;
       padding: 20px;
       max-width: 420px;
@@ -130,53 +116,81 @@
     }
 
     input {
-      padding: 10px 14px;
+      padding: 10px;
       background: var(--box);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 10px;
       color: var(--text);
     }
 
-    input:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 6px var(--accent);
-    }
-
     button {
-      margin-top: 10px;
       padding: 12px;
       background: var(--accent);
       color: white;
       border: none;
       border-radius: 10px;
-      font-weight: 600;
       cursor: pointer;
     }
 
-    button:hover {
-      opacity: 0.9;
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
 
     .status {
       font-size: 0.9rem;
-      margin-top: 6px;
     }
 
-    /* Overlay (mobile) */
+    /* Overlay */
     .overlay {
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, 0.5);
       display: none;
-      z-index: 900;
     }
 
     .overlay.active {
       display: block;
     }
 
-    @media (max-width: 768px) {
+    /* Loader */
+    .loader-overlay,
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .loader-box,
+    .popup-box {
+      background: var(--card);
+      padding: 30px;
+      border-radius: 14px;
+      text-align: center;
+      max-width: 350px;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--box);
+      border-top: 4px solid var(--accent);
+      border-radius: 50%;
+      margin: auto;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width:768px) {
       .main {
         margin-left: 0;
       }
@@ -194,6 +208,7 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="addCredits.css" />
 </head>
 
 <body>
@@ -202,7 +217,7 @@
   <aside class="sidebar" id="sidebar">
     <h2>Buyer Panel</h2>
     <ul class="nav-links">
-      <li><a href="buyer.html" >Browse Services</a></li>
+      <li><a href="buyer.html">Browse Services</a></li>
       <li><a href="buyerOrder.html">Orders</a></li>
       <li><a class="active" href="addCredits.html">Add Credits</a></li>
       <li><a href="../index.html">Logout</a></li>
@@ -211,11 +226,28 @@
 
   <div class="overlay" id="overlay"></div>
 
+  <!-- Loader Overlay -->
+  <div id="loaderOverlay" class="loader-overlay">
+    <div class="loader-box">
+      <div class="spinner"></div>
+      <p>Processing request...</p>
+    </div>
+  </div>
+
+  <!-- Success Popup -->
+  <div id="popupOverlay" class="popup-overlay">
+    <div class="popup-box">
+      <h3>Request Sent</h3>
+      <p>Your request has been forwarded, it will be handled shortly.</p>
+      <button id="closePopupBtn">OK</button>
+    </div>
+  </div>
+
   <!-- Main -->
   <main class="main">
     <div class="topbar">
       <button class="menu-btn" id="menuBtn">☰</button>
-      <span>Add Credits</span>
+      <h2>Your Credits: <span id="creditsDisplay">0</span></h2>
     </div>
 
     <div class="content">
@@ -232,7 +264,7 @@
           <label>Credit Amount</label>
           <input id="credits" type="number" min="1" placeholder="100" />
 
-          <button type="submit">Submit</button>
+          <button type="submit" id="submitBtn">Submit</button>
           <div id="status" class="status"></div>
         </form>
       </div>
@@ -240,6 +272,14 @@
   </main>
 
   <script>
+    const API_BASE = "https://gtaw-project.vercel.app";
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      window.location.href = "../index.html";
+    }
+
+    /* Sidebar */
     const menuBtn = document.getElementById("menuBtn");
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("overlay");
@@ -254,135 +294,117 @@
       overlay.classList.remove("active");
     });
 
+    /* JWT */
+    function parseJWT(token) {
+      try {
+        const payload = token.split(".")[1];
+        return JSON.parse(atob(payload));
+      } catch {
+        return null;
+      }
+    }
+
+    function loadCredits() {
+      const decoded = parseJWT(token);
+      if (!decoded) return;
+      document.getElementById("creditsDisplay").textContent =
+        decoded.credits ?? 0;
+    }
+
+    /* Form */
     const form = document.getElementById("creditForm");
     const routingInput = document.getElementById("routingNumber");
     const discordInput = document.getElementById("discordTag");
     const creditsInput = document.getElementById("credits");
     const status = document.getElementById("status");
-    const submitBtn = document.querySelector("#creditForm button");
+    const submitBtn = document.getElementById("submitBtn");
 
-    // Disable initially
+    const loaderOverlay = document.getElementById("loaderOverlay");
+    const popupOverlay = document.getElementById("popupOverlay");
+    const closePopupBtn = document.getElementById("closePopupBtn");
+
     submitBtn.disabled = true;
 
-    function validateFormRealtime() {
+    function validate() {
       const routing = routingInput.value.trim();
       const discord = discordInput.value.trim();
-      const credits = creditsInput.value.trim();
+      const credits = Number(creditsInput.value.trim());
 
-      status.style.color = "red";
       submitBtn.disabled = true;
+      status.style.color = "red";
 
-      // ===== Routing Number =====
-      if (!routing) {
-        status.textContent = "Routing number required.";
-        return;
-      }
+      if (!/^\d{9}$/.test(routing))
+        return status.textContent = "Routing must be 9 digits.";
 
-      if (!/^\d+$/.test(routing)) {
-        status.textContent = "Routing number must be numeric.";
-        return;
-      }
+      if (!/^[a-zA-Z0-9_]+$/.test(discord))
+        return status.textContent = "Invalid Discord tag.";
 
-      if (routing.length !== 9) {
-        status.textContent = "Routing number must be 9 digits.";
-        return;
-      }
+      if (isNaN(credits) || credits <= 0)
+        return status.textContent = "Invalid credit amount.";
 
-      // ===== Discord Tag =====
-      if (!discord) {
-        status.textContent = "Discord tag required.";
-        return;
-      }
-
-      if (discord.includes(" ")) {
-        status.textContent = "Discord tag cannot contain spaces.";
-        return;
-      }
-
-      if (!/^[a-zA-Z0-9_]+$/.test(discord)) {
-        status.textContent = "Discord tag format invalid.";
-        return;
-      }
-
-      // ===== Credits =====
-      if (!credits) {
-        status.textContent = "Credit amount required.";
-        return;
-      }
-
-      const creditAmount = Number(credits);
-
-      if (isNaN(creditAmount) || creditAmount <= 0) {
-        status.textContent = "Enter a valid credit amount.";
-        return;
-      }
-
-      // ✅ All checks passed
       status.style.color = "limegreen";
       status.textContent = "All fields valid ✓";
       submitBtn.disabled = false;
     }
 
-    // Real-time listeners
-    routingInput.addEventListener("input", validateFormRealtime);
-    discordInput.addEventListener("input", validateFormRealtime);
-    creditsInput.addEventListener("input", validateFormRealtime);
-    
+    routingInput.addEventListener("input", validate);
+    discordInput.addEventListener("input", validate);
+    creditsInput.addEventListener("input", validate);
+
+    function showLoader() {
+      loaderOverlay.style.display = "flex";
+    }
+
+    function hideLoader() {
+      loaderOverlay.style.display = "none";
+    }
+
+    function showPopup() {
+      popupOverlay.style.display = "flex";
+    }
+
+    closePopupBtn.addEventListener("click", () => {
+      popupOverlay.style.display = "none";
+    });
+
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-
-      // Extra safety — do not submit if still disabled
       if (submitBtn.disabled) return;
 
-      // Get fresh values
-      const routingNumber = routingInput.value.trim();
-      const discordTag = discordInput.value.trim();
-      const creditAmount = Number(creditsInput.value.trim());
-      const token = localStorage.getItem("token");
-
-      // Disable button to prevent spam
+      showLoader();
       submitBtn.disabled = true;
-      submitBtn.textContent = "Submitting...";
 
       try {
-        const res = await fetch(
-          "https://gtaw-project.vercel.app/discord/credits-request",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": "Bearer " + token
-            },
-            body: JSON.stringify({
-              type: "buy",
-              routing_number: routingNumber,
-              amount_credits: creditAmount,
-              discord_tag: discordTag
-            })
-          }
-        );
+        const res = await fetch(`${API_BASE}/discord/credits-request`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token
+          },
+          body: JSON.stringify({
+            type: "buy",
+            routing_number: routingInput.value.trim(),
+            amount_credits: Number(creditsInput.value.trim()),
+            discord_tag: discordInput.value.trim()
+          })
+        });
 
-        if (!res.ok) throw new Error("Server error " + res.status);
+        if (!res.ok) throw new Error("Server error");
 
-        const data = await res.json();
-
-        status.style.color = "limegreen";
-        status.textContent = "Request submitted successfully ✓";
-
-        console.log(data);
+        showPopup();
+        form.reset();
+        submitBtn.disabled = true;
+        status.textContent = "";
 
       } catch (err) {
-        status.style.color = "red";
-        status.textContent = "API error: " + err.message;
+        status.textContent = "API error occurred.";
       } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Submit";
+        hideLoader();
       }
     });
 
-
+    document.addEventListener("DOMContentLoaded", loadCredits);
   </script>
-
 </body>
 
 </html>
