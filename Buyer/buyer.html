@@ -423,9 +423,10 @@
         return;
       }
 
-      window.alert("Services:", services);
       services.forEach(service => {
         const card = document.createElement("div");
+
+        window.alert("Services: ${ service._id }");
         card.className = "service-card";
 
         card.innerHTML = `
