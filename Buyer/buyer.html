@@ -467,6 +467,7 @@
       showLoader();
       try {
         try {
+          window.alert("service:", typeof serviceId);
           const res = await fetch(`${API_BASE}/orders/buyservice`, {
             method: "POST",
             headers: {
