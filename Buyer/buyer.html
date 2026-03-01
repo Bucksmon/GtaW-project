@@ -346,7 +346,7 @@
               Authorization: "Bearer " + token
             }
           });
-
+          console.log(res);
           if (!res.ok) throw new Error();
 
           const user = await res.json();
