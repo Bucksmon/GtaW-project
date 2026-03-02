@@ -434,7 +434,7 @@
             discord_tag: discordInput.value.trim()
           })
         });
-
+        window.alert(res.ok);
         if (!res.ok) throw new Error("Server error");
 
         showPopup();
