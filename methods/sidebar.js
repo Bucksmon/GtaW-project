@@ -48,6 +48,7 @@ const currentPage = window.location.pathname.split("/").pop();
     <ul class="nav-links" id="navLinks">
       ${menuItems
         .map(
+            console.log("item:", item.href);
           (item) => `
           <li class="${item.href.split("/").pop() === currentPage ? "active" : ""}">
             <a href="${item.href}">
