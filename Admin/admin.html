@@ -266,6 +266,35 @@
                 width: 100%;
             }
         }
+
+        /* ================= PAGINATION ================= */
+
+        #pagination {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        #pagination button {
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: var(--box);
+            color: var(--text);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        #pagination button:hover {
+            background: var(--accent);
+        }
+
+        #pagination button:disabled {
+            background: var(--accent);
+            cursor: default;
+        }
     </style>
 </head>
 
@@ -284,8 +313,9 @@
             <div class="credits-badge" id="creditsDisplay">Credits: 0</div>
         </div>
 
-        <div class="content">
+        <div c<div class="content">
             <div id="usersContainer"></div>
+            <div id="pagination"></div>
         </div>
     </main>
 
@@ -385,57 +415,68 @@
             } finally { hideLoader(); }
         }
 
+        const usersContainer = document.getElementById("usersContainer");
+        const paginationContainer = document.getElementById("pagination");
+
         function renderUsers(users) {
-            const container = document.getElementById("usersContainer");
-            container.innerHTML = "";
+            usersContainer.innerHTML = "";
+
             if (!users.length) {
-                container.innerHTML = "<div class='card'>No users found.</div>";
+                usersContainer.innerHTML = "<div class='card'>No users found.</div>";
+                paginationContainer.innerHTML = "";
                 return;
             }
 
             users.forEach(user => {
                 const card = document.createElement("div");
                 card.className = "card";
+
                 const canAssignAdmin = currentUser?.role === "superadmin";
 
                 card.innerHTML = `
-<div class="user-info">
-    <div class="user-details">
-        <strong>${user.username}</strong>
-        <span>Role: ${user.role}</span>
-        <span>Credits: ${user.credits ?? 0}</span>
-    </div>
-    <div class="role-select-wrapper">
-        <select class="role-select"
-            onchange="updateRole('${user._id}', this.value)">
+            <div class="user-info">
+                <div class="user-details">
+                    <strong>${user.username}</strong>
+                    <span>Role: ${user.role}</span>
+                    <span>Credits: ${user.credits ?? 0}</span>
+                </div>
+                <div class="role-select-wrapper">
+                    <select class="role-select" data-id="${user._id}">
+                        <option value="guest" ${user.role === "guest" ? "selected" : ""}>Guest</option>
+                        <option value="user" ${user.role === "user" ? "selected" : ""}>User</option>
+                        ${canAssignAdmin ? `
+                            <option value="admin" ${user.role === "admin" ? "selected" : ""}>Admin</option>
+                        ` : ""}
+                    </select>
+                </div>
+            </div>
+        `;
 
-            <option value="guest" ${user.role === "guest" ? "selected" : ""}>Guest</option>
-            <option value="buyer" ${user.role === "buyer" ? "selected" : ""}>Buyer</option>
-            <option value="seller" ${user.role === "seller" ? "selected" : ""}>Seller</option>
-
-            ${canAssignAdmin ? `
-                <option value="admin" ${user.role === "admin" ? "selected" : ""}>Admin</option>
-            ` : ""}
-
-        </select>
-    </div>
-</div>
-`;
-                container.appendChild(card);
+                usersContainer.appendChild(card);
             });
         }
 
         function renderPagination() {
-            const container = document.getElementById("usersContainer");
-            const card = document.createElement("div");
-            card.className = "card";
-            card.style.textAlign = "center";
-            card.innerHTML = `
-        <button onclick="prevPage()" ${currentPage === 1 ? "disabled" : ""}>Previous</button>
-        <span style="margin:0 15px;">Page ${currentPage} of ${totalPages}</span>
-        <button onclick="nextPage()" ${currentPage === totalPages ? "disabled" : ""}>Next</button>
-    `;
-            container.appendChild(card);
+            paginationContainer.innerHTML = "";
+
+            const prevBtn = document.createElement("button");
+            prevBtn.textContent = "Previous";
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.addEventListener("click", () => {
+                if (currentPage > 1) loadUsers(currentPage - 1);
+            });
+
+            const pageInfo = document.createElement("span");
+            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+
+            const nextBtn = document.createElement("button");
+            nextBtn.textContent = "Next";
+            nextBtn.disabled = currentPage === totalPages;
+            nextBtn.addEventListener("click", () => {
+                if (currentPage < totalPages) loadUsers(currentPage + 1);
+            });
+
+            paginationContainer.append(prevBtn, pageInfo, nextBtn);
         }
 
         function prevPage() { if (currentPage > 1) loadUsers(currentPage - 1); }
@@ -460,7 +501,38 @@
                 loadUsers(currentPage);
             } finally { hideLoader(); }
         }
+        usersContainer.addEventListener("change", async (e) => {
+            if (!e.target.classList.contains("role-select")) return;
 
+            const userId = e.target.dataset.id;
+            const role = e.target.value;
+
+            if (!confirm(`Change role to ${role}?`)) {
+                loadUsers(currentPage);
+                return;
+            }
+
+            showLoader();
+
+            try {
+                const res = await fetch(`${API_BASE}/users/role`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ userId, role })
+                });
+
+                const data = await res.json();
+                if (!res.ok) return alert(data.error);
+
+                alert("Role updated successfully");
+                loadUsers(currentPage);
+            } finally {
+                hideLoader();
+            }
+        });
         document.addEventListener("DOMContentLoaded", () => {
             renderSidebar();
             loadUsers();
