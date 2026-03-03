@@ -387,7 +387,7 @@
 
             try {
                 const res = await fetch(
-                    `${API_BASE}/orders/buyer?page=${page}&limit=${limit}`,
+                    `${API_BASE}/orders/mine?page=${page}&limit=${limit}`,
                     {
                         headers: { Authorization: `Bearer ${token}` }
                     }
