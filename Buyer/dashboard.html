@@ -387,6 +387,9 @@
 
       try {
         const res = await fetch(`${API_BASE}/services?page=${page}&limit=8`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
           cache: "no-store"
         });
 
