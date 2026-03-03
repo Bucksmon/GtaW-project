@@ -41,6 +41,7 @@ export function renderSidebar() {
   const role = user?.role || "guest";
 
   const menuItems = getMenuByRole(role);
+  console.log(menuItems);
   const currentPath = window.location.pathname;
 
   sidebar.innerHTML = `
