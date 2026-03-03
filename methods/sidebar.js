@@ -48,9 +48,8 @@ const currentPage = window.location.pathname.split("/").pop();
     <ul class="nav-links" id="navLinks">
       ${menuItems
         .map(
-            console.log("item:", item.href);
           (item) => `
-          <li class="${item.href.split("/").pop() === currentPage ? "active" : ""}">
+          <li class="${item.href.split("/").pop().includes("dashboard") ? "active" : ""}">
             <a href="${item.href}">
               <span>${item.icon}</span>
               ${item.label}
