@@ -49,7 +49,7 @@ export function renderSidebar() {
   <ul class="nav-links">
     ${menuItems.map(item => `
       <li>
-        <a href="${item.href}" class="${currentPath.includes(item.href) ? "active" : ""}">
+        <a href="${item.href}" class="active">
           <span>${item.icon}</span>
           ${item.label}
         </a>
