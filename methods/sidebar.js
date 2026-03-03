@@ -2,7 +2,7 @@ import { getCurrentUser } from "../utils/auth.js";
 
 function getMenuByRole(role) {
   const baseMenu = [
-    { label: "Dashboard", href: "../Buyer/dashboard.html", icon: "🛒" },
+    { label: "Dashboard", href: "bucksmon.github.io/GtaW-project/Buyer/dashboard.html", icon: "🛒" },
   ];
 
   const userMenu = [
