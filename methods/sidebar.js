@@ -48,7 +48,7 @@ export function renderSidebar() {
   <ul class="nav-links">
     ${menuItems.map(item => {
     const itemPath = new URL(item.href, window.location.origin).pathname;
-    const isActive = itemPath === currentPath ? "active" : "";
+    const isActive = (itemPath === currentPath) ? "active" : "";
 
     return `
         <li>
