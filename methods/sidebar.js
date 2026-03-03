@@ -49,8 +49,8 @@ const currentPage = window.location.pathname.split("/").pop();
       ${menuItems
         .map(
           (item) => `
-          <li class="${item.href.split("/").pop() === currentPage ? "active" : ""}">
-            <a href="${item.href}">
+          <li>
+            <a class="${item.href.split("/").pop() === currentPage ? "active" : ""}" href="${item.href}">
               <span>${item.icon}</span>
               ${item.label}
             </a>
