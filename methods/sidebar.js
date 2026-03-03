@@ -49,7 +49,7 @@ const currentPage = window.location.pathname.split("/").pop();
       ${menuItems
         .map(
           (item) => `
-          <li class="${item.href.split("/").pop().includes("dashboard") ? "active" : ""}">
+          <li class="${item.href.split("/").pop() === "dashboard.html" ? "active" : ""}">
             <a href="${item.href}">
               <span>${item.icon}</span>
               ${item.label}
