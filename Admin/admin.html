@@ -270,7 +270,7 @@
 </head>
 
 <body>
-    <aside id="sidebar">
+    <aside id="sidebar" class="sidebar">
         <h2>Admin Panel</h2>
         <ul class="nav-links" id="navLinks"></ul>
     </aside>
@@ -298,7 +298,7 @@
 
     <script type="module">
         import { renderSidebar } from "../methods/sidebar.js";
-        const sidebar = document.querySelector(".sidebar");
+        const sidebar = document.getElementById("sidebar");
         const overlay = document.querySelector(".overlay");
         const menuBtn = document.getElementById("menuBtn");
 
