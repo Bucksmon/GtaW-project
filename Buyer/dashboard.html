@@ -379,7 +379,7 @@
       overlay.classList.remove("active");
     });
 
-    
+
     let currentPage = 1;
 
     async function loadServices(page = 1) {
@@ -429,10 +429,12 @@
     <span><strong>Seller:</strong> ${service.service_sellerId?.username || "Unknown"}</span>
   </div>
 
-  <button onclick="buyService('${service._id}')">Buy</button>
+  <button class="buy-btn" data-id="${service._id}">Buy</button>
 `;
 
         container.appendChild(card);
+        const btn = card.querySelector(".buy-btn");
+        btn.addEventListener("click", () => buyService(service._id));
       });
     }
 
