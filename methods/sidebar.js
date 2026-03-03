@@ -2,20 +2,20 @@ import { getCurrentUser } from "../utils/auth.js";
 
 function getMenuByRole(role) {
   const baseMenu = [
-    { label: "Marketplace", href: "/services.html", icon: "🛒" },
+    { label: "Marketplace", href: "../Buyer/dashboard.html", icon: "🛒" },
   ];
 
   const userMenu = [
-    { label: "My Orders", href: "/orders.html", icon: "📦" },
-    { label: "My Services", href: "/my-services.html", icon: "🛠" },
-    { label: "Add Service", href: "/add-service.html", icon: "➕" },
-    { label: "Credits", href: "/credits.html", icon: "💳" },
+    { label: "My Orders", href: "../Buyer/buyerOrders.html", icon: "📦" },
+    { label: "My Services", href: "../Seller/removeService.html", icon: "🛠" },
+    { label: "Add Service", href: "../Seller/addService.html", icon: "➕" },
+    { label: "Credits", href: "../Buyer/addCredits.html", icon: "💳" },
   ];
 
   const adminMenu = [
-    { label: "Manage Users", href: "/admin/users.html", icon: "👥" },
-    { label: "All Orders", href: "/admin/orders.html", icon: "📊" },
-    { label: "All Services", href: "/admin/services.html", icon: "🧾" },
+    { label: "Manage Users", href: "../Admin/admin.html", icon: "👥" },
+    { label: "All Orders", href: "../Admin/managerOrder.html", icon: "📊" },
+    { label: "All Services", href: "../Admin/manageServices.html", icon: "🧾" },
   ];
 
   if (!role || role === "guest") {
