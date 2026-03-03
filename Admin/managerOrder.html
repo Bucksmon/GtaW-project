@@ -404,7 +404,10 @@
                 const res = await fetch(
                     `${API_BASE}/orders/admin?page=${page}&limit=${limit}`,
                     {
-                        headers: { Authorization: `Bearer ${token}` }
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        },
+                        cache: "no-store"
                     }
                 );
 
