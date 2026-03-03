@@ -317,12 +317,7 @@
 
   <aside class="sidebar" id="sidebar">
     <h2>Buyer Panel</h2>
-    <ul class="nav-links">
-      <li><a class="active" href="buyer.html">Browse Services</a></li>
-      <li><a href="buyerOrder.html">Orders</a></li>
-      <li><a href="addCredits.html">Add Credits</a></li>
-      <li><a href="../index.html">Logout</a></li>
-    </ul>
+    <ul class="nav-links" id="navLinks"></ul>
   </aside>
 
   <div class="overlay" id="overlay"></div>
@@ -345,7 +340,8 @@
 
   </main>
 
-  <script>
+  <script type="module">
+    import { renderSidebar } from "./sidebar.js";
     const API_BASE = "https://gtaw-project.vercel.app";
     const token = localStorage.getItem("token");
 
@@ -383,14 +379,7 @@
       overlay.classList.remove("active");
     });
 
-    /* Active nav highlight */
-    const currentPagePath = window.location.pathname.split("/").pop();
-    document.querySelectorAll(".nav-links a").forEach(link => {
-      if (link.getAttribute("href") === currentPagePath) {
-        link.classList.add("active");
-      }
-    });
-
+    
     let currentPage = 1;
 
     async function loadServices(page = 1) {
@@ -403,7 +392,7 @@
 
         const data = await res.json();
         if (!res.ok) throw new Error("Failed to load services");
-  
+
         renderServices(data.services || []);
         renderPagination(data.page || 1, data.totalPages || 1);
 
@@ -514,6 +503,7 @@
       }
     }
     document.addEventListener("DOMContentLoaded", () => {
+      renderSidebar();
       loadServices(currentPage);
       loadCredits(true); // show loader first time
       setInterval(() => loadCredits(false), 15000);
