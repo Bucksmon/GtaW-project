@@ -41,7 +41,7 @@ export function renderSidebar() {
   const role = user?.role || "guest";
 
   const menuItems = getMenuByRole(role);
-  const currentPage = window.location.pathname;
+const currentPage = window.location.pathname.split("/").pop();
 
   sidebar.innerHTML = `
       <h2>${role} Panel</h2>
@@ -49,7 +49,7 @@ export function renderSidebar() {
       ${menuItems
         .map(
           (item) => `
-          <li class="${currentPage.includes(item.href) ? "active" : ""}">
+          <li class="${item.href.split("/").pop() === currentPage ? "active" : ""}">
             <a href="${item.href}">
               <span>${item.icon}</span>
               ${item.label}
