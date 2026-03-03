@@ -330,7 +330,7 @@
 <body>
 
     <aside class="sidebar" id="sidebar">
-        <h2>Seller Panel</h2>
+        <h2>Admin Panel</h2>
         <ul class="nav-links" id="navLinks"></ul>
     </aside>
 
@@ -397,12 +397,12 @@
 
         /* ================= LOAD ORDERS ================= */
 
-        async function loadSellerOrders(page = 1) {
+        async function loadAdminOrders(page = 1) {
             showLoader();
 
             try {
                 const res = await fetch(
-                    `${API_BASE}/orders/seller?page=${page}&limit=${limit}`,
+                    `${API_BASE}/orders/admin?page=${page}&limit=${limit}`,
                     {
                         headers: { Authorization: `Bearer ${token}` }
                     }
@@ -416,7 +416,7 @@
                 renderPagination(data.pagination);
 
             } catch (err) {
-                console.error("Failed to load seller orders:", err);
+                console.error("Failed to load admin orders:", err);
             } finally {
                 hideLoader();
             }
@@ -478,7 +478,7 @@
 
                 btn.onclick = () => {
                     currentPage = i;
-                    loadSellerOrders(i);
+                    loadAdminOrders(i);
                 };
 
                 paginationDiv.appendChild(btn);
@@ -512,7 +512,7 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             renderSidebar();
-            loadSellerOrders(currentPage);
+            loadAdminOrders(currentPage);
             loadCredits(true);
             setInterval(() => loadCredits(false), 15000);
         }); 
