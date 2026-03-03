@@ -44,11 +44,10 @@ export function renderSidebar() {
   const currentPage = window.location.pathname;
 
   sidebar.innerHTML = `
-    <div class="sidebar-header">
-      <h2>BucksMon</h2>
-      <p class="role">${role.toUpperCase()}</p>
-    </div>
-    <ul class="sidebar-links">
+    <aside class="sidebar" id="sidebar">
+      <h2>${role} Panel</h2>
+    </aside>
+    <ul class="nav-links" id="navLinks">
       ${menuItems
         .map(
           (item) => `
