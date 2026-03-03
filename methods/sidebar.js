@@ -44,9 +44,7 @@ export function renderSidebar() {
   const currentPage = window.location.pathname;
 
   sidebar.innerHTML = `
-    <aside class="sidebar" id="sidebar">
       <h2>${role} Panel</h2>
-    </aside>
     <ul class="nav-links" id="navLinks">
       ${menuItems
         .map(
