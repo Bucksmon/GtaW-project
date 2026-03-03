@@ -326,14 +326,7 @@
 
     <aside class="sidebar" id="sidebar">
         <h2>Seller Panel</h2>
-        <ul class="nav-links">
-            <li><a href="seller.html">Browse Services</a></li>
-            <li><a href="sellerOrder.html">Orders</a></li>
-            <li><a href="sellCredits.html">Sell Credits</a></li>
-            <li><a href="addService.html">Add Services</a></li>
-            <li><a class="active" href="removeService.html">Remove Services</a></li>
-            <li><a href="../index.html">Logout</a></li>
-        </ul>
+       <ul class="nav-links" id="navLinks"></ul>
     </aside>
 
     <div class="overlay" id="overlay"></div>
@@ -356,7 +349,9 @@
 
     </main>
 
-    <script>
+    <script type="module">
+        import { renderSidebar } from "../methods/sidebar.js";
+
         const API_BASE = "https://gtaw-project.vercel.app";
         const token = localStorage.getItem("token");
 
@@ -592,6 +587,7 @@
             }
         }
         document.addEventListener("DOMContentLoaded", () => {
+            renderSidebar();
             loadServices(currentPage);
             loadCredits(true);
             setInterval(() => loadCredits(false), 15000);
