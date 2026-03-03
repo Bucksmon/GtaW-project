@@ -302,12 +302,7 @@
 
     <aside class="sidebar">
         <h2>Admin Panel</h2>
-        <ul class="nav-links">
-            <li><a href="admin.html" class="active">Manage Users</a></li>
-            <li><a href="manageServices.html">Manage Services</a></li>
-            <li><a href="manageServices.html">Manage Orders</a></li>
-            <li><a href="#" class="logout-link" onclick="logout()">Logout</a></li>
-        </ul>
+        <ul class="nav-links" id="navLinks"></ul>
     </aside>
 
     <div class="overlay"></div>
@@ -331,8 +326,8 @@
         </div>
     </div>
 
-    <script>
-
+    <script type="module">
+        import { renderSidebar } from "../methods/sidebar.js";
         const sidebar = document.querySelector(".sidebar");
         const overlay = document.querySelector(".overlay");
         const menuBtn = document.getElementById("menuBtn");
@@ -497,6 +492,7 @@
         }
 
         document.addEventListener("DOMContentLoaded", () => {
+            renderSidebar();
             loadUsers();
             toggleCreditVisibility();
             loadCredits();
