@@ -1,4 +1,4 @@
-import { getCurrentUser } from "./utils/auth.js";
+import { getCurrentUser } from "../utils/auth.js";
 
 function getMenuByRole(role) {
   const baseMenu = [
