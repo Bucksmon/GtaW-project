@@ -46,19 +46,14 @@ export function renderSidebar() {
   sidebar.innerHTML = `
   <h2>${role} Panel</h2>
   <ul class="nav-links">
-    ${menuItems.map(item => {
-    const itemPath = new URL(item.href, window.location.origin).pathname;
-    const isActive = (itemPath === currentPath) ? "active" : "";
-
-    return `
-        <li>
-          <a class="${isActive}" href="${item.href}">
-            <span>${item.icon}</span>
-            ${item.label}
-          </a>
-        </li>
-      `;
-  }).join("")}F
+    ${menuItems.map(item => `
+      <li>
+        <a class="${currentPath.includes(item.href) ? "active" : ""}" href="${item.href}">
+          <span>${item.icon}</span>
+          ${item.label}
+        </a>
+      </li>
+    `).join("")}
   </ul>
 `;
 }
