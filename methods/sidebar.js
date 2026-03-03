@@ -2,7 +2,7 @@ import { getCurrentUser } from "../utils/auth.js";
 
 function getMenuByRole(role) {
   const baseMenu = [
-    { label: "Marketplace", href: "../Buyer/dashboard.html", icon: "🛒" },
+    { label: "Dashboard", href: "../Buyer/dashboard.html", icon: "🛒" },
   ];
 
   const userMenu = [
