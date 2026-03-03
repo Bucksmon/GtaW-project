@@ -336,10 +336,7 @@
         <img id="preview" class="image-preview">
       </div>
 
-      <button class="submit-btn" onclick="submitService()">Add Service</button>
-
-
-
+      <button class="submit-btn" >Add Service</button>
     </div>
   </main>
 
@@ -394,6 +391,7 @@
     const globalLoader = document.getElementById("globalLoader");
     const submitBtn = document.querySelector(".submit-btn");
 
+    submitBtn.addEventListener("click", submitService);
     async function submitService() {
       const service_title = titleInput.value.trim();
       const service_description = descriptionInput.value.trim();
