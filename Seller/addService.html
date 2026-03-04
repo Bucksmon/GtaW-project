@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>Seller Panel - Add Service</title>
+  <title>Seller Panel</title>
 
   <style>
     :root {
@@ -21,8 +21,6 @@
       --transition: .25s ease;
     }
 
-    /* ================= BASE ================= */
-
     * {
       box-sizing: border-box;
       font-family: "Segoe UI", system-ui, sans-serif;
@@ -35,7 +33,7 @@
       min-height: 100vh;
     }
 
-    /* ================= SIDEBAR ================= */
+    /* SIDEBAR */
 
     .sidebar {
       position: fixed;
@@ -46,14 +44,12 @@
       background: var(--panel);
       border-right: 1px solid rgba(255, 255, 255, .06);
       padding: 30px 0;
-      transition: transform var(--transition);
       z-index: 1000;
     }
 
     .sidebar h2 {
       text-align: center;
       margin-bottom: 30px;
-      font-weight: 600;
     }
 
     .nav-links {
@@ -71,7 +67,6 @@
       border-radius: var(--radius-sm);
       text-decoration: none;
       color: var(--text);
-      transition: var(--transition);
     }
 
     .nav-links a:hover,
@@ -79,21 +74,7 @@
       background: rgba(255, 255, 255, .08);
     }
 
-    /* ================= OVERLAY ================= */
-
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, .5);
-      display: none;
-      z-index: 900;
-    }
-
-    .overlay.active {
-      display: block;
-    }
-
-    /* ================= MAIN ================= */
+    /* MAIN */
 
     .main {
       margin-left: 250px;
@@ -101,62 +82,60 @@
       min-height: 100vh;
     }
 
-    /* ================= TOPBAR ================= */
-
     .topbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 50px;
-    }
-
-    .topbar h2 {
-      margin: 0;
-      font-weight: 600;
-    }
-
-    .topbar h3 {
-      margin: 0;
-      font-weight: 500;
-      color: var(--muted);
+      margin-bottom: 40px;
     }
 
     .topbar span {
       color: var(--accent);
-      font-weight: 600;
     }
 
-    .menu-btn {
-      display: none;
-      background: none;
+    /* TABS */
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .tab {
+      padding: 10px 18px;
       border: none;
+      border-radius: var(--radius-sm);
+      background: var(--box);
       color: var(--text);
-      font-size: 1.6rem;
       cursor: pointer;
     }
 
-    /* ================= FORM CARD ================= */
+    .tab.active {
+      background: var(--accent);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* FORM */
 
     .form-card {
       background: var(--card);
       padding: 36px;
       border-radius: var(--radius);
       max-width: 650px;
-      box-shadow: 0 20px 55px rgba(0, 0, 0, .4);
     }
-
-    /* ================= FORM GROUP ================= */
 
     .form-group {
       display: flex;
       flex-direction: column;
       gap: 8px;
       margin-bottom: 22px;
-    }
-
-    .form-group label {
-      font-size: .9rem;
-      color: var(--muted);
     }
 
     .form-group input,
@@ -166,41 +145,11 @@
       border: 1px solid rgba(255, 255, 255, .08);
       background: var(--box);
       color: var(--text);
-      outline: none;
-      transition: var(--transition);
     }
 
-    .form-group textarea {
+    textarea {
       min-height: 120px;
-      resize: vertical;
     }
-
-    .form-group input:focus,
-    .form-group textarea:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 2px rgba(79, 140, 255, .25);
-    }
-
-    /* ================= HELPER TEXT ================= */
-
-    .helper-text {
-      font-size: .8rem;
-      color: var(--muted);
-    }
-
-    /* ================= IMAGE PREVIEW ================= */
-
-    .image-preview {
-      margin-top: 12px;
-      width: 100%;
-      max-height: 220px;
-      object-fit: cover;
-      border-radius: var(--radius-sm);
-      border: 1px solid rgba(255, 255, 255, .08);
-      display: none;
-    }
-
-    /* ================= BUTTON ================= */
 
     .submit-btn {
       margin-top: 10px;
@@ -209,21 +158,71 @@
       border-radius: var(--radius-sm);
       background: var(--accent);
       color: white;
-      font-weight: 600;
       cursor: pointer;
-      transition: var(--transition);
     }
 
-    .submit-btn:hover {
-      opacity: .9;
+    /* SERVICES */
+
+    .services {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 30px;
     }
 
-    .submit-btn:disabled {
-      opacity: .6;
-      cursor: not-allowed;
+    .service-card {
+      background: var(--card);
+      padding: 22px;
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
 
-    /* ================= GLOBAL LOADER ================= */
+    .service-image {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+    }
+
+    .service-meta {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .danger-btn {
+      background: var(--danger);
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    /* PAGINATION */
+
+    #pagination {
+      margin-top: 40px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    #pagination button {
+      padding: 8px 14px;
+      background: var(--box);
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+
+    #pagination button:disabled {
+      opacity: .5;
+    }
+
+    /* LOADER */
 
     .global-loader {
       position: fixed;
@@ -239,174 +238,154 @@
       background: var(--card);
       padding: 40px;
       border-radius: var(--radius);
-      text-align: center;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, .5);
     }
 
-    .spinner-large {
+    .spinner {
       width: 50px;
       height: 50px;
       border: 4px solid rgba(255, 255, 255, .2);
       border-top: 4px solid var(--accent);
       border-radius: 50%;
-      margin: auto;
       animation: spin .8s linear infinite;
     }
 
     @keyframes spin {
       to {
-        transform: rotate(360deg);
+        transform: rotate(360deg)
       }
-    }
-
-    /* ================= RESPONSIVE ================= */
-
-    @media (max-width: 768px) {
-
-      .sidebar {
-        transform: translateX(-100%);
-      }
-
-      .sidebar.open {
-        transform: translateX(0);
-      }
-
-      .main {
-        margin-left: 0;
-        padding: 30px 20px;
-      }
-
-      .menu-btn {
-        display: block;
-      }
-
     }
   </style>
 </head>
 
 <body>
 
-  <aside class="sidebar" id="sidebar">
-    <h2 style="text-align:center;">Seller Panel</h2>
+  <aside class="sidebar">
+    <h2>Seller Panel</h2>
     <ul class="nav-links" id="navLinks"></ul>
   </aside>
 
-  <div class="overlay" id="overlay"></div>
-  <!-- GLOBAL LOADER -->
   <div id="globalLoader" class="global-loader">
     <div class="loader-box">
-      <div class="spinner-large"></div>
-      <p>Adding service...</p>
+      <div class="spinner"></div>
+      <p>Processing...</p>
     </div>
   </div>
+
   <main class="main">
 
     <div class="topbar">
-      <div style="display:flex; align-items:center; gap:15px;">
-        <button class="menu-btn" id="menuBtn">☰</button>
-        <h2>Add Service</h2>
-      </div>
-
+      <h2>Seller Services</h2>
       <h3>Your Credits: <span id="creditsDisplay">0</span></h3>
     </div>
 
-    <div class="form-card">
-
-      <div class="form-group">
-        <label>Service Title</label>
-        <input type="text" id="title">
-      </div>
-
-      <div class="form-group">
-        <label>Description</label>
-        <textarea id="description"></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>Price (credits)</label>
-        <input type="number" id="price">
-      </div>
-
-      <div class="form-group">
-        <label>Service Image (Imgur Link)</label>
-        <input type="text" id="imageInput" placeholder="https://i.imgur.com/example.png">
-        <div class="helper-text">
-          Example: https://i.imgur.com/placeholder.png
-        </div>
-        <img id="preview" class="image-preview">
-      </div>
-
-      <button class="submit-btn" >Add Service</button>
+    <div class="tabs">
+      <button class="tab active" data-tab="add">Add Service</button>
+      <button class="tab" data-tab="remove">Remove Services</button>
     </div>
+
+    <!-- ADD SERVICE -->
+
+    <div id="add" class="tab-content active">
+
+      <div class="form-card">
+
+        <div class="form-group">
+          <label>Service Title</label>
+          <input id="title" />
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="description"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Price</label>
+          <input type="number" id="price" />
+        </div>
+
+        <div class="form-group">
+          <label>Image URL</label>
+          <input id="imageInput" />
+          <img id="preview" style="display:none;width:100%;margin-top:10px;border-radius:10px;">
+        </div>
+
+        <button class="submit-btn">Add Service</button>
+
+      </div>
+    </div>
+
+    <!-- REMOVE SERVICES -->
+
+    <div id="remove" class="tab-content">
+      <div id="servicesContainer" class="services"></div>
+      <div id="pagination"></div>
+    </div>
+
   </main>
 
   <script type="module">
+
     import { renderSidebar } from "../methods/sidebar.js";
 
     const API_BASE = "https://gtaw-project.vercel.app";
     const token = localStorage.getItem("token");
 
-    if (!token) {
-      window.location.href = "../index.html";
-    }
+    if (!token) location.href = "../index.html";
 
-    /* ================= Sidebar ================= */
-    const sidebar = document.getElementById("sidebar");
-    const overlay = document.getElementById("overlay");
-    const menuBtn = document.getElementById("menuBtn");
+    const loader = document.getElementById("globalLoader");
 
-    menuBtn.addEventListener("click", () => {
-      sidebar.classList.toggle("open");
-      overlay.classList.toggle("active");
+    function showLoader() { loader.style.display = "flex"; }
+    function hideLoader() { loader.style.display = "none"; }
+
+    /* TABS */
+
+    const tabs = document.querySelectorAll(".tab");
+
+    tabs.forEach(tab => {
+      tab.onclick = () => {
+        tabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+
+        document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+        document.getElementById(tab.dataset.tab).classList.add("active");
+
+        if (tab.dataset.tab === "remove") loadServices();
+      };
     });
 
-    overlay.addEventListener("click", () => {
-      sidebar.classList.remove("open");
-      overlay.classList.remove("active");
-    });
-
-    /* ================= Form ================= */
+    /* ADD SERVICE */
 
     const titleInput = document.getElementById("title");
     const descriptionInput = document.getElementById("description");
     const priceInput = document.getElementById("price");
     const imageInput = document.getElementById("imageInput");
     const preview = document.getElementById("preview");
-    const loader = document.getElementById("loader");
 
-    /* Live Image Preview */
-    imageInput.addEventListener("input", () => {
+    imageInput.oninput = () => {
       const url = imageInput.value.trim();
-
-      if (url !== "") {
+      if (url) {
         preview.src = url;
         preview.style.display = "block";
-      } else {
-        preview.style.display = "none";
-      }
-    });
+      } else preview.style.display = "none";
+    };
 
-    /* ================= Submit ================= */
+    document.querySelector(".submit-btn").onclick = async () => {
 
-    const globalLoader = document.getElementById("globalLoader");
-    const submitBtn = document.querySelector(".submit-btn");
-
-    submitBtn.addEventListener("click", submitService);
-    async function submitService() {
       const service_title = titleInput.value.trim();
       const service_description = descriptionInput.value.trim();
       const service_price = Number(priceInput.value);
       const service_image = imageInput.value.trim();
 
       if (!service_title || !service_description || !service_price) {
-        alert("Please fill all required fields.");
+        alert("Fill required fields");
         return;
       }
 
-      submitBtn.disabled = true;
-      globalLoader.style.display = "flex";
+      showLoader();
 
       try {
+
         const res = await fetch(`${API_BASE}/services`, {
           method: "POST",
           headers: {
@@ -423,12 +402,9 @@
 
         const data = await res.json();
 
-        if (!res.ok) {
-          alert(data.error || "Failed to add service");
-          return;
-        }
+        if (!res.ok) return alert(data.error);
 
-        alert("Service added successfully!");
+        alert("Service added!");
 
         titleInput.value = "";
         descriptionInput.value = "";
@@ -437,36 +413,138 @@
         preview.style.display = "none";
 
       } catch (err) {
-        console.error("Add service error:", err);
-        alert("Server error");
-      } finally {
-        submitBtn.disabled = false;
-        globalLoader.style.display = "none";
+        console.error(err);
       }
+
+      hideLoader();
+
+    };
+
+    /* LOAD SERVICES */
+
+    let currentPage = 1;
+
+    async function loadServices(page = 1) {
+
+      showLoader();
+
+      const res = await fetch(`${API_BASE}/services/mine?page=${page}&limit=8`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      const data = await res.json();
+
+      renderServices(data.services || []);
+      renderPagination(data.page, data.totalPages);
+
+      hideLoader();
+
     }
+
+    /* RENDER */
+
+    function renderServices(services) {
+
+      const container = document.getElementById("servicesContainer");
+      container.innerHTML = "";
+
+      if (!services.length) {
+        container.innerHTML = "<p>No services found.</p>";
+        return;
+      }
+
+      services.forEach(service => {
+
+        const card = document.createElement("div");
+        card.className = "service-card";
+
+        card.innerHTML = `
+<img class="service-image" src="${service.service_image}">
+<h3>${service.service_title}</h3>
+<p>${service.service_description}</p>
+
+<div class="service-meta">
+<span>${service.service_price} credits</span>
+</div>
+`;
+
+        const del = document.createElement("button");
+        del.className = "danger-btn";
+        del.textContent = "Delete";
+
+        del.onclick = () => deleteService(service._id);
+
+        card.appendChild(del);
+        container.appendChild(card);
+
+      });
+
+    }
+
+    /* DELETE */
+
+    async function deleteService(id) {
+
+      if (!confirm("Delete service?")) return;
+
+      showLoader();
+
+      await fetch(`${API_BASE}/services/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      loadServices(currentPage);
+
+      hideLoader();
+
+    }
+
+    /* PAGINATION */
+
+    function renderPagination(current, total) {
+
+      const pagination = document.getElementById("pagination");
+      pagination.innerHTML = "";
+
+      for (let i = 1; i <= total; i++) {
+
+        const btn = document.createElement("button");
+        btn.textContent = i;
+
+        if (i === current) btn.disabled = true;
+
+        btn.onclick = () => {
+          currentPage = i;
+          loadServices(i);
+        };
+
+        pagination.appendChild(btn);
+
+      }
+
+    }
+
+    /* CREDITS */
 
     async function loadCredits() {
-      try {
-        const res = await fetch(`${API_BASE}/users/me`, {
-          headers: {
-            Authorization: "Bearer " + token
-          }
-        });
 
-        if (!res.ok) throw new Error();
+      const res = await fetch(`${API_BASE}/users/me`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
 
-        const user = await res.json();
-        document.getElementById("creditsDisplay").textContent =
-          user.credits ?? 0;
+      const user = await res.json();
 
-      } catch (err) {
-        console.log("Failed to load credits", err);
-      }
+      document.getElementById("creditsDisplay").textContent = user.credits ?? 0;
+
     }
+
     document.addEventListener("DOMContentLoaded", () => {
       renderSidebar();
       loadCredits();
+      setInterval(loadCredits, 15000);
     });
+
   </script>
 
 </body>
