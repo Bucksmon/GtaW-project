@@ -426,7 +426,7 @@
   <p>${service.service_description || "No description"}</p>
 
   <div class="service-meta">
-    <span><strong>Price:</strong> <span style="color: green;">${service.service_price || 0}</span></span>
+    <span><strong>Price:</strong> <span style="color: #2ecc710;">${service.service_price || 0}</span></span>
     <span><strong>Seller:</strong> ${service.service_sellerId?.username || "Unknown"}</span>
   </div>
 
@@ -473,7 +473,7 @@
           if (!res.ok) return alert(data.error || "Purchase failed");
 
           alert("Service purchased!");
-          document.getElementById("creditsDisplay").innerHTML = `Credits: <span style="color:var(--accent)">${data.buyerCredits ?? 0}</span>`; 
+          document.getElementById("creditsDisplay").innerHTML = `<span style="color:#2ecc710;">${data.buyerCredits ?? 0}</span>`; 
 
         } catch (err) {
           console.error(err);

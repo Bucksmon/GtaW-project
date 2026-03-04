@@ -555,7 +555,8 @@
 <h3>${service.service_title}</h3>
 <p>${service.service_description}</p>
 <div class="service-meta">
-  <span style="color: green;">${service.service_price || 0}</span>
+  Credits: 
+  <span style="color: #2ecc710;">${service.service_price || 0}</span>
 </div>
 `;
 
@@ -626,7 +627,7 @@
 
       const user = await res.json();
 
-      document.getElementById("creditsDisplay").innerHTML = `Credits: <span style="color:var(--accent)">${user.credits ?? 0}</span>`;
+      document.getElementById("creditsDisplay").innerHTML = `<span style="color:#2ecc71">${user.credits ?? 0}</span>`;
 
     }
 

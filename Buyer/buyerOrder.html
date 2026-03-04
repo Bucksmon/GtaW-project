@@ -527,7 +527,7 @@
 
         <div class="order-row">
             <span><strong>Seller:</strong> ${order.seller?.username}</span>
-            <span><strong>Total:</strong> <span style="color: green;">${order.totalPrice}</span></span>
+            <span><strong>Total:</strong> <span style="color: #2ecc71;">${order.totalPrice}</span></span>
         </div>
 
         <div class="order-row">
@@ -588,7 +588,7 @@
 
                 const user = await res.json();
 
-                document.getElementById("creditsDisplay").innerHTML = `Credits: <span style="color:var(--accent)">${user.credits ?? 0}</span>`;
+                document.getElementById("creditsDisplay").innerHTML = `<span style="color:var(--success)">${user.credits ?? 0}</span>`;
 
             } catch (err) {
                 console.log("Failed to load credits", err);

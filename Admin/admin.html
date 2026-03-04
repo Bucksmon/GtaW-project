@@ -390,7 +390,7 @@
 
                 const user = await res.json();
 
-                creditsDisplay.innerHTML = `Credits: <span style="color:var(--accent)">${user.credits ?? 0}</span>`;
+                creditsDisplay.innerHTML = `Credits: <span style="color:#2ecc71">${user.credits ?? 0}</span>`;
 
             } catch {
                 console.log("Failed to load credits");
