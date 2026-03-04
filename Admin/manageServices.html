@@ -592,8 +592,7 @@
                 if (!res.ok) throw new Error();
 
                 const user = await res.json();
-                document.getElementById("creditsDisplay").textContent =
-                    user.credits ?? 0;
+                document.getElementById("creditsDisplay").innerHTML = `Credits: <span style="color:var(--accent)">${user.credits ?? 0}</span>`;
 
             } catch (err) {
                 console.log("Failed to load credits", err);

@@ -473,7 +473,7 @@
           if (!res.ok) return alert(data.error || "Purchase failed");
 
           alert("Service purchased!");
-          document.getElementById("creditsDisplay").textContent = data.buyerCredits;
+          document.getElementById("creditsDisplay").innerHTML = `Credits: <span style="color:var(--accent)">${data.buyerCredits ?? 0}</span>`; 
 
         } catch (err) {
           console.error(err);
