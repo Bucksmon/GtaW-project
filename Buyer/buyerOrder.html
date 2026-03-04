@@ -184,10 +184,6 @@
             font-weight: 600;
         }
 
-        .service-card p:last-child:contains("completed"),
-        .service-card p:last-child:contains("Completed") {
-            color: var(--success);
-        }
 
         /* ================= ORDER ROW ================= */
 
@@ -378,7 +374,19 @@
     <script type="module">
 
         import { renderSidebar } from "../methods/sidebar.js";
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+        const menuBtn = document.getElementById("menuBtn");
 
+        menuBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("open");
+            overlay.classList.toggle("active");
+        });
+
+        overlay.addEventListener("click", () => {
+            sidebar.classList.remove("open");
+            overlay.classList.remove("active");
+        });
         const API_BASE = "https://gtaw-project.vercel.app";
         const token = localStorage.getItem("token");
 
