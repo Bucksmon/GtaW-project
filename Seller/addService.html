@@ -2,10 +2,11 @@
 <html lang="en">
 
 <head>
-<meta charset="UTF-8"/>
+<meta charset="UTF-8">
 <title>Seller Panel</title>
 
 <style>
+
 :root{
 --bg:#0b0f1a;
 --panel:#111827;
@@ -44,6 +45,7 @@ height:100%;
 background:var(--panel);
 border-right:1px solid rgba(255,255,255,.06);
 padding:30px 0;
+transition:transform var(--transition);
 z-index:1000;
 }
 
@@ -67,11 +69,26 @@ padding:12px 16px;
 border-radius:var(--radius-sm);
 text-decoration:none;
 color:var(--text);
+transition:var(--transition);
 }
 
 .nav-links a:hover,
 .nav-links a.active{
 background:rgba(255,255,255,.08);
+}
+
+/* OVERLAY */
+
+.overlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.5);
+display:none;
+z-index:900;
+}
+
+.overlay.active{
+display:block;
 }
 
 /* MAIN */
@@ -82,11 +99,22 @@ padding:60px 40px;
 min-height:100vh;
 }
 
+/* TOPBAR */
+
 .topbar{
 display:flex;
 justify-content:space-between;
 align-items:center;
 margin-bottom:40px;
+}
+
+.menu-btn{
+display:none;
+background:none;
+border:none;
+font-size:1.6rem;
+color:var(--text);
+cursor:pointer;
 }
 
 .topbar span{
@@ -113,6 +141,8 @@ cursor:pointer;
 .tab.active{
 background:var(--accent);
 }
+
+/* TAB CONTENT */
 
 .tab-content{
 display:none;
@@ -149,6 +179,7 @@ color:var(--text);
 
 textarea{
 min-height:120px;
+resize:vertical;
 }
 
 .submit-btn{
@@ -208,13 +239,15 @@ margin-top:40px;
 display:flex;
 justify-content:center;
 gap:10px;
+flex-wrap:wrap;
 }
 
 #pagination button{
 padding:8px 14px;
-background:var(--box);
 border:none;
-color:white;
+border-radius:var(--radius-sm);
+background:var(--box);
+color:var(--text);
 cursor:pointer;
 }
 
@@ -238,6 +271,7 @@ z-index:3000;
 background:var(--card);
 padding:40px;
 border-radius:var(--radius);
+text-align:center;
 }
 
 .spinner{
@@ -253,15 +287,40 @@ animation:spin .8s linear infinite;
 to{transform:rotate(360deg)}
 }
 
+/* RESPONSIVE */
+
+@media (max-width:768px){
+
+.sidebar{
+transform:translateX(-100%);
+}
+
+.sidebar.open{
+transform:translateX(0);
+}
+
+.main{
+margin-left:0;
+padding:30px 20px;
+}
+
+.menu-btn{
+display:block;
+}
+
+}
+
 </style>
 </head>
 
 <body>
 
-<aside class="sidebar">
+<aside class="sidebar" id="sidebar">
 <h2>Seller Panel</h2>
 <ul class="nav-links" id="navLinks"></ul>
 </aside>
+
+<div class="overlay" id="overlay"></div>
 
 <div id="globalLoader" class="global-loader">
 <div class="loader-box">
@@ -273,8 +332,14 @@ to{transform:rotate(360deg)}
 <main class="main">
 
 <div class="topbar">
+
+<div style="display:flex;align-items:center;gap:15px;">
+<button class="menu-btn" id="menuBtn">☰</button>
 <h2>Seller Services</h2>
+</div>
+
 <h3>Your Credits: <span id="creditsDisplay">0</span></h3>
+
 </div>
 
 <div class="tabs">
@@ -282,7 +347,7 @@ to{transform:rotate(360deg)}
 <button class="tab" data-tab="remove">Remove Services</button>
 </div>
 
-<!-- ADD SERVICE -->
+<!-- ADD -->
 
 <div id="add" class="tab-content active">
 
@@ -290,7 +355,7 @@ to{transform:rotate(360deg)}
 
 <div class="form-group">
 <label>Service Title</label>
-<input id="title"/>
+<input id="title">
 </div>
 
 <div class="form-group">
@@ -300,21 +365,22 @@ to{transform:rotate(360deg)}
 
 <div class="form-group">
 <label>Price</label>
-<input type="number" id="price"/>
+<input type="number" id="price">
 </div>
 
 <div class="form-group">
 <label>Image URL</label>
-<input id="imageInput"/>
+<input id="imageInput">
 <img id="preview" style="display:none;width:100%;margin-top:10px;border-radius:10px;">
 </div>
 
 <button class="submit-btn">Add Service</button>
 
 </div>
+
 </div>
 
-<!-- REMOVE SERVICES -->
+<!-- REMOVE -->
 
 <div id="remove" class="tab-content">
 <div id="servicesContainer" class="services"></div>
@@ -336,6 +402,22 @@ const loader=document.getElementById("globalLoader");
 
 function showLoader(){ loader.style.display="flex"; }
 function hideLoader(){ loader.style.display="none"; }
+
+/* SIDEBAR TOGGLE */
+
+const sidebar=document.getElementById("sidebar");
+const overlay=document.getElementById("overlay");
+const menuBtn=document.getElementById("menuBtn");
+
+menuBtn.addEventListener("click",()=>{
+sidebar.classList.toggle("open");
+overlay.classList.toggle("active");
+});
+
+overlay.addEventListener("click",()=>{
+sidebar.classList.remove("open");
+overlay.classList.remove("active");
+});
 
 /* TABS */
 
@@ -366,7 +448,9 @@ const url=imageInput.value.trim();
 if(url){
 preview.src=url;
 preview.style.display="block";
-}else preview.style.display="none";
+}else{
+preview.style.display="none";
+}
 };
 
 document.querySelector(".submit-btn").onclick=async()=>{
@@ -401,7 +485,7 @@ service_image
 
 const data=await res.json();
 
-if(!res.ok) return alert(data.error);
+if(!res.ok) return alert(data.error||"Failed");
 
 alert("Service added!");
 
@@ -419,7 +503,7 @@ hideLoader();
 
 };
 
-/* LOAD SERVICES */
+/* SERVICES */
 
 let currentPage=1;
 
@@ -434,13 +518,11 @@ headers:{Authorization:`Bearer ${token}`}
 const data=await res.json();
 
 renderServices(data.services||[]);
-renderPagination(data.page,data.totalPages);
+renderPagination(data.page||1,data.totalPages||1);
 
 hideLoader();
 
 }
-
-/* RENDER */
 
 function renderServices(services){
 
@@ -458,10 +540,9 @@ const card=document.createElement("div");
 card.className="service-card";
 
 card.innerHTML=`
-<img class="service-image" src="${service.service_image}">
+<img class="service-image" src="${service.service_image||'https://i.imgur.com/placeholder.png'}">
 <h3>${service.service_title}</h3>
 <p>${service.service_description}</p>
-
 <div class="service-meta">
 <span>${service.service_price} credits</span>
 </div>
