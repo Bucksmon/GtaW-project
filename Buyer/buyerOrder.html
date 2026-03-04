@@ -324,6 +324,25 @@
             background: var(--accent);
             cursor: default;
         }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            padding: 10px 18px;
+            background: var(--box);
+            border: none;
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .tab.active {
+            background: var(--accent);
+        }
     </style>
 </head>
 
@@ -348,7 +367,10 @@
             <button class="menu-btn" id="menuBtn">☰</button>
             <h2>Your Credits: <span id="creditsDisplay">0</span></h2>
         </div>
-
+        <div class="tabs">
+            <button class="tab active" data-tab="buy">Buy Orders</button>
+            <button class="tab" data-tab="sell">Sell Orders</button>
+        </div>
         <div id="servicesContainer" class="services"></div>
         <div id="pagination"></div>
     </main>
@@ -356,6 +378,7 @@
     <script type="module">
 
         import { renderSidebar } from "../methods/sidebar.js";
+
         const API_BASE = "https://gtaw-project.vercel.app";
         const token = localStorage.getItem("token");
 
@@ -366,6 +389,24 @@
         let activeRequests = 0;
         let currentPage = 1;
         const limit = 6;
+
+        let activeTab = "buy";
+        let allOrders = [];
+
+        /* ================= JWT ================= */
+
+        function parseJWT(token) {
+            try {
+                return JSON.parse(atob(token.split(".")[1]));
+            } catch {
+                return null;
+            }
+        }
+
+        const userData = parseJWT(token);
+        const userId = userData?.id;
+
+        /* ================= LOADER ================= */
 
         function showLoader() {
             activeRequests++;
@@ -380,12 +421,33 @@
             }
         }
 
+        /* ================= TABS ================= */
+
+        const tabs = document.querySelectorAll(".tab");
+
+        tabs.forEach(tab => {
+
+            tab.addEventListener("click", () => {
+
+                tabs.forEach(t => t.classList.remove("active"));
+                tab.classList.add("active");
+
+                activeTab = tab.dataset.tab;
+
+                filterOrders();
+
+            });
+
+        });
+
         /* ================= LOAD ORDERS ================= */
 
         async function loadBuyerOrders(page = 1) {
+
             showLoader();
 
             try {
+
                 const res = await fetch(
                     `${API_BASE}/orders/mine?page=${page}&limit=${limit}`,
                     {
@@ -397,7 +459,10 @@
 
                 const data = await res.json();
 
-                renderOrders(data.orders || []);
+                allOrders = data.orders || [];
+
+                filterOrders();
+
                 renderPagination(data.pagination);
 
             } catch (err) {
@@ -405,27 +470,52 @@
             } finally {
                 hideLoader();
             }
+
+        }
+
+        /* ================= FILTER ORDERS ================= */
+
+        function filterOrders() {
+
+            let filtered = [];
+
+            if (activeTab === "buy") {
+                filtered = allOrders.filter(
+                    order => order.buyer?._id === userId
+                );
+            }
+
+            if (activeTab === "sell") {
+                filtered = allOrders.filter(
+                    order => order.seller?._id === userId
+                );
+            }
+
+            renderOrders(filtered);
+
         }
 
         /* ================= RENDER ORDERS ================= */
 
         function renderOrders(orders) {
+
             const container = document.getElementById("servicesContainer");
             container.innerHTML = "";
 
             if (!orders.length) {
-                container.innerHTML = "<p>No purchases yet.</p>";
+                container.innerHTML = "<p>No orders in this category.</p>";
                 return;
             }
 
             orders.forEach(order => {
+
                 const card = document.createElement("div");
                 card.className = "service-card";
 
                 card.innerHTML = `
         <img class="service-image"
-            src="${order.service?.service_image || 'https://i.imgur.com/placeholder.png'}">
-        
+        src="${order.service?.service_image || 'https://i.imgur.com/placeholder.png'}">
+
         <h3>${order.service?.service_title}</h3>
 
         <div class="order-row">
@@ -441,18 +531,22 @@
         `;
 
                 container.appendChild(card);
+
             });
+
         }
 
         /* ================= PAGINATION ================= */
 
         function renderPagination(pagination) {
+
             const paginationDiv = document.getElementById("pagination");
             paginationDiv.innerHTML = "";
 
             if (!pagination || pagination.totalPages <= 1) return;
 
             for (let i = 1; i <= pagination.totalPages; i++) {
+
                 const btn = document.createElement("button");
                 btn.textContent = i;
 
@@ -466,15 +560,19 @@
                 };
 
                 paginationDiv.appendChild(btn);
+
             }
+
         }
 
         /* ================= LOAD CREDITS ================= */
 
         async function loadCredits(show = false) {
+
             if (show) showLoader();
 
             try {
+
                 const res = await fetch(`${API_BASE}/users/me`, {
                     headers: { Authorization: "Bearer " + token }
                 });
@@ -482,6 +580,7 @@
                 if (!res.ok) throw new Error();
 
                 const user = await res.json();
+
                 document.getElementById("creditsDisplay").textContent =
                     user.credits ?? 0;
 
@@ -490,6 +589,7 @@
             } finally {
                 if (show) hideLoader();
             }
+
         }
 
         /* ================= INIT ================= */
@@ -500,6 +600,7 @@
             loadCredits(true);
             setInterval(() => loadCredits(false), 15000);
         });
+
     </script>
 
 </body>
