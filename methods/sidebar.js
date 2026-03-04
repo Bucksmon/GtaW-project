@@ -7,7 +7,6 @@ function getMenuByRole(role) {
 
   const userMenu = [
     { label: "My Orders", href: "../Buyer/buyerOrder.html", icon: "📦" },
-    { label: "My Services", href: "../Seller/removeService.html", icon: "🛠" },
     { label: "Add Service", href: "../Seller/addService.html", icon: "➕" },
     { label: "Credits", href: "../Buyer/addCredits.html", icon: "💳" },
   ];
