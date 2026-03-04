@@ -165,6 +165,34 @@
       cursor: not-allowed;
     }
 
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 10px;
+      background: var(--box);
+      border: none;
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .tab.active {
+      background: var(--accent);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
     /* ================= OVERLAYS ================= */
 
     .overlay,
@@ -281,26 +309,56 @@
 
     <div class="content">
       <div class="card">
-        <h2>Add Credits</h2>
 
-        <form id="creditForm">
-          <label>Routing Number</label>
-          <input id="routingNumber" placeholder="Numbers only" />
+        <div class="tabs">
+          <button class="tab active" data-tab="buyTab">Add Credits</button>
+          <button class="tab" data-tab="sellTab">Sell Credits</button>
+        </div>
 
-          <label>Discord Tag</label>
-          <input id="discordTag" placeholder="angel_nunez4" />
+        <!-- BUY CREDITS -->
+        <div id="buyTab" class="tab-content active">
+          <form id="buyForm">
 
-          <label>Credit Amount</label>
-          <input id="credits" type="number" min="1" placeholder="100" />
+            <label>Routing Number</label>
+            <input id="buyRouting" placeholder="Numbers only" />
 
-          <button type="submit" id="submitBtn">Submit</button>
-          <div id="status" class="status"></div>
-        </form>
+            <label>Discord Tag</label>
+            <input id="buyDiscord" placeholder="angel_nunez4" />
+
+            <label>Credit Amount</label>
+            <input id="buyCredits" type="number" min="1" placeholder="100" />
+
+            <button type="submit" id="buySubmit">Submit</button>
+            <div id="buyStatus" class="status"></div>
+
+          </form>
+        </div>
+
+        <!-- SELL CREDITS -->
+        <div id="sellTab" class="tab-content">
+          <form id="sellForm">
+
+            <label>Routing Number</label>
+            <input id="sellRouting" placeholder="Numbers only" />
+
+            <label>Discord Tag</label>
+            <input id="sellDiscord" placeholder="angel_nunez4" />
+
+            <label>Credit Amount</label>
+            <input id="sellCredits" type="number" min="1" placeholder="100" />
+
+            <button type="submit" id="sellSubmit">Submit</button>
+            <div id="sellStatus" class="status"></div>
+
+          </form>
+        </div>
+
       </div>
     </div>
   </main>
 
   <script type="module">
+
     import { renderSidebar } from "../methods/sidebar.js";
 
     const API_BASE = "https://gtaw-project.vercel.app";
@@ -310,7 +368,8 @@
       window.location.href = "../index.html";
     }
 
-    /* Sidebar */
+    /* ================= SIDEBAR ================= */
+
     const menuBtn = document.getElementById("menuBtn");
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("overlay");
@@ -325,7 +384,8 @@
       overlay.classList.remove("active");
     });
 
-    /* JWT */
+    /* ================= JWT ================= */
+
     function parseJWT(token) {
       try {
         const payload = token.split(".")[1];
@@ -335,8 +395,12 @@
       }
     }
 
+    /* ================= LOAD CREDITS ================= */
+
     async function loadCredits() {
+
       try {
+
         const res = await fetch(`${API_BASE}/users/me`, {
           headers: {
             Authorization: "Bearer " + token
@@ -353,23 +417,54 @@
       } catch (err) {
         console.log("Failed to load credits", err);
       }
+
     }
 
-    /* Form */
-    const form = document.getElementById("creditForm");
-    const routingInput = document.getElementById("routingNumber");
-    const discordInput = document.getElementById("discordTag");
-    const creditsInput = document.getElementById("credits");
-    const status = document.getElementById("status");
-    const submitBtn = document.getElementById("submitBtn");
+    /* ================= TABS ================= */
+
+    const tabs = document.querySelectorAll(".tab");
+    const contents = document.querySelectorAll(".tab-content");
+
+    tabs.forEach(tab => {
+
+      tab.addEventListener("click", () => {
+
+        tabs.forEach(t => t.classList.remove("active"));
+        contents.forEach(c => c.classList.remove("active"));
+
+        tab.classList.add("active");
+        document.getElementById(tab.dataset.tab).classList.add("active");
+
+      });
+
+    });
+
+    /* ================= OVERLAYS ================= */
 
     const loaderOverlay = document.getElementById("loaderOverlay");
     const popupOverlay = document.getElementById("popupOverlay");
     const closePopupBtn = document.getElementById("closePopupBtn");
 
-    submitBtn.disabled = true;
+    function showLoader() {
+      loaderOverlay.style.display = "flex";
+    }
 
-    function validate() {
+    function hideLoader() {
+      loaderOverlay.style.display = "none";
+    }
+
+    function showPopup() {
+      popupOverlay.style.display = "flex";
+    }
+
+    closePopupBtn.addEventListener("click", () => {
+      popupOverlay.style.display = "none";
+    });
+
+    /* ================= VALIDATION ================= */
+
+    function validateForm(routingInput, discordInput, creditsInput, status, submitBtn) {
+
       const routing = routingInput.value.trim();
       const discord = discordInput.value.trim();
       const credits = Number(creditsInput.value.trim());
@@ -388,37 +483,42 @@
 
       status.style.color = "limegreen";
       status.textContent = "All fields valid ✓";
+
       submitBtn.disabled = false;
     }
 
-    routingInput.addEventListener("input", validate);
-    discordInput.addEventListener("input", validate);
-    creditsInput.addEventListener("input", validate);
+    /* ================= BUY FORM ================= */
 
-    function showLoader() {
-      loaderOverlay.style.display = "flex";
-    }
+    const buyRouting = document.getElementById("buyRouting");
+    const buyDiscord = document.getElementById("buyDiscord");
+    const buyCredits = document.getElementById("buyCredits");
+    const buyStatus = document.getElementById("buyStatus");
+    const buySubmit = document.getElementById("buySubmit");
 
-    function hideLoader() {
-      loaderOverlay.style.display = "none";
-    }
+    buySubmit.disabled = true;
 
-    function showPopup() {
-      popupOverlay.style.display = "flex";
-    }
+    buyRouting.addEventListener("input", () =>
+      validateForm(buyRouting, buyDiscord, buyCredits, buyStatus, buySubmit)
+    );
 
-    closePopupBtn.addEventListener("click", () => {
-      popupOverlay.style.display = "none";
-    });
+    buyDiscord.addEventListener("input", () =>
+      validateForm(buyRouting, buyDiscord, buyCredits, buyStatus, buySubmit)
+    );
 
-    form.addEventListener("submit", async (e) => {
+    buyCredits.addEventListener("input", () =>
+      validateForm(buyRouting, buyDiscord, buyCredits, buyStatus, buySubmit)
+    );
+
+    document.getElementById("buyForm").addEventListener("submit", async (e) => {
+
       e.preventDefault();
-      if (submitBtn.disabled) return;
+      if (buySubmit.disabled) return;
 
       showLoader();
-      submitBtn.disabled = true;
+      buySubmit.disabled = true;
 
       try {
+
         const res = await fetch(`${API_BASE}/discord/credits-request`, {
           method: "POST",
           headers: {
@@ -427,30 +527,108 @@
           },
           body: JSON.stringify({
             type: "buy",
-            routing_number: routingInput.value.trim(),
-            amount_credits: Number(creditsInput.value.trim()),
-            discord_tag: discordInput.value.trim()
+            routing_number: buyRouting.value.trim(),
+            amount_credits: Number(buyCredits.value.trim()),
+            discord_tag: buyDiscord.value.trim()
           })
         });
-        if (!res.ok) throw new Error("Server error");
+
+        if (!res.ok) throw new Error();
 
         showPopup();
-        form.reset();
-        submitBtn.disabled = true;
-        status.textContent = "";
+
+        e.target.reset();
+        buySubmit.disabled = true;
+        buyStatus.textContent = "";
 
       } catch (err) {
-        status.textContent = "API error occurred.";
+
+        buyStatus.style.color = "red";
+        buyStatus.textContent = "API error occurred.";
+
       } finally {
+
         hideLoader();
+
       }
+
     });
+
+    /* ================= SELL FORM ================= */
+
+    const sellRouting = document.getElementById("sellRouting");
+    const sellDiscord = document.getElementById("sellDiscord");
+    const sellCredits = document.getElementById("sellCredits");
+    const sellStatus = document.getElementById("sellStatus");
+    const sellSubmit = document.getElementById("sellSubmit");
+
+    sellSubmit.disabled = true;
+
+    sellRouting.addEventListener("input", () =>
+      validateForm(sellRouting, sellDiscord, sellCredits, sellStatus, sellSubmit)
+    );
+
+    sellDiscord.addEventListener("input", () =>
+      validateForm(sellRouting, sellDiscord, sellCredits, sellStatus, sellSubmit)
+    );
+
+    sellCredits.addEventListener("input", () =>
+      validateForm(sellRouting, sellDiscord, sellCredits, sellStatus, sellSubmit)
+    );
+
+    document.getElementById("sellForm").addEventListener("submit", async (e) => {
+
+      e.preventDefault();
+      if (sellSubmit.disabled) return;
+
+      showLoader();
+      sellSubmit.disabled = true;
+
+      try {
+
+        const res = await fetch(`${API_BASE}/discord/credits-request`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token
+          },
+          body: JSON.stringify({
+            type: "sell",
+            routing_number: sellRouting.value.trim(),
+            amount_credits: Number(sellCredits.value.trim()),
+            discord_tag: sellDiscord.value.trim()
+          })
+        });
+
+        if (!res.ok) throw new Error();
+
+        showPopup();
+
+        e.target.reset();
+        sellSubmit.disabled = true;
+        sellStatus.textContent = "";
+
+      } catch (err) {
+
+        sellStatus.style.color = "red";
+        sellStatus.textContent = "API error occurred.";
+
+      } finally {
+
+        hideLoader();
+
+      }
+
+    });
+
+    /* ================= INIT ================= */
 
     document.addEventListener("DOMContentLoaded", () => {
       renderSidebar();
       loadCredits();
-      setInterval(loadCredits, 15000); // refresh every 15 seconds
+      setInterval(loadCredits, 15000);
     });
+
   </script>
 </body>
 
