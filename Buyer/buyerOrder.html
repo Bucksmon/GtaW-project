@@ -13,7 +13,7 @@
             --box: #1e2945;
             --text: #e6e9f2;
             --muted: #9aa4b8;
-            --accent: #4f8cff;
+            --accent: #23c826;
             --success: #2ecc71;
             --danger: #ff4f4f;
 
@@ -199,7 +199,7 @@
         .order-row span {
             white-space: nowrap;
         }
-
+        
         /* subtle divider between rows */
         .order-row+.order-row {
             padding-top: 6px;
@@ -528,7 +528,7 @@
 
         <div class="order-row">
             <span><strong>Seller:</strong> ${order.seller?.username}</span>
-            <span><strong>Total:</strong> ${order.totalPrice} </span>
+            <span><strong>Total:</strong> <span style="color: var(--accent);">${order.totalPrice}</span></span>
         </div>
 
         <div class="order-row">
