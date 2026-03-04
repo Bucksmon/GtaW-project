@@ -473,7 +473,7 @@
           if (!res.ok) return alert(data.error || "Purchase failed");
 
           alert("Service purchased!");
-          document.getElementById("creditsDisplay").innerHTML = `<span style="color:#2ecc71">${data.buyerCredits ?? 0}</span>`; 
+          document.getElementById("creditsDisplay").innerHTML = `<span style="color:#2ecc71">${data.newCredits ?? 0}</span>`; 
 
         } catch (err) {
           console.error(err);
@@ -496,7 +496,7 @@
         if (!res.ok) throw new Error();
 
         const user = await res.json();
-        document.getElementById("creditsDisplay").innerHTML = `<span style="color:#2ecc71">${data.buyerCredits ?? 0}</span>`;
+        document.getElementById("creditsDisplay").innerHTML = `<span style="color:#2ecc71">${user.credits ?? 0}</span>`;
 
       } catch (err) {
         console.log(err);
