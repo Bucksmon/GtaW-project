@@ -13,7 +13,7 @@
             --box: #1e2945;
             --text: #e6e9f2;
             --muted: #9aa4b8;
-            --accent: #23c826;
+            --accent: #4f8cff;
             --success: #2ecc71;
             --danger: #ff4f4f;
 
@@ -539,7 +539,7 @@
 
         <div class="order-row">
             <span><strong>Buyer:</strong> ${order.buyer?.username}</span>
-            <span><strong>Total Price:</strong> ${order.totalPrice} credits</span>
+            <span><strong>Total Price:</strong> <span style="color: green;">${order.totalPrice}</span> </span>
         </div>
 
         <div class="order-row">
