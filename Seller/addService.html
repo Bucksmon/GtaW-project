@@ -254,37 +254,43 @@
       opacity: .5;
     }
 
-    /* LOADER */
+    /* ================= LOADER ================= */
 
-    .global-loader {
+    .loader-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, .7);
+      background: rgba(0, 0, 0, .6);
       display: none;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       z-index: 3000;
     }
 
-    .loader-box {
+    .loader-overlay.show {
+      display: flex;
+    }
+
+    .popup {
       background: var(--card);
-      padding: 40px;
+      padding: 30px;
       border-radius: var(--radius);
-      text-align: center;
+      display: flex;
+      align-items: center;
+      gap: 15px;
     }
 
     .spinner {
-      width: 50px;
-      height: 50px;
-      border: 4px solid rgba(255, 255, 255, .2);
-      border-top: 4px solid var(--accent);
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(255, 255, 255, .2);
+      border-top: 3px solid var(--accent);
       border-radius: 50%;
       animation: spin .8s linear infinite;
     }
 
     @keyframes spin {
       to {
-        transform: rotate(360deg)
+        transform: rotate(360deg);
       }
     }
 
@@ -322,10 +328,10 @@
 
   <div class="overlay" id="overlay"></div>
 
-  <div id="globalLoader" class="global-loader">
-    <div class="loader-box">
+  <div id="loaderOverlay" class="loader-overlay">
+    <div class="popup">
       <div class="spinner"></div>
-      <p>Processing...</p>
+      <span>Loading...</span>
     </div>
   </div>
 
@@ -398,10 +404,15 @@
 
     if (!token) location.href = "../index.html";
 
-    const loader = document.getElementById("globalLoader");
+    const loaderOverlay = document.getElementById("loaderOverlay");
 
-    function showLoader() { loader.style.display = "flex"; }
-    function hideLoader() { loader.style.display = "none"; }
+    function showLoader() {
+      loaderOverlay.classList.add("show");
+    }
+
+    function hideLoader() {
+      loaderOverlay.classList.remove("show");
+    }
 
     /* SIDEBAR TOGGLE */
 
