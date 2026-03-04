@@ -460,7 +460,7 @@
             paginationContainer.innerHTML = "";
 
             const prevBtn = document.createElement("button");
-            prevBtn.textContent = "Previous";
+            prevBtn.textContent = "<";
             prevBtn.disabled = currentPage === 1;
             prevBtn.addEventListener("click", () => {
                 if (currentPage > 1) loadUsers(currentPage - 1);
@@ -470,7 +470,7 @@
             pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
 
             const nextBtn = document.createElement("button");
-            nextBtn.textContent = "Next";
+            nextBtn.textContent = ">";
             nextBtn.disabled = currentPage === totalPages;
             nextBtn.addEventListener("click", () => {
                 if (currentPage < totalPages) loadUsers(currentPage + 1);
