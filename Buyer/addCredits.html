@@ -195,23 +195,43 @@
 
     /* ================= OVERLAYS ================= */
 
-    .overlay,
-    .loader-overlay,
-    .popup-overlay,
-    .global-loader {
+    /* SIDEBAR OVERLAY */
+    .overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, .65);
+      background: rgba(0, 0, 0, .5);
+      display: none;
+      z-index: 900;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    /* LOADER */
+    .loader-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .7);
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 2000;
+      z-index: 3000;
     }
 
-    .overlay.active,
+    /* POPUP */
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 4000;
+    }
+
     .loader-overlay.active,
-    .popup-overlay.active,
-    .global-loader.active {
+    .popup-overlay.active {
       display: flex;
     }
 
@@ -444,17 +464,16 @@
     const loaderOverlay = document.getElementById("loaderOverlay");
     const popupOverlay = document.getElementById("popupOverlay");
     const closePopupBtn = document.getElementById("closePopupBtn");
-
     function showLoader() {
-      loaderOverlay.style.display = "flex";
+      loaderOverlay.classList.add("active");
     }
 
     function hideLoader() {
-      loaderOverlay.style.display = "none";
+      loaderOverlay.classList.remove("active");
     }
 
     function showPopup() {
-      popupOverlay.style.display = "flex";
+      popupOverlay.classList.add("active");
     }
 
     closePopupBtn.addEventListener("click", () => {
