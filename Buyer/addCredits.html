@@ -493,7 +493,7 @@
       if (!/^\d{9}$/.test(routing))
         return status.textContent = "Routing must be 9 digits.";
 
-      if (!/^[a-zA-Z0-9_]+$/.test(discord))
+      if (!/^(?=.{2,32}$)(?!\.)(?!.*\.\.)([a-zA-Z0-9_.]+)(?<!\.)$/.test(discord))
         return status.textContent = "Invalid Discord tag.";
 
       if (isNaN(credits) || credits <= 0)
