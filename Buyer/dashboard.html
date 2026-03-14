@@ -133,15 +133,13 @@
 
     .services {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 24px;
-      width: 100%;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 30px;
     }
 
     /* ================= CARD ================= */
 
     .service-card {
-      width: 100%;
       background: var(--card);
       border-radius: var(--radius);
       padding: 22px;
@@ -158,8 +156,7 @@
 
     .service-image {
       width: 100%;
-      aspect-ratio: 16 / 9;
-      object-fit: cover;
+      height: 180px;
       object-fit: cover;
       border-radius: var(--radius-sm);
       background: var(--box);
@@ -178,18 +175,6 @@
 
     .service-card strong {
       color: var(--text);
-    }
-
-    @media (max-width:1100px) {
-
-      .main {
-        padding: 40px 25px;
-      }
-
-      .services {
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      }
-
     }
 
     /* ================= BUTTON ================= */
@@ -321,11 +306,7 @@
 
       .main {
         margin-left: 0;
-        padding: 25px 18px;
-      }
-
-      .services {
-        grid-template-columns: 1fr;
+        padding: 30px 20px;
       }
 
       .menu-btn {
@@ -492,7 +473,7 @@
           if (!res.ok) return alert(data.error || "Purchase failed");
 
           alert("Service purchased!");
-          document.getElementById("creditsDisplay").innerHTML = `<span style="color:#2ecc71">${data.newCredits ?? 0}</span>`;
+          document.getElementById("creditsDisplay").innerHTML = `<span style="color:#2ecc71">${data.newCredits ?? 0}</span>`; 
 
         } catch (err) {
           console.error(err);
