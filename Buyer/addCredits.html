@@ -261,6 +261,38 @@
       }
     }
 
+    /* POPUP BUTTON */
+
+    .popup-box button {
+      margin-top: 20px;
+      padding: 12px 28px;
+      min-width: 120px;
+
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius-sm);
+
+      color: white;
+      font-size: 0.95rem;
+      font-weight: 600;
+
+      cursor: pointer;
+      transition: var(--transition);
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .popup-box button:hover {
+      transform: translateY(-1px);
+      opacity: .95;
+    }
+
+    .popup-box button:active {
+      transform: translateY(0);
+    }
+
     /* ================= RESPONSIVE ================= */
 
     @media (max-width: 768px) {
@@ -316,7 +348,7 @@
     <div class="popup-box">
       <h3>Request Sent</h3>
       <p>Your request has been forwarded, it will be handled shortly.</p>
-      <button id="closePopupBtn">OK</button>
+      <button id="closePopupBtn">Close</button>
     </div>
   </div>
 
@@ -476,7 +508,7 @@
     }
 
     closePopupBtn.addEventListener("click", () => {
-      popupOverlay.style.display = "none";
+      popupOverlay.classList.remove("active");
     });
 
     /* ================= VALIDATION ================= */
