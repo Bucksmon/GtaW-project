@@ -49,7 +49,7 @@ export function renderSidebar() {
   const currentFile = window.location.pathname.split("/").pop().toLowerCase();
 
   sidebar.innerHTML = `
-  <h2>${role} Panel</h2>
+  <h2>Royal Road</h2>
   <ul class="nav-links">
     ${menuItems.map(item => {
     const file = item.href.split("/").pop().toLowerCase();
