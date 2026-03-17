@@ -149,9 +149,10 @@
 
     .form-card {
       background: var(--card);
-      padding: 36px;
+      padding: 32px;
       border-radius: var(--radius);
-      max-width: 650px;
+      max-width: 520px;
+      /* reduced from 650px */
       width: 100%;
     }
 
@@ -172,7 +173,8 @@
     }
 
     textarea {
-      min-height: 120px;
+      min-height: 90px;
+      /* was 120px */
       resize: vertical;
     }
 
@@ -184,6 +186,13 @@
       background: var(--accent);
       color: white;
       cursor: pointer;
+
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      /* centers button */
+      min-width: 180px;
+      /* makes it feel consistent */
     }
 
     /* SERVICES */
@@ -332,15 +341,14 @@
       <h3>Your Credits: <span id="creditsDisplay">0</span></h3>
     </div>
 
-
+    <div class="tabs">
+      <button class="tab active" data-tab="add">Add Service</button>
+      <button class="tab" data-tab="remove">Remove Services</button>
+    </div>
 
     <!-- ADD -->
     <div id="add" class="tab-content active">
       <div class="add-wrapper">
-        <div class="tabs">
-          <button class="tab active" data-tab="add">Add Service</button>
-          <button class="tab" data-tab="remove">Remove Services</button>
-        </div>
         <div class="form-card">
           <div class="form-group">
             <label>Service Title</label>
@@ -356,7 +364,10 @@
           </div>
           <div class="form-group">
             <label>Image URL</label>
-            <input id="imageInput">
+            <input id="imageInput" placeholder="https://i.imgur.com/bua2dNG.png">
+            <small style="color: var(--muted); font-size: 0.75rem;">
+              Example: https://i.imgur.com/bua2dNG.png
+            </small>
             <img id="preview" style="display:none;width:100%;margin-top:10px;border-radius:10px;">
           </div>
           <button class="submit-btn">Add Service</button>
