@@ -68,15 +68,12 @@
       border-radius: var(--radius-sm);
       text-decoration: none;
       color: var(--text);
-      transition: var(--transition);
     }
 
     .nav-links a:hover,
     .nav-links a.active {
       background: rgba(255, 255, 255, .08);
     }
-
-    /* OVERLAY */
 
     .overlay {
       position: fixed;
@@ -98,8 +95,6 @@
       min-height: 100vh;
     }
 
-    /* TOPBAR */
-
     .topbar {
       display: flex;
       justify-content: space-between;
@@ -114,10 +109,6 @@
       font-size: 1.6rem;
       color: var(--text);
       cursor: pointer;
-    }
-
-    .topbar span {
-      color: var(--accent);
     }
 
     /* TABS */
@@ -141,8 +132,6 @@
       background: var(--accent);
     }
 
-    /* TAB CONTENT */
-
     .tab-content {
       display: none;
     }
@@ -151,13 +140,19 @@
       display: block;
     }
 
-    /* FORM */
+    /* ✅ ADD FIX */
+
+    .add-wrapper {
+      display: flex;
+      justify-content: center;
+    }
 
     .form-card {
       background: var(--card);
       padding: 36px;
       border-radius: var(--radius);
       max-width: 650px;
+      width: 100%;
     }
 
     .form-group {
@@ -231,8 +226,6 @@
       cursor: pointer;
     }
 
-    /* PAGINATION */
-
     #pagination {
       margin-top: 40px;
       display: flex;
@@ -253,8 +246,6 @@
     #pagination button:disabled {
       opacity: .5;
     }
-
-    /* ================= LOADER ================= */
 
     .loader-overlay {
       position: fixed;
@@ -289,32 +280,14 @@
     }
 
     @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
+      to { transform: rotate(360deg); }
     }
 
-    /* RESPONSIVE */
-
     @media (max-width:768px) {
-
-      .sidebar {
-        transform: translateX(-100%);
-      }
-
-      .sidebar.open {
-        transform: translateX(0);
-      }
-
-      .main {
-        margin-left: 0;
-        padding: 30px 20px;
-      }
-
-      .menu-btn {
-        display: block;
-      }
-
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main { margin-left: 0; padding: 30px 20px; }
+      .menu-btn { display: block; }
     }
   </style>
 </head>
@@ -322,7 +295,7 @@
 <body>
 
   <aside class="sidebar" id="sidebar">
-    <h2>Royal Road/h2>
+    <h2>Royal Road</h2>
     <ul class="nav-links" id="navLinks"></ul>
   </aside>
 
@@ -338,14 +311,11 @@
   <main class="main">
 
     <div class="topbar">
-
       <div style="display:flex;align-items:center;gap:15px;">
         <button class="menu-btn" id="menuBtn">☰</button>
         <h2>Seller Services</h2>
       </div>
-
       <h3>Your Credits: <span id="creditsDisplay">0</span></h3>
-
     </div>
 
     <div class="tabs">
@@ -354,40 +324,32 @@
     </div>
 
     <!-- ADD -->
-
     <div id="add" class="tab-content active">
-
-      <div class="form-card">
-
-        <div class="form-group">
-          <label>Service Title</label>
-          <input id="title">
+      <div class="add-wrapper">
+        <div class="form-card">
+          <div class="form-group">
+            <label>Service Title</label>
+            <input id="title">
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="description"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Price</label>
+            <input type="number" id="price">
+          </div>
+          <div class="form-group">
+            <label>Image URL</label>
+            <input id="imageInput">
+            <img id="preview" style="display:none;width:100%;margin-top:10px;border-radius:10px;">
+          </div>
+          <button class="submit-btn">Add Service</button>
         </div>
-
-        <div class="form-group">
-          <label>Description</label>
-          <textarea id="description"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label>Price</label>
-          <input type="number" id="price">
-        </div>
-
-        <div class="form-group">
-          <label>Image URL</label>
-          <input id="imageInput">
-          <img id="preview" style="display:none;width:100%;margin-top:10px;border-radius:10px;">
-        </div>
-
-        <button class="submit-btn">Add Service</button>
-
       </div>
-
     </div>
 
     <!-- REMOVE -->
-
     <div id="remove" class="tab-content">
       <div id="servicesContainer" class="services"></div>
       <div id="pagination"></div>
@@ -396,7 +358,6 @@
   </main>
 
   <script type="module">
-
     import { renderSidebar } from "../methods/sidebar.js";
 
     const API_BASE = "https://gtaw-project.vercel.app";
@@ -406,15 +367,8 @@
 
     const loaderOverlay = document.getElementById("loaderOverlay");
 
-    function showLoader() {
-      loaderOverlay.classList.add("show");
-    }
-
-    function hideLoader() {
-      loaderOverlay.classList.remove("show");
-    }
-
-    /* SIDEBAR TOGGLE */
+    function showLoader() { loaderOverlay.classList.add("show"); }
+    function hideLoader() { loaderOverlay.classList.remove("show"); }
 
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("overlay");
@@ -430,8 +384,6 @@
       overlay.classList.remove("active");
     });
 
-    /* TABS */
-
     const tabs = document.querySelectorAll(".tab");
 
     tabs.forEach(tab => {
@@ -446,8 +398,6 @@
       };
     });
 
-    /* ADD SERVICE */
-
     const titleInput = document.getElementById("title");
     const descriptionInput = document.getElementById("description");
     const priceInput = document.getElementById("price");
@@ -456,16 +406,11 @@
 
     imageInput.oninput = () => {
       const url = imageInput.value.trim();
-      if (url) {
-        preview.src = url;
-        preview.style.display = "block";
-      } else {
-        preview.style.display = "none";
-      }
+      preview.style.display = url ? "block" : "none";
+      preview.src = url;
     };
 
     document.querySelector(".submit-btn").onclick = async () => {
-
       const service_title = titleInput.value.trim();
       const service_description = descriptionInput.value.trim();
       const service_price = Number(priceInput.value);
@@ -479,7 +424,6 @@
       showLoader();
 
       try {
-
         const res = await fetch(`${API_BASE}/services`, {
           method: "POST",
           headers: {
@@ -511,15 +455,11 @@
       }
 
       hideLoader();
-
     };
-
-    /* SERVICES */
 
     let currentPage = 1;
 
     async function loadServices(page = 1) {
-
       showLoader();
 
       const res = await fetch(`${API_BASE}/services/mine?page=${page}&limit=8`, {
@@ -532,11 +472,9 @@
       renderPagination(data.page || 1, data.totalPages || 1);
 
       hideLoader();
-
     }
 
     function renderServices(services) {
-
       const container = document.getElementById("servicesContainer");
       container.innerHTML = "";
 
@@ -546,7 +484,6 @@
       }
 
       services.forEach(service => {
-
         const card = document.createElement("div");
         card.className = "service-card";
 
@@ -556,27 +493,21 @@
 <p>${service.service_description}</p>
 <div class="service-meta">
   Credits: 
-  <span style="color: #2ecc710">${service.service_price || 0}</span>
+  <span style="color: #2ecc71">${service.service_price || 0}</span>
 </div>
 `;
 
         const del = document.createElement("button");
         del.className = "danger-btn";
         del.textContent = "Delete";
-
         del.onclick = () => deleteService(service._id);
 
         card.appendChild(del);
         container.appendChild(card);
-
       });
-
     }
 
-    /* DELETE */
-
     async function deleteService(id) {
-
       if (!confirm("Delete service?")) return;
 
       showLoader();
@@ -587,20 +518,14 @@
       });
 
       loadServices(currentPage);
-
       hideLoader();
-
     }
 
-    /* PAGINATION */
-
     function renderPagination(current, total) {
-
       const pagination = document.getElementById("pagination");
       pagination.innerHTML = "";
 
       for (let i = 1; i <= total; i++) {
-
         const btn = document.createElement("button");
         btn.textContent = i;
 
@@ -612,23 +537,18 @@
         };
 
         pagination.appendChild(btn);
-
       }
-
     }
 
-    /* CREDITS */
-
     async function loadCredits() {
-
       const res = await fetch(`${API_BASE}/users/me`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
       const user = await res.json();
 
-      document.getElementById("creditsDisplay").innerHTML = `<span style="color:#2ecc71">${user.credits ?? 0}</span>`;
-
+      document.getElementById("creditsDisplay").innerHTML =
+        `<span style="color:#2ecc71">${user.credits ?? 0}</span>`;
     }
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -636,9 +556,7 @@
       loadCredits();
       setInterval(loadCredits, 15000);
     });
-
   </script>
 
 </body>
-
 </html>
