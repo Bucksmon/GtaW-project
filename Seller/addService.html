@@ -116,16 +116,24 @@
     .content {
       flex: 1;
       padding: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 700px;
     }
 
     /* CARD */
 
-    .card {
+    .form-card {
       background: var(--card);
       border-radius: var(--radius);
       padding: 28px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, .4);
-      max-width: 650px;
+      width: 100%;
     }
 
     /* FORM */
@@ -210,8 +218,8 @@
 
     .services {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
     }
 
     .service-card {
@@ -221,7 +229,7 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-      box-shadow: 0 6px 18px rgba(0,0,0,.3);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, .3);
     }
 
     .service-image {
@@ -234,7 +242,7 @@
     .service-meta {
       display: flex;
       justify-content: space-between;
-      border-top: 1px solid rgba(255,255,255,.06);
+      border-top: 1px solid rgba(255, 255, 255, .06);
       padding-top: 6px;
     }
 
@@ -254,6 +262,7 @@
       display: flex;
       gap: 10px;
       justify-content: center;
+      flex-wrap: wrap;
     }
 
     #pagination button {
@@ -270,7 +279,7 @@
     .loader-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,.7);
+      background: rgba(0, 0, 0, .7);
       display: none;
       align-items: center;
       justify-content: center;
@@ -299,7 +308,9 @@
     }
 
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     /* RESPONSIVE */
@@ -326,7 +337,7 @@
         padding: 20px;
       }
 
-      .card {
+      .form-card {
         padding: 22px;
       }
     }
@@ -336,75 +347,75 @@
 <body>
 
   <aside class="sidebar" id="sidebar">
-    <h2>Royal Road/h2>
+    <h2>Royal Road</h2>
     <ul class="nav-links" id="navLinks"></ul>
   </aside>
 
   <div class="overlay" id="overlay"></div>
 
   <div id="loaderOverlay" class="loader-overlay">
-    <div class="popup">
+    <div class="loader-box">
       <div class="spinner"></div>
-      <span>Loading...</span>
+      <p>Loading...</p>
     </div>
   </div>
 
   <main class="main">
 
     <div class="topbar">
-
       <div style="display:flex;align-items:center;gap:15px;">
         <button class="menu-btn" id="menuBtn">☰</button>
         <h2>Seller Services</h2>
       </div>
 
       <h3>Your Credits: <span id="creditsDisplay">0</span></h3>
-
     </div>
 
-    <div class="tabs">
-      <button class="tab active" data-tab="add">Add Service</button>
-      <button class="tab" data-tab="remove">Remove Services</button>
-    </div>
+    <div class="content">
+      <div class="container">
 
-    <!-- ADD -->
-
-    <div id="add" class="tab-content active">
-
-      <div class="form-card">
-
-        <div class="form-group">
-          <label>Service Title</label>
-          <input id="title">
+        <div class="tabs">
+          <button class="tab active" data-tab="add">Add Service</button>
+          <button class="tab" data-tab="remove">Remove Services</button>
         </div>
 
-        <div class="form-group">
-          <label>Description</label>
-          <textarea id="description"></textarea>
+        <!-- ADD -->
+        <div id="add" class="tab-content active">
+          <div class="form-card">
+
+            <div class="form-group">
+              <label>Service Title</label>
+              <input id="title">
+            </div>
+
+            <div class="form-group">
+              <label>Description</label>
+              <textarea id="description"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Price</label>
+              <input type="number" id="price">
+            </div>
+
+            <div class="form-group">
+              <label>Image URL</label>
+              <input id="imageInput">
+              <img id="preview" style="display:none;width:100%;margin-top:10px;border-radius:10px;">
+            </div>
+
+            <button class="submit-btn">Add Service</button>
+
+          </div>
         </div>
 
-        <div class="form-group">
-          <label>Price</label>
-          <input type="number" id="price">
+        <!-- REMOVE -->
+        <div id="remove" class="tab-content">
+          <div id="servicesContainer" class="services"></div>
+          <div id="pagination"></div>
         </div>
-
-        <div class="form-group">
-          <label>Image URL</label>
-          <input id="imageInput">
-          <img id="preview" style="display:none;width:100%;margin-top:10px;border-radius:10px;">
-        </div>
-
-        <button class="submit-btn">Add Service</button>
 
       </div>
-
-    </div>
-
-    <!-- REMOVE -->
-
-    <div id="remove" class="tab-content">
-      <div id="servicesContainer" class="services"></div>
-      <div id="pagination"></div>
     </div>
 
   </main>
