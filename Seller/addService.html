@@ -280,14 +280,28 @@
     }
 
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     @media (max-width:768px) {
-      .sidebar { transform: translateX(-100%); }
-      .sidebar.open { transform: translateX(0); }
-      .main { margin-left: 0; padding: 30px 20px; }
-      .menu-btn { display: block; }
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main {
+        margin-left: 0;
+        padding: 30px 20px;
+      }
+
+      .menu-btn {
+        display: block;
+      }
     }
   </style>
 </head>
@@ -318,14 +332,15 @@
       <h3>Your Credits: <span id="creditsDisplay">0</span></h3>
     </div>
 
-    <div class="tabs">
-      <button class="tab active" data-tab="add">Add Service</button>
-      <button class="tab" data-tab="remove">Remove Services</button>
-    </div>
+
 
     <!-- ADD -->
     <div id="add" class="tab-content active">
       <div class="add-wrapper">
+        <div class="tabs">
+          <button class="tab active" data-tab="add">Add Service</button>
+          <button class="tab" data-tab="remove">Remove Services</button>
+        </div>
         <div class="form-card">
           <div class="form-group">
             <label>Service Title</label>
@@ -559,4 +574,5 @@
   </script>
 
 </body>
+
 </html>
