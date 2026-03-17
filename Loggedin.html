@@ -198,7 +198,7 @@
     try {
       const userData = decodeJWT(token);
 
-      document.getElementById("status").innerText = "Token decoded successfully!";
+      document.getElementById("status").innerText = "Please select a character";
 
       const chars = userData.character || [];
       const container = document.getElementById("characters");
