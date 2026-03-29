@@ -356,7 +356,12 @@
   <main class="main">
     <div class="topbar">
       <button class="menu-btn" id="menuBtn">☰</button>
-      <h2>Your Credits: <span id="creditsDisplay">0</span></h2>
+      <h2>
+        Credits: <span id="creditsDisplay">0</span>
+        <span id="siteBalanceWrapper" style="margin-left:15px; display:none;">
+          | Site Balance: <span id="siteBalanceDisplay">0</span>
+        </span>
+      </h2>
     </div>
 
     <div class="content">
@@ -477,10 +482,15 @@
 
         document.getElementById("creditsDisplay").innerHTML =
           `<span style="color:#2ecc71">${user.credits ?? 0}</span>`;
-
+        // ✅ Show site balance only for admins
         // ✅ SHOW ADMIN TAB
-        if (["admin", "superadmin"].includes(user.role)) {
+        if (["superadmin"].includes(user.role)) {
           document.getElementById("adminTabBtn").style.display = "block";
+
+          document.getElementById("siteBalanceWrapper").style.display = "inline";
+
+          document.getElementById("siteBalanceDisplay").innerHTML =
+            `<span style="color:#4f8cff">${user.siteBalance ?? 0}</span>`;
         }
 
       } catch (err) {
