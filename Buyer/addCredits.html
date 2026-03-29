@@ -733,8 +733,8 @@
 
       try {
 
-        const res = await fetch(`${API_BASE}/admin/send-credits`, {
-          method: "POST",
+        const res = await fetch(`${API_BASE}/users/Site-Balance`, {
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer " + token
