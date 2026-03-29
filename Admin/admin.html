@@ -318,7 +318,7 @@
             </div>
         </div>
 
-        <div c<div class="content">
+        <div class="content">
             <div id="usersContainer"></div>
             <div id="pagination"></div>
         </div>
@@ -350,8 +350,6 @@
         });
         const loaderOverlay = document.getElementById("loaderOverlay");
         const creditsDisplay = document.getElementById("creditsDisplay");
-        document.getElementById("creditsDisplay").innerHTML =
-            `<span style="color:#2ecc71">${user.credits ?? 0}</span>`;
         const API_BASE = "https://gtaw-project.vercel.app";
         const token = localStorage.getItem("token");
 
@@ -379,8 +377,6 @@
         }
 
         async function loadCredits() {
-            if (currentUser?.role !== "superadmin") return;
-
             try {
                 const res = await fetch(`${API_BASE}/users/me`, {
                     headers: {
@@ -399,16 +395,17 @@
                 creditsValue.textContent = user.credits ?? 0;
                 creditsValue.style.color = "#2ecc71";
 
-                // ✅ Show site balance ONLY for superadmin
+                // reset
+                siteBalanceWrapper.style.display = "none";
+
                 if (user.role === "superadmin") {
                     siteBalanceWrapper.style.display = "inline";
-
                     siteBalanceValue.textContent = user.siteBalance ?? 0;
                     siteBalanceValue.style.color = "#4f8cff";
                 }
 
-            } catch {
-                console.log("Failed to load credits");
+            } catch (err) {
+                console.log("Failed to load credits", err);
             }
         }
         let currentPage = 1;
