@@ -237,6 +237,29 @@
             font-size: 1rem;
         }
 
+        /* ================= TABS ================= */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 18px;
+            min-width: 140px;
+            background: var(--box);
+            border: none;
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .tab.active {
+            background: var(--accent);
+        }
+
         /* ================= LOADER ================= */
 
         .loader-overlay {
@@ -352,7 +375,10 @@
             <button class="menu-btn" id="menuBtn">☰</button>
             <h2>Your Credits: <span id="creditsDisplay">0</span></h2>
         </div>
-
+        <div class="tabs">
+            <button class="tab active" data-tab="buy">Buy Orders</button>
+            <button class="tab" data-tab="sell">Sell Orders</button>
+        </div>
         <div id="servicesContainer" class="services"></div>
         <div id="pagination"></div>
     </main>
@@ -394,16 +420,21 @@
 
         /* ================= LOAD ORDERS ================= */
 
-        async function loadAdminOrders(page = 1) {
+        let activeTab = "buy";
+
+        async function loadOrders(page = 1) {
             showLoader();
 
             try {
+                const endpoint =
+                    activeTab === "buy"
+                        ? "/orders/buyer"
+                        : "/orders/seller";
+
                 const res = await fetch(
-                    `${API_BASE}/orders/admin?page=${page}&limit=${limit}`,
+                    `${API_BASE}${endpoint}?page=${page}&limit=${limit}`,
                     {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        },
+                        headers: { Authorization: `Bearer ${token}` },
                         cache: "no-store"
                     }
                 );
@@ -416,12 +447,26 @@
                 renderPagination(data.pagination);
 
             } catch (err) {
-                console.error("Failed to load admin orders:", err);
+                console.error("Failed to load orders:", err);
             } finally {
                 hideLoader();
             }
         }
 
+        const tabs = document.querySelectorAll(".tab");
+
+        tabs.forEach(tab => {
+            tab.addEventListener("click", () => {
+
+                tabs.forEach(t => t.classList.remove("active"));
+                tab.classList.add("active");
+
+                activeTab = tab.dataset.tab;
+
+                currentPage = 1; // reset page on switch
+                loadOrders(currentPage);
+            });
+        });
         /* ================= RENDER ORDERS ================= */
 
         function renderOrders(orders) {
@@ -478,7 +523,7 @@
 
                 btn.onclick = () => {
                     currentPage = i;
-                    loadAdminOrders(i);
+                    loadOrders(i);
                 };
 
                 paginationDiv.appendChild(btn);
@@ -510,7 +555,7 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             renderSidebar();
-            loadAdminOrders(currentPage);
+            loadOrders(currentPage);
             loadCredits(true);
             setInterval(() => loadCredits(false), 15000);
         }); 
