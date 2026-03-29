@@ -690,7 +690,7 @@
     });
 
     /* ================= Sell Site FORM ================= */
-    
+
     const adminCredits = document.getElementById("adminCredits");
     const adminStatus = document.getElementById("adminStatus");
     const adminSubmit = document.getElementById("adminSubmit");
@@ -703,7 +703,6 @@
       adminSubmit.disabled = true;
       adminStatus.style.color = "red";
 
-      if (!userId) return adminStatus.textContent = "User ID required.";
       if (isNaN(credits) || credits <= 0)
         return adminStatus.textContent = "Invalid credits.";
 
