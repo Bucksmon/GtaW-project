@@ -363,8 +363,11 @@
       <div class="card">
 
         <div class="tabs">
-          <button class="tab active" data-tab="buyTab">Add Credits</button>
-          <button class="tab" data-tab="sellTab">Sell Credits</button>
+          <button class="tab active" data-tab="buyTab">Deposit Credits</button>
+          <button class="tab" data-tab="sellTab">Withdraw Credits</button>
+          <button class="tab" id="adminTabBtn" data-tab="adminTab" style="display:none;">
+            Withdraw Site Credit
+          </button>
         </div>
 
         <!-- BUY CREDITS -->
@@ -405,6 +408,18 @@
           </form>
         </div>
 
+        <!-- ADMIN TAB -->
+        <div id="adminTab" class="tab-content">
+          <form id="adminForm">
+
+            <label>Credit Amount</label>
+            <input id="adminCredits" type="number" min="1" placeholder="100" />
+
+            <button type="submit" id="adminSubmit">Send Credits</button>
+            <div id="adminStatus" class="status"></div>
+
+          </form>
+        </div>
       </div>
     </div>
   </main>
@@ -412,7 +427,7 @@
   <script type="module">
 
     import { renderSidebar } from "../methods/sidebar.js";
-
+    const userData = parseJWT(token);
     const API_BASE = "https://gtaw-project.vercel.app";
     const token = localStorage.getItem("token");
 
@@ -454,16 +469,20 @@
       try {
 
         const res = await fetch(`${API_BASE}/users/me`, {
-          headers: {
-            Authorization: "Bearer " + token
-          }
+          headers: { Authorization: "Bearer " + token }
         });
 
         if (!res.ok) throw new Error();
 
         const user = await res.json();
 
-        document.getElementById("creditsDisplay").innerHTML = `<span style="color:#2ecc71">${user.credits ?? 0}</span>`;
+        document.getElementById("creditsDisplay").innerHTML =
+          `<span style="color:#2ecc71">${user.credits ?? 0}</span>`;
+
+        // ✅ SHOW ADMIN TAB
+        if (["admin", "superadmin"].includes(user.role)) {
+          document.getElementById("adminTabBtn").style.display = "block";
+        }
 
       } catch (err) {
         console.log("Failed to load credits", err);
@@ -671,6 +690,71 @@
 
     });
 
+    /* ================= Sell Site FORM ================= */
+    const adminUserId = document.getElementById("adminUserId");
+    const adminCredits = document.getElementById("adminCredits");
+    const adminStatus = document.getElementById("adminStatus");
+    const adminSubmit = document.getElementById("adminSubmit");
+
+    adminSubmit.disabled = true;
+
+    function validateAdminForm() {
+      const userId = adminUserId.value.trim();
+      const credits = Number(adminCredits.value.trim());
+
+      adminSubmit.disabled = true;
+      adminStatus.style.color = "red";
+
+      if (!userId) return adminStatus.textContent = "User ID required.";
+      if (isNaN(credits) || credits <= 0)
+        return adminStatus.textContent = "Invalid credits.";
+
+      adminStatus.style.color = "limegreen";
+      adminStatus.textContent = "Valid ✓";
+
+      adminSubmit.disabled = false;
+    }
+
+    adminUserId.addEventListener("input", validateAdminForm);
+    adminCredits.addEventListener("input", validateAdminForm);
+
+    document.getElementById("adminForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (adminSubmit.disabled) return;
+
+      showLoader();
+      adminSubmit.disabled = true;
+
+      try {
+
+        const res = await fetch(`${API_BASE}/admin/send-credits`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token
+          },
+          body: JSON.stringify({
+            userId: adminUserId.value.trim(),
+            credits: Number(adminCredits.value.trim())
+          })
+        });
+
+        if (!res.ok) throw new Error();
+
+        showPopup();
+
+        e.target.reset();
+        adminStatus.textContent = "";
+
+      } catch (err) {
+
+        adminStatus.style.color = "red";
+        adminStatus.textContent = "API error.";
+
+      } finally {
+        hideLoader();
+      }
+    });
     /* ================= INIT ================= */
 
     document.addEventListener("DOMContentLoaded", () => {
