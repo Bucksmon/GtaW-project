@@ -352,6 +352,8 @@
         const creditsDisplay = document.getElementById("creditsDisplay");
         document.getElementById("creditsDisplay").innerHTML =
             `<span style="color:#2ecc71">${user.credits ?? 0}</span>`;
+        const API_BASE = "https://gtaw-project.vercel.app";
+        const token = localStorage.getItem("token");
 
         if (!token) window.location.href = "../index.html";
         function parseJWT(token) {
