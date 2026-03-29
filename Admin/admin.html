@@ -310,7 +310,12 @@
         <div class="topbar">
             <button class="menu-btn" id="menuBtn">☰</button>
             <h2>Manage Users</h2>
-            <div class="credits-badge" id="creditsDisplay">Credits: 0</div>
+            <div class="credits-badge" id="creditsDisplay">
+                Credits: <span id="creditsValue">0</span>
+                <span id="siteBalanceWrapper" style="display:none; margin-left:10px;">
+                    | Site: <span id="siteBalanceValue">0</span>
+                </span>
+            </div>
         </div>
 
         <div c<div class="content">
@@ -369,11 +374,7 @@
         function hideLoader() { loaderOverlay.classList.remove("show"); }
 
         function toggleCreditVisibility() {
-            if (currentUser?.role === "superadmin") {
-                creditsDisplay.style.display = "block";
-            } else {
-                creditsDisplay.style.display = "none";
-            }
+            creditsDisplay.style.display = "block"; // always show
         }
 
         async function loadCredits() {
@@ -390,7 +391,20 @@
 
                 const user = await res.json();
 
-                creditsDisplay.innerHTML = `Credits: <span style="color:#2ecc71">${user.credits ?? 0}</span>`;
+                const creditsValue = document.getElementById("creditsValue");
+                const siteBalanceWrapper = document.getElementById("siteBalanceWrapper");
+                const siteBalanceValue = document.getElementById("siteBalanceValue");
+
+                creditsValue.textContent = user.credits ?? 0;
+                creditsValue.style.color = "#2ecc71";
+
+                // ✅ Show site balance ONLY for superadmin
+                if (user.role === "superadmin") {
+                    siteBalanceWrapper.style.display = "inline";
+
+                    siteBalanceValue.textContent = user.siteBalance ?? 0;
+                    siteBalanceValue.style.color = "#4f8cff";
+                }
 
             } catch {
                 console.log("Failed to load credits");
