@@ -427,7 +427,6 @@
   <script type="module">
 
     import { renderSidebar } from "../methods/sidebar.js";
-    const userData = parseJWT(token);
     const API_BASE = "https://gtaw-project.vercel.app";
     const token = localStorage.getItem("token");
 
@@ -691,7 +690,7 @@
     });
 
     /* ================= Sell Site FORM ================= */
-    const adminUserId = document.getElementById("adminUserId");
+    
     const adminCredits = document.getElementById("adminCredits");
     const adminStatus = document.getElementById("adminStatus");
     const adminSubmit = document.getElementById("adminSubmit");
@@ -699,7 +698,6 @@
     adminSubmit.disabled = true;
 
     function validateAdminForm() {
-      const userId = adminUserId.value.trim();
       const credits = Number(adminCredits.value.trim());
 
       adminSubmit.disabled = true;
@@ -715,7 +713,6 @@
       adminSubmit.disabled = false;
     }
 
-    adminUserId.addEventListener("input", validateAdminForm);
     adminCredits.addEventListener("input", validateAdminForm);
 
     document.getElementById("adminForm").addEventListener("submit", async (e) => {
@@ -734,7 +731,6 @@
             Authorization: "Bearer " + token
           },
           body: JSON.stringify({
-            userId: adminUserId.value.trim(),
             credits: Number(adminCredits.value.trim())
           })
         });
