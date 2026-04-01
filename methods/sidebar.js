@@ -16,6 +16,14 @@ function getMenuByRole(role) {
     { label: "All Orders", href: "../Admin/managerOrder.html", icon: "📊" },
     { label: "All Services", href: "../Admin/manageServices.html", icon: "🧾" },
   ];
+  
+  const settingItem = {
+    label: "Setting",
+    href: "#../Settings.html",
+    icon: "⚙️",
+    isLogout: true
+  };
+
   const logoutItem = {
     label: "Logout",
     href: "#",
@@ -27,11 +35,11 @@ function getMenuByRole(role) {
   }
 
   if (role === "user") {
-    return [...baseMenu, ...userMenu, logoutItem];
+    return [...baseMenu, ...userMenu, settingItem, logoutItem];
   }
 
   if (role === "admin" || role === "superadmin") {
-    return [...baseMenu, ...userMenu, ...adminMenu, logoutItem];
+    return [...baseMenu, ...userMenu, ...adminMenu, settingItem, logoutItem];
   }
 
   return baseMenu;
