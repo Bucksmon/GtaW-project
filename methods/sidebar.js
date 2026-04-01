@@ -20,8 +20,7 @@ function getMenuByRole(role) {
   const settingItem = {
     label: "Setting",
     href: "../Settings.html",
-    icon: "⚙️",
-    isLogout: true
+    icon: "⚙️"
   };
 
   const logoutItem = {
