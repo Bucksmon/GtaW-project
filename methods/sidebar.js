@@ -25,7 +25,7 @@ function getMenuByRole(role) {
 
   const logoutItem = {
     label: "Logout",
-    href: "#",
+    href: "/index.html",
     icon: "🚪",
     isLogout: true
   };
