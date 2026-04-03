@@ -1,34 +1,37 @@
 import { getCurrentUser } from "../utils/auth.js";
 
+const BASE = "/GtaW-project";
+
 function getMenuByRole(role) {
   const baseMenu = [
-    { label: "Dashboard", href: "../Buyer/dashboard.html", icon: "🛒" },
+    { label: "Dashboard", href: `${BASE}/Buyer/dashboard.html`, icon: "🛒" },
   ];
 
   const userMenu = [
-    { label: "Orders", href: "../Buyer/buyerOrder.html", icon: "📦" },
-    { label: "Services", href: "../Seller/addService.html", icon: "➕" },
-    { label: "Credits", href: "../Buyer/addCredits.html", icon: "💳" },
+    { label: "Orders", href: `${BASE}/Buyer/buyerOrder.html`, icon: "📦" },
+    { label: "Services", href: `${BASE}/Seller/addService.html`, icon: "➕" },
+    { label: "Credits", href: `${BASE}/Buyer/addCredits.html`, icon: "💳" },
   ];
 
   const adminMenu = [
-    { label: "Manage Users", href: "../Admin/admin.html", icon: "👥" },
-    { label: "All Orders", href: "../Admin/managerOrder.html", icon: "📊" },
-    { label: "All Services", href: "../Admin/manageServices.html", icon: "🧾" },
+    { label: "Manage Users", href: `${BASE}/Admin/admin.html`, icon: "👥" },
+    { label: "All Orders", href: `${BASE}/Admin/managerOrder.html`, icon: "📊" },
+    { label: "All Services", href: `${BASE}/Admin/manageServices.html`, icon: "🧾" },
   ];
-  
+
   const settingItem = {
     label: "Setting",
-    href: "/GtaW-project/Settings.html",
+    href: `${BASE}/Settings.html`,
     icon: "⚙️"
   };
 
   const logoutItem = {
     label: "Logout",
-    href: "/GtaW-project/index.html",
+    href: "#",
     icon: "🚪",
     isLogout: true
   };
+
   if (!role || role === "guest") {
     return baseMenu;
   }
@@ -52,47 +55,49 @@ export function renderSidebar() {
   const role = user?.role || "guest";
 
   const menuItems = getMenuByRole(role);
-  console.log(menuItems);
   const currentFile = window.location.pathname.split("/").pop().toLowerCase();
 
   sidebar.innerHTML = `
-  <h2>Royal Road</h2>
-  <ul class="nav-links">
-    ${menuItems.map(item => {
+    <h2>Royal Road</h2>
+    <ul class="nav-links">
+      ${menuItems.map(item => {
     const file = item.href.split("/").pop().toLowerCase();
     const isActive = file === currentFile ? "active" : "";
+
     if (item.isLogout) {
       return `
-      <li>
-        <a href="#" class="logout-link" id="logoutBtn">
-          <span>${item.icon}</span>
-          ${item.label}
-        </a>
-      </li>
-    `;
+            <li>
+              <a href="#" class="logout-link" id="logoutBtn">
+                <span>${item.icon}</span>
+                ${item.label}
+              </a>
+            </li>
+          `;
     }
+
     return `
-        <li>
-          <a href="${item.href}" class="${isActive}">
-            <span>${item.icon}</span>
-            ${item.label}
-          </a>
-        </li>
-      `;
+          <li>
+            <a href="${item.href}" class="${isActive}">
+              <span>${item.icon}</span>
+              ${item.label}
+            </a>
+          </li>
+        `;
   }).join("")}
-  </ul>
-`;
+    </ul>
+  `;
+
   const logoutBtn = document.getElementById("logoutBtn");
 
   if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
+    logoutBtn.addEventListener("click", (e) => {
+      e.preventDefault();
       handleLogout();
     });
   }
 }
 
 function handleLogout() {
-  // Remove all auth-related data
   localStorage.removeItem("token");
-  window.location.href = "../index.html";
+  window.location.href = `${BASE}/index.html`;
 }
