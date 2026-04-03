@@ -9,72 +9,32 @@
     :root {
       --bg: #0b0f1a;
       --panel: #111827;
-      --card: #121a2a;
-      --box: #1a2440;
+      --card: #151e33;
+      --box: #1e2945;
       --text: #e6e9f2;
       --muted: #9aa4b8;
       --accent: #4f8cff;
 
-      --radius: 14px;
-      --radius-sm: 10px;
+      --radius: 16px;
+      --radius-sm: 12px;
+      --transition: .25s ease;
+    }
+
+    /* ================= BASE ================= */
+
+    * {
+      box-sizing: border-box;
+      font-family: "Segoe UI", system-ui, sans-serif;
     }
 
     body {
       margin: 0;
-      background: radial-gradient(circle at top, #111827, #0b0f1a);
+      background: radial-gradient(circle at top, #111827, #0b0f1a 60%, #070a10);
       color: var(--text);
-      font-family: "Segoe UI", sans-serif;
+      min-height: 100vh;
     }
 
-    .main {
-      margin-left: 250px;
-      padding: 40px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .card {
-      background: var(--card);
-      padding: 30px;
-      border-radius: var(--radius);
-      width: 100%;
-      max-width: 500px;
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    label {
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-
-    input,
-    select {
-      padding: 12px;
-      background: var(--box);
-      border: 1px solid rgba(255, 255, 255, .08);
-      border-radius: var(--radius-sm);
-      color: var(--text);
-    }
-
-    button {
-      margin-top: 10px;
-      padding: 12px;
-      background: var(--accent);
-      border: none;
-      border-radius: var(--radius-sm);
-      color: white;
-      cursor: pointer;
-    }
-
-    .readonly {
-      opacity: 0.7;
-      pointer-events: none;
-    }
+    /* ================= SIDEBAR ================= */
 
     .sidebar {
       position: fixed;
@@ -85,7 +45,13 @@
       background: var(--panel);
       border-right: 1px solid rgba(255, 255, 255, .06);
       padding: 30px 0;
+      transition: transform var(--transition);
       z-index: 1000;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 30px;
     }
 
     .nav-links {
@@ -103,10 +69,137 @@
       border-radius: var(--radius-sm);
       text-decoration: none;
       color: var(--text);
+      transition: var(--transition);
     }
 
+    .nav-links a:hover,
     .nav-links a.active {
       background: rgba(255, 255, 255, .08);
+    }
+
+    /* ================= OVERLAY ================= */
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .5);
+      display: none;
+      z-index: 900;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    /* ================= MAIN ================= */
+
+    .main {
+      margin-left: 250px;
+      padding: 60px 40px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ================= TOPBAR ================= */
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    .menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    /* ================= CARD ================= */
+
+    .card {
+      background: var(--card);
+      padding: 30px;
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+      box-shadow: 0 20px 55px rgba(0, 0, 0, .4);
+    }
+
+    /* ================= FORM ================= */
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    label {
+      font-size: .85rem;
+      color: var(--muted);
+    }
+
+    input,
+    select {
+      padding: 12px;
+      background: var(--box);
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      transition: var(--transition);
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 12px;
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius-sm);
+      color: white;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .readonly {
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    /* ================= RESPONSIVE ================= */
+
+    @media (max-width: 768px) {
+
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main {
+        margin-left: 0;
+        padding: 30px 20px;
+      }
+
+      .menu-btn {
+        display: block;
+      }
     }
   </style>
 </head>
@@ -119,6 +212,10 @@
 
   <div class="overlay"></div>
   <main class="main">
+    <div class="topbar">
+      <button class="menu-btn" id="menuBtn">☰</button>
+      <h2>Settings</h2>
+    </div>
     <div class="card">
       <h2>Settings</h2>
 
@@ -265,7 +362,20 @@
     });
 
     /* ================= INIT ================= */
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.querySelector(".overlay");
+    const menuBtn = document.getElementById("menuBtn");
 
+    menuBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("open");
+      overlay.classList.toggle("active");
+    });
+
+    overlay.addEventListener("click", () => {
+      sidebar.classList.remove("open");
+      overlay.classList.remove("active");
+    });
+    
     document.addEventListener("DOMContentLoaded", () => {
       renderSidebar(); // 👈 ADD THIS
       loadUser();
