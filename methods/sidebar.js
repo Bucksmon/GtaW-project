@@ -19,13 +19,13 @@ function getMenuByRole(role) {
   
   const settingItem = {
     label: "Setting",
-    href: "/Settings.html",
+    href: "/GtaW-project/Settings.html",
     icon: "⚙️"
   };
 
   const logoutItem = {
     label: "Logout",
-    href: "/index.html",
+    href: "/GtaW-project/index.html",
     icon: "🚪",
     isLogout: true
   };
