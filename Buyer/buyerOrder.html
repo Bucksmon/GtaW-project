@@ -531,7 +531,7 @@
         <h3>${order.service?.service_title}</h3>
 
         <div class="order-row">
-            <span><strong>Seller:</strong> ${order.seller?.username}</span>
+            <span><strong>Seller:</strong> ${order.seller?.nickName || "anonymous"}</span>
             <span><strong>Total:</strong> <span style="color: #2ecc71;">${order.totalPrice}</span></span>
         </div>
 

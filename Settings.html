@@ -321,7 +321,7 @@
       } else {
         taxWrapper.innerHTML = `
           <label>Site Balance</label>
-          <input class="readonly" value="${user.siteBalance ?? 0}" />
+          <input class="readonly" value="${user.commissionRate ?? 0}" />
         `;
       }
     }
@@ -375,9 +375,9 @@
       sidebar.classList.remove("open");
       overlay.classList.remove("active");
     });
-    
+
     document.addEventListener("DOMContentLoaded", () => {
-      renderSidebar(); // 👈 ADD THIS
+      renderSidebar(); 
       loadUser();
       loadAddress();
     });

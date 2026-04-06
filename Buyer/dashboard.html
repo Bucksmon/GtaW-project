@@ -427,7 +427,7 @@
 
   <div class="service-meta">
     <span><strong>Price:</strong> <span style="color: #2ecc71">${service.service_price || 0}</span></span>
-    <span><strong>Seller:</strong> ${service.service_sellerId?.username || "Unknown"}</span>
+    <span><strong>Seller:</strong> ${service.service_sellerId?.nickName || "anonymous" }</span>
   </div>
 
   <button class="buy-btn" data-id="${service._id}">Buy</button>
