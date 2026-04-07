@@ -319,6 +319,7 @@
           </select>
         `;
       } else {
+        alert(`${user.commissionRate}`);
         taxWrapper.innerHTML = `
           <label>Site Balance</label>
           <input class="readonly" value="${user.commissionRate ?? 0}" />
