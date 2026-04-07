@@ -758,9 +758,7 @@
         if (!res.ok) throw new Error();
 
         showPopup();
-
-        await loadCredits(); // ✅ refresh
-
+        await loadCredits(); 
         e.target.reset();
         adminStatus.textContent = "";
 
