@@ -332,9 +332,8 @@
     }
 
     /* ================= LOAD USER ================= */
-
     async function loadUser() {
-      showLoader(); // ✅ start
+      showLoader();
 
       try {
         const res = await fetch(`${API_BASE}/users/me`, {
@@ -344,56 +343,63 @@
         const user = await res.json();
 
         populateForm(user);
-        renderTax(user);
+        renderTax(user); // ✅ now works
 
       } catch (err) {
         console.log("User load failed");
       } finally {
-        hideLoader(); // ✅ always stop
+        hideLoader();
       }
     }
 
 
     /* ================= TAX UI ================= */
+    function renderTax(user) {
+      if (user.role === "superadmin") {
+        taxWrapper.innerHTML = `
+      <label>Site Tax for sellers</label>
+      <select id="taxSelect">
+        <option value="10">10</option>
+        <option value="15">15</option>
+        <option value="20">20</option>
+        <option value="25">25</option>
+        <option value="30">30</option>
+      </select>
+    `;
 
-    if (user.role === "superadmin") {
-      taxWrapper.innerHTML = `
-    <label>Site Tax for sellers</label>
-    <select id="taxSelect">
-      <option value="10">10</option>
-      <option value="15">15</option>
-      <option value="20">20</option>
-      <option value="25">25</option>
-      <option value="30">30</option>
-    </select>
-  `;
+        const select = document.getElementById("taxSelect");
 
-      const select = document.getElementById("taxSelect");
-      if (select) {
-        select.value = user.commissionRate ?? "10";
+        if (select) {
+          select.value = user.commissionRate ?? "10";
 
-        // 🔥 ADD THIS
-        select.addEventListener("change", async () => {
-          showLoader();
+          select.addEventListener("change", async () => {
+            showLoader();
 
-          try {
-            await fetch(`${API_BASE}/users/Commission-Rate`, {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + token
-              },
-              body: JSON.stringify({
-                commissionRate: Number(select.value)
-              })
-            });
+            try {
+              await fetch(`${API_BASE}/users/Commission-Rate`, {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: "Bearer " + token
+                },
+                body: JSON.stringify({
+                  commissionRate: Number(select.value)
+                })
+              });
 
-          } catch (err) {
-            console.log("Failed to update commission");
-          } finally {
-            hideLoader();
-          }
-        });
+            } catch (err) {
+              console.log("Failed to update commission");
+            } finally {
+              hideLoader();
+            }
+          });
+        }
+
+      } else {
+        taxWrapper.innerHTML = `
+      <label>Site Tax</label>
+      <input class="readonly" value="${user.commissionRate ?? 0}" />
+    `;
       }
     }
 
