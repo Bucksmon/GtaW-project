@@ -248,6 +248,7 @@
 
   <script type="module">
     import { renderSidebar } from "./methods/sidebar.js";
+
     const API_BASE = "https://gtaw-project.vercel.app";
     const token = localStorage.getItem("token");
 
@@ -261,6 +262,23 @@
 
     let userRole = null;
 
+    /* ================= FORM MAPPER ================= */
+
+    function populateForm(user = {}) {
+      const mapping = {
+        nickname: user.nickName,
+        discord: user.discordTag,
+        mobile: user.mobileNumber
+      };
+
+      Object.entries(mapping).forEach(([id, value]) => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.value = value ?? "";
+        }
+      });
+    }
+
     /* ================= LOAD USER ================= */
 
     async function loadUser() {
@@ -273,10 +291,7 @@
 
         userRole = user.role;
 
-        // Nickname
-        nicknameInput.value = user.nickname || "";
-
-        // ROLE BASED TAX UI
+        populateForm(user);
         renderTax(user);
 
       } catch (err) {
@@ -296,7 +311,7 @@
 
         const data = await res.json();
 
-        addressInput.value = data.address || "Import Store, Little Seoul";
+        addressInput.value = data.address ?? "Import Store, Little Seoul";
 
       } catch {
         addressInput.value = "Import Store, Little Seoul";
@@ -306,24 +321,29 @@
     /* ================= TAX UI ================= */
 
     function renderTax(user) {
-
       if (userRole === "superadmin") {
         taxWrapper.innerHTML = `
-          <label>Site Tax for sellers</label>
-          <select id="taxSelect">
-            <option>10</option>
-            <option>15</option>
-            <option>20</option>
-            <option>25</option>
-            <option>30</option>
-          </select>
-        `;
+      <label>Site Tax for sellers</label>
+      <select id="taxSelect">
+        <option value="10">10</option>
+        <option value="15">15</option>
+        <option value="20">20</option>
+        <option value="25">25</option>
+        <option value="30">30</option>
+      </select>
+    `;
+
+        // set current value if exists
+        const select = document.getElementById("taxSelect");
+        if (select) {
+          select.value = user.commissionRate ?? "10";
+        }
+
       } else {
-        alert(`${user.commissionRate}`);
         taxWrapper.innerHTML = `
-          <label>Site Balance</label>
-          <input class="readonly" value="${user.commissionRate ?? 0}" />
-        `;
+      <label>Site Balance</label>
+      <input class="readonly" value="${user.commissionRate ?? 0}" />
+    `;
       }
     }
 
@@ -333,14 +353,14 @@
       e.preventDefault();
 
       const payload = {
-        nickname: nicknameInput.value,
+        nickName: document.getElementById("nickname").value,
         address: addressInput.value,
-        discord: document.getElementById("discord").value,
-        mobile: document.getElementById("mobile").value
+        discordTag: document.getElementById("discord").value,
+        mobileNumber: document.getElementById("mobile").value
       };
 
       if (userRole === "superadmin") {
-        payload.tax = document.getElementById("taxSelect").value;
+        payload.commissionRate = Number(document.getElementById("taxSelect").value);
       }
 
       try {
@@ -363,6 +383,7 @@
     });
 
     /* ================= INIT ================= */
+
     const sidebar = document.getElementById("sidebar");
     const overlay = document.querySelector(".overlay");
     const menuBtn = document.getElementById("menuBtn");
@@ -378,7 +399,7 @@
     });
 
     document.addEventListener("DOMContentLoaded", () => {
-      renderSidebar(); 
+      renderSidebar();
       loadUser();
       loadAddress();
     });
