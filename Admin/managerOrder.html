@@ -486,7 +486,7 @@
             orders.forEach(order => {
                 const card = document.createElement("div");
                 card.className = "service-card";
-                alert(`Buyer username: ${order.buyer?.username}`);
+                alert(`Order: ${order}`);
                 card.innerHTML = `
         <img class="service-image"
             src="${order.service?.service_image || 'https://i.imgur.com/placeholder.png'}">
