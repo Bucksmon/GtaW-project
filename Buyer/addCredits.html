@@ -733,6 +733,13 @@
 
       try {
 
+        const value = adminCredits.value.trim();
+
+        if (!value) {
+          alert("Please enter an amount");
+          return;
+        }
+
         const res = await fetch(`${API_BASE}/users/Site-Balance`, {
           method: "PUT",
           headers: {
@@ -740,7 +747,7 @@
             Authorization: "Bearer " + token
           },
           body: JSON.stringify({
-            credits: Number(adminCredits.value.trim())
+            amount: Number(value)
           })
         });
 

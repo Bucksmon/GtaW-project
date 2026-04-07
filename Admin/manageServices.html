@@ -463,7 +463,7 @@
             <h3>${service.service_title}</h3>
 
             <div class="order-row">
-                <span><strong>Seller:</strong> ${service.service_sellerId?.nickName || "anonymous"}</span>
+                <span><strong>Seller:</strong> ${service.service_sellerId?.username || "anonymous"}</span>
                 <span><strong>Price:</strong> <span style="color: var(--accent);">${service.service_price || 0}</span></span>
             </div>
 
@@ -538,7 +538,7 @@
         <h3>${order.service?.service_title}</h3>
 
         <div class="order-row">
-            <span><strong>Buyer:</strong> ${order.buyer?.nickName || "anonymous" }</span>
+            <span><strong>Buyer:</strong> ${order.buyer?.username || "anonymous" }</span>
             <span><strong>Total Price:</strong> <span style="color: #2ecc71;">${order.totalPrice}</span> </span>
         </div>
 
