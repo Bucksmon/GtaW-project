@@ -443,7 +443,9 @@
                 const card = document.createElement("div");
                 card.className = "card";
 
-                const canAssignAdmin = currentUser?.role === "superadmin";
+                const canEditRole =
+                    currentUser?.role === "superadmin" || // full control
+                    (currentUser?.role === "admin" && user.role !== "admin" && user.role !== "superadmin");
 
                 card.innerHTML = `
             <div class="user-info">
@@ -455,15 +457,17 @@
                     <span>Mobile Number: ${user.mobileNumber ?? "Not Set"}</span>
                     <span>Discord Tag: ${user.discordTag ?? "Not Set"}</span>
                 </div>
-                <div class="role-select-wrapper">
-                    <select class="role-select" data-id="${user._id}">
-                        <option value="guest" ${user.role === "guest" ? "selected" : ""}>Guest</option>
-                        <option value="user" ${user.role === "user" ? "selected" : ""}>User</option>
-                        ${canAssignAdmin ? `
-                            <option value="admin" ${user.role === "admin" ? "selected" : ""}>Admin</option>
-                        ` : ""}
-                    </select>
-                </div>
+                ${canEditRole ? `
+  <div class="role-select-wrapper">
+    <select class="role-select" data-id="${user._id}">
+      <option value="guest" ${user.role === "guest" ? "selected" : ""}>Guest</option>
+      <option value="user" ${user.role === "user" ? "selected" : ""}>User</option>
+      ${currentUser?.role === "superadmin" ? `
+        <option value="admin" ${user.role === "admin" ? "selected" : ""}>Admin</option>
+      ` : ""}
+    </select>
+  </div>
+` : ""}
             </div>
         `;
 
