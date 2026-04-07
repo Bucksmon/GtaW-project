@@ -483,7 +483,6 @@
             orders.forEach(order => {
                 const card = document.createElement("div");
                 card.className = "service-card";
-                alert(`Buyer:${order.buyer.username}`);
                 card.innerHTML = `
         <img class="service-image"
             src="${order.service?.service_image || 'https://i.imgur.com/placeholder.png'}">
@@ -491,7 +490,14 @@
         <h3>${order.service?.service_title}</h3>
 
         <div class="order-row">
-            <span><strong>Buyer:</strong> ${order.buyer?.username || "Anonymous"}</span>
+           <span>
+                <strong>${activeTab === "buy" ? "Buyer:" : "Seller:"}</strong>
+                ${
+                    activeTab === "buy"
+                        ? (order.buyer?.username || "Anonymous")
+                        : (order.seller?.username || "Anonymous")
+                }
+            </span>
             <span><strong>Total Price:</strong> <span style="color:#2ecc71;">${order.totalPrice}</span></span>
         </div>
 
