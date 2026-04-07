@@ -449,8 +449,11 @@
             <div class="user-info">
                 <div class="user-details">
                     <strong>${user.username}</strong>
+                    <span>Nick Name: ${user.nickName ?? "Anonymous"}</span>
                     <span>Role: ${user.role}</span>
                     <span>Credits: ${user.credits ?? 0}</span>
+                    <span>Mobile Number: ${user.mobileNumber ?? "Not Set"}</span>
+                    <span>Discord Tag: ${user.discordTag ?? "Not Set"}</span>
                 </div>
                 <div class="role-select-wrapper">
                     <select class="role-select" data-id="${user._id}">
