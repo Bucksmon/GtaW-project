@@ -615,6 +615,8 @@
 
         showPopup();
 
+        await loadCredits(); // ✅ refresh
+
         e.target.reset();
         buySubmit.disabled = true;
         buyStatus.textContent = "";
@@ -681,6 +683,8 @@
         if (!res.ok) throw new Error();
 
         showPopup();
+
+        await loadCredits(); // ✅ refresh
 
         e.target.reset();
         sellSubmit.disabled = true;
@@ -754,6 +758,8 @@
         if (!res.ok) throw new Error();
 
         showPopup();
+
+        await loadCredits(); // ✅ refresh
 
         e.target.reset();
         adminStatus.textContent = "";
