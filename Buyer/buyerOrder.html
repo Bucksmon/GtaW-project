@@ -544,6 +544,12 @@
                 <strong>Status:</strong> ${order.status}
             </span>
         </div>
+
+        <div class="order-row">
+            <span>${activeTab === "buy" ? `${order.seller?.mobileNumber}` : `${order.buyer?.mobileNumber}`}:</span>
+            <span>${activeTab === "buy" ? `${order.seller?.discordTag}` : `${order.buyer?.discordTag}`}:</span>    
+            
+        </div>
         `;
 
                 container.appendChild(card);
