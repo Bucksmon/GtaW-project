@@ -546,9 +546,22 @@
         </div>
 
         <div class="order-row">
-            <span>Mobile Number: ${activeTab === "buy" ? `${order.seller?.mobileNumber}` : `${order.buyer?.mobileNumber}`}:</span>
-            <span>Discord: ${activeTab === "buy" ? `${order.seller?.discordTag}` : `${order.buyer?.discordTag}`}:</span>    
-            
+            <span>
+                <strong>Mobile Number:</strong>
+                <span>
+                    ${activeTab === "buy"
+                        ? (order.seller?.mobileNumber || "Not Set")
+                        : (order.buyer?.mobileNumber || "Not Set")}
+                </span>
+            </span>
+            <span>
+                <strong>Discord:</strong>
+                <span>
+                    ${activeTab === "buy"
+                        ? (order.seller?.discordTag || "Not Set")
+                        : (order.buyer?.discordTag || "Not Set")}
+                </span>
+            </span>
         </div>
         `;
 
