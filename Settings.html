@@ -201,6 +201,44 @@
         display: block;
       }
     }
+
+    .loader-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 3000;
+    }
+
+    .loader-overlay.show {
+      display: flex;
+    }
+
+    .popup {
+      background: var(--card);
+      padding: 30px;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .spinner {
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(255, 255, 255, .2);
+      border-top: 3px solid var(--accent);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
   </style>
 </head>
 
@@ -246,6 +284,13 @@
     </div>
   </main>
 
+  <div id="loaderOverlay" class="loader-overlay">
+    <div class="popup">
+      <div class="spinner"></div>
+      <span>Loading...</span>
+    </div>
+  </div>
+
   <script type="module">
     import { renderSidebar } from "./methods/sidebar.js";
 
@@ -260,8 +305,15 @@
     const addressInput = document.getElementById("address");
     const taxWrapper = document.getElementById("taxWrapper");
 
-    let userRole = null;
+    const loaderOverlay = document.getElementById("loaderOverlay");
 
+    function showLoader() {
+      loaderOverlay.classList.add("show");
+    }
+
+    function hideLoader() {
+      loaderOverlay.classList.remove("show");
+    }
     /* ================= FORM MAPPER ================= */
 
     function populateForm(user = {}) {
@@ -282,6 +334,8 @@
     /* ================= LOAD USER ================= */
 
     async function loadUser() {
+      showLoader(); // ✅ start
+
       try {
         const res = await fetch(`${API_BASE}/users/me`, {
           headers: { Authorization: "Bearer " + token }
@@ -291,39 +345,55 @@
 
         populateForm(user);
         renderTax(user);
+
       } catch (err) {
         console.log("User load failed");
+      } finally {
+        hideLoader(); // ✅ always stop
       }
     }
 
 
-
     /* ================= TAX UI ================= */
 
-    function renderTax(user) {
-      if (user.role === "superadmin") {
-        taxWrapper.innerHTML = `
-      <label>Site Tax for sellers</label>
-      <select id="taxSelect">
-        <option value="10">10</option>
-        <option value="15">15</option>
-        <option value="20">20</option>
-        <option value="25">25</option>
-        <option value="30">30</option>
-      </select>
-    `;
+    if (user.role === "superadmin") {
+      taxWrapper.innerHTML = `
+    <label>Site Tax for sellers</label>
+    <select id="taxSelect">
+      <option value="10">10</option>
+      <option value="15">15</option>
+      <option value="20">20</option>
+      <option value="25">25</option>
+      <option value="30">30</option>
+    </select>
+  `;
 
-        // set current value if exists
-        const select = document.getElementById("taxSelect");
-        if (select) {
-          select.value = user.commissionRate ?? "10";
-        }
+      const select = document.getElementById("taxSelect");
+      if (select) {
+        select.value = user.commissionRate ?? "10";
 
-      } else {
-        taxWrapper.innerHTML = `
-      <label>Site Balance</label>
-      <input class="readonly" value="${user.commissionRate ?? 0}" />
-    `;
+        // 🔥 ADD THIS
+        select.addEventListener("change", async () => {
+          showLoader();
+
+          try {
+            await fetch(`${API_BASE}/users/Commission-Rate`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + token
+              },
+              body: JSON.stringify({
+                commissionRate: Number(select.value)
+              })
+            });
+
+          } catch (err) {
+            console.log("Failed to update commission");
+          } finally {
+            hideLoader();
+          }
+        });
       }
     }
 
@@ -331,6 +401,8 @@
 
     document.getElementById("settingsForm").addEventListener("submit", async (e) => {
       e.preventDefault();
+
+      showLoader(); // ✅ start
 
       const payload = {
         nickName: document.getElementById("nickname").value,
@@ -359,6 +431,8 @@
 
       } catch {
         alert("Failed to update");
+      } finally {
+        hideLoader(); // ✅ always stop
       }
     });
 
