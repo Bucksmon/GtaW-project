@@ -97,7 +97,7 @@
 
     .main {
       margin-left: 250px;
-      padding: 50px 30px;
+      padding: 60px 40px;
       min-height: 100vh;
     }
 
@@ -107,7 +107,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 40px;
+      margin-bottom: 50px;
     }
 
     .topbar h2 {
@@ -133,8 +133,8 @@
 
     .services {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 30px;
     }
 
     /* ================= CARD ================= */
@@ -142,16 +142,16 @@
     .service-card {
       background: var(--card);
       border-radius: var(--radius);
-      padding: 20px;
+      padding: 22px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, .35);
+      gap: 14px;
+      box-shadow: 0 20px 55px rgba(0, 0, 0, .4);
       transition: var(--transition);
     }
 
     .service-card:hover {
-      transform: translateY(-4px);
+      transform: translateY(-6px);
     }
 
     .service-image {
@@ -200,25 +200,27 @@
       cursor: not-allowed;
     }
 
-    /* ================= META ================= */
+    /* ================= META ROW ================= */
 
     .service-meta {
       display: flex;
       justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 10px;
       padding-top: 6px;
       border-top: 1px solid rgba(255, 255, 255, .06);
       margin-top: 4px;
-      font-size: .9rem;
     }
 
-    /* ================= EMPTY ================= */
+    .service-meta span {
+      white-space: nowrap;
+    }
+
+    /* ================= EMPTY STATE ================= */
 
     .services p {
       grid-column: 1 / -1;
       text-align: center;
       color: var(--muted);
+      font-size: 1rem;
     }
 
     /* ================= PAGINATION ================= */
@@ -268,18 +270,13 @@
 
     .popup {
       background: var(--card);
-      padding: 24px;
+      padding: 30px;
       border-radius: var(--radius);
       display: flex;
-      flex-direction: column;
       align-items: center;
-      gap: 12px;
-      min-width: 280px;
-      max-width: 90%;
-      text-align: center;
+      gap: 15px;
+      min-width: 300px;
     }
-
-    /* ================= SPINNER ================= */
 
     .spinner {
       width: 24px;
@@ -294,51 +291,6 @@
       to {
         transform: rotate(360deg);
       }
-    }
-
-    /* ================= POPUP BUTTONS ================= */
-
-    .popup-actions {
-      display: flex;
-      gap: 10px;
-      width: 100%;
-    }
-
-    .popup-btn {
-      flex: 1;
-      padding: 10px;
-      border-radius: 10px;
-      border: none;
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    /* Primary */
-    .popup-btn.primary {
-      background: var(--accent);
-      color: white;
-    }
-
-    .popup-btn.primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(79, 140, 255, 0.3);
-    }
-
-    /* Secondary */
-    .popup-btn.secondary {
-      background: var(--box);
-      color: var(--text);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .popup-btn.secondary:hover {
-      background: rgba(255, 255, 255, 0.08);
-      transform: translateY(-2px);
-    }
-
-    .popup-btn:active {
-      transform: scale(0.96);
     }
 
     /* ================= RESPONSIVE ================= */
@@ -362,17 +314,46 @@
         display: block;
       }
 
-      .services {
-        grid-template-columns: 1fr;
-      }
+    }
 
-      .popup-actions {
-        flex-direction: column;
-      }
+    /* ================= POPUP BUTTONS ================= */
 
-      .popup-btn {
-        width: 100%;
-      }
+    .popup-btn {
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      min-width: 120px;
+    }
+
+    /* Primary (Go to Settings) */
+    .popup-btn.primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .popup-btn.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(79, 140, 255, 0.3);
+    }
+
+    /* Secondary (Cancel) */
+    .popup-btn.secondary {
+      background: var(--box);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .popup-btn.secondary:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateY(-2px);
+    }
+
+    /* Click effect */
+    .popup-btn:active {
+      transform: scale(0.96);
     }
   </style>
 </head>
