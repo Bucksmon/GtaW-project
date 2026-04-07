@@ -289,39 +289,19 @@
 
         const user = await res.json();
 
-        userRole = user.role;
-
         populateForm(user);
         renderTax(user);
-
       } catch (err) {
         console.log("User load failed");
       }
     }
 
-    /* ================= LOAD ADDRESS ================= */
 
-    async function loadAddress() {
-      try {
-        const res = await fetch(`${API_BASE}/user/address`, {
-          headers: { Authorization: "Bearer " + token }
-        });
-
-        if (!res.ok) throw new Error();
-
-        const data = await res.json();
-
-        addressInput.value = data.address ?? "Import Store, Little Seoul";
-
-      } catch {
-        addressInput.value = "Import Store, Little Seoul";
-      }
-    }
 
     /* ================= TAX UI ================= */
 
     function renderTax(user) {
-      if (userRole === "superadmin") {
+      if (user.role === "superadmin") {
         taxWrapper.innerHTML = `
       <label>Site Tax for sellers</label>
       <select id="taxSelect">
@@ -401,7 +381,6 @@
     document.addEventListener("DOMContentLoaded", () => {
       renderSidebar();
       loadUser();
-      loadAddress();
     });
   </script>
 
