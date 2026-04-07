@@ -494,12 +494,15 @@
         <h3>${order.service?.service_title}</h3>
 
         <div class="order-row">
-            <span><strong>Buyer:</strong> ${order.buyer?.nickName || "anonymous"}</span>
+            <span><strong>Buyer:</strong> ${order.buyer?.username || "anonymous"}</span>
             <span><strong>Total Price:</strong> <span style="color:#2ecc71;">${order.totalPrice}</span></span>
         </div>
 
         <div class="order-row">
-            <span><strong>Seller Received:</strong> <span style="color:#2ecc71;"> ${order.sellerAmount}</span></span>
+            < <span>
+                <strong>${activeTab === "buy" ? "You Paid" : "You Received"}:</strong>
+                <span style="color:#2ecc71;"> ${order.sellerAmount}</span>
+            </span>
             <span class="order-status ${order.status?.toLowerCase()}">
                 <strong>Status:</strong> ${order.status}
             </span>
