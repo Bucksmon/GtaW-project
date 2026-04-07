@@ -546,7 +546,9 @@
         </div>
         <div class="order-row">
             <span>
-                <strong>Mobile Number:</strong>
+                <strong>
+                    ${activeTab === "buy" ? "Seller Number" : "Buyer Number"}:
+                </strong>
                 <span>
                     ${activeTab === "buy"
                         ? (order.seller?.mobileNumber || "Not Set")
