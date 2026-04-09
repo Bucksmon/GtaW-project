@@ -239,6 +239,31 @@
         transform: rotate(360deg);
       }
     }
+
+    .error {
+      color: #ff4f4f;
+      font-size: 0.75rem;
+      min-height: 14px;
+    }
+
+    input.invalid {
+      border-color: #ff4f4f;
+    }
+
+    .form-message {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .form-message.success {
+      color: #2ecc71;
+    }
+
+    .form-message.error {
+      color: #ff4f4f;
+    }
   </style>
 </head>
 
@@ -262,17 +287,19 @@
         <!-- SITE TAX -->
         <div id="taxWrapper"></div>
 
-        <!-- Nickname -->
         <label>Nickname</label>
         <input id="nickname" />
+        <small class="error" id="nicknameError"></small>
 
-        <!-- Discord -->
         <label>Discord Tag</label>
         <input id="discord" placeholder="angel_nunez4" />
+        <small class="error" id="discordError"></small>
 
-        <!-- Mobile -->
         <label>Mobile Number</label>
-        <input id="mobile" placeholder="+92..." />
+        <input id="mobile" />
+        <small class="error" id="mobileError"></small>
+
+        <small id="formMessage" class="form-message"></small>
 
         <button type="submit">Save Settings</button>
 
@@ -298,11 +325,13 @@
       window.location.href = "/GtaW-project/index.html";
     }
 
-    const nicknameInput = document.getElementById("nickname");
-    const taxWrapper = document.getElementById("taxWrapper");
-
+    // ================= DOM =================
     const loaderOverlay = document.getElementById("loaderOverlay");
+    const taxWrapper = document.getElementById("taxWrapper");
+    const form = document.getElementById("settingsForm");
+    const formMessage = document.getElementById("formMessage");
 
+    // ================= LOADER =================
     function showLoader() {
       loaderOverlay.classList.add("show");
     }
@@ -310,8 +339,86 @@
     function hideLoader() {
       loaderOverlay.classList.remove("show");
     }
-    /* ================= FORM MAPPER ================= */
 
+    // ================= FIELD CONFIG =================
+    const fields = {
+      nickname: {
+        el: document.getElementById("nickname"),
+        validate: (val) => val && val.length < 2 ? "At least 2 characters" : ""
+      },
+      discord: {
+        el: document.getElementById("discord"),
+        validate: (val) => {
+          const regex = /^[a-zA-Z0-9._]{2,32}$/;
+          return val && !regex.test(val) ? "Invalid username" : "";
+        }
+      },
+      mobile: {
+        el: document.getElementById("mobile"),
+        validate: (val) => {
+          const regex = /^\+?[0-9]{10,15}$/;
+          return val && !regex.test(val) ? "Invalid number" : "";
+        }
+      }
+    };
+
+    // ================= ERROR HANDLING =================
+    function setError(input, message) {
+      const errorEl = document.getElementById(input.id + "Error");
+      input.classList.add("invalid");
+      errorEl.textContent = message;
+    }
+
+    function clearError(input) {
+      const errorEl = document.getElementById(input.id + "Error");
+      input.classList.remove("invalid");
+      errorEl.textContent = "";
+    }
+
+    function showMessage(msg, type = "error") {
+      formMessage.textContent = msg;
+      formMessage.className = `form-message ${type}`;
+    }
+
+    function clearMessage() {
+      formMessage.textContent = "";
+      formMessage.className = "form-message";
+    }
+
+    // ================= VALIDATION =================
+    function validateField(key) {
+      const field = fields[key];
+      const value = field.el.value.trim();
+
+      const error = field.validate(value);
+
+      if (error) {
+        setError(field.el, error);
+        return false;
+      }
+
+      clearError(field.el);
+      return true;
+    }
+
+    function validateAll() {
+      let isValid = true;
+
+      Object.keys(fields).forEach(key => {
+        if (!validateField(key)) isValid = false;
+      });
+
+      return isValid;
+    }
+
+    // ================= REAL-TIME =================
+    Object.keys(fields).forEach(key => {
+      fields[key].el.addEventListener("input", () => {
+        validateField(key);
+      });
+    });
+
+    // ================= LOAD USER =================
     function populateForm(user = {}) {
       const mapping = {
         nickname: user.nickName,
@@ -321,13 +428,10 @@
 
       Object.entries(mapping).forEach(([id, value]) => {
         const el = document.getElementById(id);
-        if (el) {
-          el.value = value ?? "";
-        }
+        if (el) el.value = value ?? "";
       });
     }
 
-    /* ================= LOAD USER ================= */
     async function loadUser() {
       showLoader();
 
@@ -338,8 +442,9 @@
 
         const user = await res.json();
         userRole = user.role;
+
         populateForm(user);
-        renderTax(user); // ✅ now works
+        renderTax(user);
 
       } catch (err) {
         console.log("User load failed");
@@ -348,8 +453,7 @@
       }
     }
 
-
-    /* ================= TAX UI ================= */
+    // ================= TAX =================
     function renderTax(user) {
       if (user.role === "superadmin") {
         taxWrapper.innerHTML = `
@@ -383,12 +487,10 @@
                 })
               });
 
-              if (!res.ok) {
-                throw new Error(`Request failed: ${res.status}`);
-              }
+              if (!res.ok) throw new Error();
 
-            } catch (err) {
-              console.log("Failed to update commission", err);
+            } catch {
+              showMessage("Failed to update tax", "error");
             } finally {
               hideLoader();
             }
@@ -403,25 +505,37 @@
       }
     }
 
-    /* ================= SUBMIT ================= */
-
-    document.getElementById("settingsForm").addEventListener("submit", async (e) => {
+    // ================= SUBMIT =================
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
+      showLoader();
+      clearMessage();
 
-      showLoader(); // ✅ start
+      if (!validateAll()) {
+        hideLoader();
+        return;
+      }
 
       const payload = {};
 
-      const nickname = document.getElementById("nickname").value.trim();
-      const discord = document.getElementById("discord").value.trim();
-      const mobile = document.getElementById("mobile").value.trim();
+      Object.keys(fields).forEach(key => {
+        const value = fields[key].el.value.trim();
 
-      if (nickname) payload.nickName = nickname;
-      if (discord) payload.discordTag = discord;
-      if (mobile) payload.mobileNumber = mobile;
+        if (value) {
+          if (key === "nickname") payload.nickName = value;
+          if (key === "discord") payload.discordTag = value;
+          if (key === "mobile") payload.mobileNumber = value;
+        }
+      });
 
       if (userRole === "superadmin") {
         payload.commissionRate = Number(document.getElementById("taxSelect").value);
+      }
+
+      if (Object.keys(payload).length === 0) {
+        showMessage("No changes made", "error");
+        hideLoader();
+        return;
       }
 
       try {
@@ -434,19 +548,20 @@
           body: JSON.stringify(payload)
         });
 
-        if (!res.ok) throw new Error();
+        const data = await res.json();
 
-        alert("Settings updated");
+        if (!res.ok) throw new Error(data.error);
+
+        showMessage("Settings updated successfully", "success");
 
       } catch (err) {
-        alert("Failed to update", err);
+        showMessage(err.message || "Failed to update", "error");
       } finally {
-        hideLoader(); // ✅ always stop
+        hideLoader();
       }
     });
 
-    /* ================= INIT ================= */
-
+    // ================= INIT =================
     const sidebar = document.getElementById("sidebar");
     const overlay = document.querySelector(".overlay");
     const menuBtn = document.getElementById("menuBtn");
