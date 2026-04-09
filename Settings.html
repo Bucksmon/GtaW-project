@@ -293,7 +293,7 @@
     const API_BASE = "https://gtaw-project.vercel.app";
     const token = localStorage.getItem("token");
     let userRole = null;
-    
+
     if (!token) {
       window.location.href = "/GtaW-project/index.html";
     }
@@ -372,7 +372,7 @@
             showLoader();
 
             try {
-              await fetch(`${API_BASE}/users/Commission-Rate`, {
+              const res = await fetch(`${API_BASE}/users/Commission-Rate`, {
                 method: "PUT",
                 headers: {
                   "Content-Type": "application/json",
@@ -383,8 +383,12 @@
                 })
               });
 
+              if (!res.ok) {
+                throw new Error(`Request failed: ${res.status}`);
+              }
+
             } catch (err) {
-              console.log("Failed to update commission");
+              console.log("Failed to update commission", err);
             } finally {
               hideLoader();
             }
