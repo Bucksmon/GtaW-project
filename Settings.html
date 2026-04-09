@@ -266,10 +266,6 @@
         <label>Nickname</label>
         <input id="nickname" />
 
-        <!-- Address -->
-        <label>Address</label>
-        <input id="address" />
-
         <!-- Discord -->
         <label>Discord Tag</label>
         <input id="discord" placeholder="angel_nunez4" />
@@ -302,7 +298,6 @@
     }
 
     const nicknameInput = document.getElementById("nickname");
-    const addressInput = document.getElementById("address");
     const taxWrapper = document.getElementById("taxWrapper");
 
     const loaderOverlay = document.getElementById("loaderOverlay");
@@ -412,7 +407,6 @@
 
       const payload = {
         nickName: document.getElementById("nickname").value,
-        address: addressInput.value,
         discordTag: document.getElementById("discord").value,
         mobileNumber: document.getElementById("mobile").value
       };

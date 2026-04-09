@@ -348,6 +348,27 @@
         .tab.active {
             background: var(--accent);
         }
+
+        .status-dropdown {
+            background: var(--box);
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: var(--radius-sm);
+            padding: 6px 10px;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        /* dynamic colors */
+        .status-dropdown.completed {
+            color: var(--success);
+            /* #2ecc71 */
+        }
+
+        .status-dropdown.cancelled {
+            color: var(--danger);
+            /* reddish */
+        }
     </style>
 </head>
 
@@ -540,9 +561,23 @@
                 <strong>${activeTab === "buy" ? "You Paid" : "You Received"}:</strong>
                 <span style="color:#2ecc71;"> ${order.sellerAmount}</span>
             </span>
-            <span class="order-status ${order.status?.toLowerCase()}">
-                <strong>Status:</strong> ${order.status}
-            </span>
+            ${activeTab === "sell"
+                        ? `
+    <select class="status-dropdown" data-id="${order._id}">
+      <option value="Completed" ${order.status === "Completed" ? "selected" : ""}>
+        Completed
+      </option>
+      <option value="Cancelled" ${order.status === "Cancelled" ? "selected" : ""}>
+        Cancelled
+      </option>
+    </select>
+    `
+                        : `
+    <span class="order-status ${order.status?.toLowerCase()}">
+      <strong>Status:</strong> ${order.status}
+    </span>
+    `
+                    }
         </div>
         <div class="order-row">
             <span>
@@ -569,9 +604,44 @@
                 container.appendChild(card);
 
             });
+            document.querySelectorAll(".status-dropdown").forEach(select => {
+                const orderId = select.dataset.id;
 
+                // set initial color
+                updateDropdownColor(select);
+
+                select.addEventListener("change", async () => {
+                    const newStatus = select.value;
+
+                    updateDropdownColor(select);
+
+                    try {
+                        await fetch(`${API_BASE}/orders/${orderId}/status`, {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: "Bearer " + token
+                            },
+                            body: JSON.stringify({ status: newStatus })
+                        });
+
+                    } catch (err) {
+                        console.log("Status update failed");
+                    }
+                });
+            });
         }
+        function updateDropdownColor(select) {
+            select.classList.remove("completed", "cancelled");
 
+            if (select.value === "Completed") {
+                select.classList.add("completed");
+            }
+
+            if (select.value === "Cancelled") {
+                select.classList.add("cancelled");
+            }
+        }
         /* ================= PAGINATION ================= */
 
         function renderPagination(pagination) {
