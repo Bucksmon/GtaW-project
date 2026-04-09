@@ -438,8 +438,8 @@
 
         alert("Settings updated");
 
-      } catch {
-        alert("Failed to update");
+      } catch (err) {
+        alert("Failed to update", err);
       } finally {
         hideLoader(); // ✅ always stop
       }
