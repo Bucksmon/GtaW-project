@@ -220,7 +220,7 @@
             color: orange;
         }
 
-        .order-status.failed {
+        .order-status.cancelled {
             color: var(--danger);
         }
 
@@ -567,21 +567,21 @@
                 <span style="color:#2ecc71;"> ${order.sellerAmount}</span>
             </span>
             ${activeTab === "sell"
-                        ? order.status === "Pending"
+                        ? order.status?.toLowerCase() === "pending"
                             ? `
       <select class="status-dropdown" data-id="${order._id}">
-        <option value="Pending" selected>Pending</option>
-        <option value="Completed">Completed</option>
-        <option value="Cancelled">Cancelled</option>
+       <option value="Pending" ${order.status === "Pending" ? "selected" : ""}>Pending</option>
+        <option value="Completed" ${order.status === "Completed" ? "selected" : ""}>Completed</option>
+        <option value="Cancelled" ${order.status === "Cancelled" ? "selected" : ""}>Cancelled</option>
       </select>
     `
                             : `
-      <span class="order-status ${order.status.toLowerCase()}">
+      <span class="order-status ${order.status?.toLowerCase()}">
         ${order.status}
       </span>
     `
                         : `
-      <span class="order-status ${order.status.toLowerCase()}">
+      <span class="order-status ${order.status?.toLowerCase()}">
         ${order.status}
       </span>
     `
@@ -653,13 +653,15 @@
             });
         }
         function updateDropdownColor(select) {
+            const value = select.value.toLowerCase();
+
             select.classList.remove("completed", "cancelled");
 
-            if (select.value === "Completed") {
+            if (value === "completed") {
                 select.classList.add("completed");
             }
 
-            if (select.value === "Cancelled") {
+            if (value === "cancelled") {
                 select.classList.add("cancelled");
             }
         }
