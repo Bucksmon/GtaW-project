@@ -336,7 +336,7 @@
         });
 
         const user = await res.json();
-
+        userRole = user.role;
         populateForm(user);
         renderTax(user); // ✅ now works
 
@@ -405,11 +405,15 @@
 
       showLoader(); // ✅ start
 
-      const payload = {
-        nickName: document.getElementById("nickname").value,
-        discordTag: document.getElementById("discord").value,
-        mobileNumber: document.getElementById("mobile").value
-      };
+      const payload = {};
+
+      const nickname = document.getElementById("nickname").value.trim();
+      const discord = document.getElementById("discord").value.trim();
+      const mobile = document.getElementById("mobile").value.trim();
+
+      if (nickname) payload.nickName = nickname;
+      if (discord) payload.discordTag = discord;
+      if (mobile) payload.mobileNumber = mobile;
 
       if (userRole === "superadmin") {
         payload.commissionRate = Number(document.getElementById("taxSelect").value);
