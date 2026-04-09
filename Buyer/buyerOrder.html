@@ -567,22 +567,25 @@
                 <span style="color:#2ecc71;"> ${order.sellerAmount}</span>
             </span>
             ${activeTab === "sell"
-                        ? `
-    <select class="status-dropdown" data-id="${order._id}">
-      <option value="Completed" ${order.status === "Completed" ? "selected" : ""}>
-        Completed
-      </option>
-      <option value="Cancelled" ${order.status === "Cancelled" ? "selected" : ""}>
-        Cancelled
-      </option>
-    </select>
+                        ? order.status === "Pending"
+                            ? `
+      <select class="status-dropdown" data-id="${order._id}">
+        <option value="Pending" selected>Pending</option>
+        <option value="Completed">Completed</option>
+        <option value="Cancelled">Cancelled</option>
+      </select>
+    `
+                            : `
+      <span class="order-status ${order.status.toLowerCase()}">
+        ${order.status}
+      </span>
     `
                         : `
-    <span class="order-status ${order.status?.toLowerCase()}">
-      <strong>Status:</strong> ${order.status}
-    </span>
+      <span class="order-status ${order.status.toLowerCase()}">
+        ${order.status}
+      </span>
     `
-                    }
+                    } 
         </div>
         <div class="order-row">
             <span>
