@@ -292,7 +292,8 @@
 
     const API_BASE = "https://gtaw-project.vercel.app";
     const token = localStorage.getItem("token");
-
+    let userRole = null;
+    
     if (!token) {
       window.location.href = "/GtaW-project/index.html";
     }
