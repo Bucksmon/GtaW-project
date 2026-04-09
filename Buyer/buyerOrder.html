@@ -460,14 +460,22 @@
 
         tabs.forEach(tab => {
 
-            tab.addEventListener("click", () => {
+            tab.addEventListener("click", async () => {
 
                 tabs.forEach(t => t.classList.remove("active"));
                 tab.classList.add("active");
 
                 activeTab = tab.dataset.tab;
 
-                filterOrders();
+                showLoader(); // ✅ loader on tab switch
+
+                try {
+                    await loadBuyerOrders(currentPage, true);
+                } catch (err) {
+                    console.log("Tab switch load failed");
+                } finally {
+                    hideLoader();
+                }
 
             });
 
@@ -475,12 +483,11 @@
 
         /* ================= LOAD ORDERS ================= */
 
-        async function loadBuyerOrders(page = 1) {
+        async function loadBuyerOrders(page = 1, show = true) {
 
-            showLoader();
+            if (show) showLoader();
 
             try {
-
                 const res = await fetch(
                     `${API_BASE}/orders/mine?page=${page}&limit=${limit}`,
                     {
@@ -495,15 +502,13 @@
                 allOrders = data.orders || [];
 
                 filterOrders();
-
                 renderPagination(data.pagination);
 
             } catch (err) {
                 console.log("Failed to load orders", err);
             } finally {
-                hideLoader();
+                if (show) hideLoader();
             }
-
         }
 
         /* ================= FILTER ORDERS ================= */
@@ -615,8 +620,11 @@
 
                     updateDropdownColor(select);
 
+                    select.disabled = true; // prevent spam clicks
+                    showLoader(); // ✅ start loader
+
                     try {
-                        await fetch(`${API_BASE}/orders/${orderId}/status`, {
+                        const res = await fetch(`${API_BASE}/orders/${orderId}/status`, {
                             method: "PUT",
                             headers: {
                                 "Content-Type": "application/json",
@@ -625,8 +633,18 @@
                             body: JSON.stringify({ status: newStatus })
                         });
 
+                        if (!res.ok) throw new Error();
+
+                        // OPTIONAL: refresh orders to stay in sync
+                        await loadBuyerOrders(currentPage, false);
+
                     } catch (err) {
                         console.log("Status update failed");
+
+                        // optional rollback (if needed)
+                    } finally {
+                        select.disabled = false;
+                        hideLoader(); // ✅ stop loader
                     }
                 });
             });
@@ -701,7 +719,7 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             renderSidebar();
-            loadBuyerOrders(currentPage);
+            loadBuyerOrders(currentPage, true);
             loadCredits(true);
             setInterval(() => loadCredits(false), 15000);
         });
