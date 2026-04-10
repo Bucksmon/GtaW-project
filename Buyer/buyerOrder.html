@@ -549,8 +549,6 @@
 
                 const card = document.createElement("div");
                 card.className = "service-card";
-                alert(`Mobile number:${order.seller?.mobileNumber} and Buyer mobile: ${order.buyer?.mobileNumber}`);
-                alert(`Mobile number:${order.seller?.discordTag} and Buyer discord: ${order.buyer?.discordTag}`);
                 card.innerHTML = `
         <img class="service-image"
         src="${order.service?.service_image || 'https://i.imgur.com/placeholder.png'}">
@@ -611,6 +609,17 @@
                     ${activeTab === "buy"
                         ? (order.seller?.discordTag || "Not Set")
                         : (order.buyer?.discordTag || "Not Set")}
+                </span>
+            </span>
+        </div>
+
+        <div class="order-row">
+            <span>
+                <strong>
+                    Address:
+                </strong>
+                <span>
+                    Little Seoul import store, Palomino Avenue, Little Seoul
                 </span>
             </span>
         </div>
