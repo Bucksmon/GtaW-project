@@ -455,7 +455,7 @@
             services.forEach(service => {
                 const card = document.createElement("div");
                 card.className = "service-card";
-                alert(`Services: ${service.service_sellerId}`);
+                alert(`Services: ${service.service_sellerId?.mobileNumber}`);
                 card.innerHTML = `
             <img class="service-image"
                 src="${service.service_image || 'https://i.imgur.com/placeholder.png'}">
