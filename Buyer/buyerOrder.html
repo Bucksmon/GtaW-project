@@ -549,8 +549,8 @@
 
                 const card = document.createElement("div");
                 card.className = "service-card";
-                Alert(`Mobile number:${order.seller?.mobileNumber} and Buyer mobile: ${order.buyer?.mobileNumber}`);
-                Alert(`Mobile number:${order.seller?.discordTag} and Buyer discord: ${order.buyer?.discordTag}`);
+                alert(`Mobile number:${order.seller?.mobileNumber} and Buyer mobile: ${order.buyer?.mobileNumber}`);
+                alert(`Mobile number:${order.seller?.discordTag} and Buyer discord: ${order.buyer?.discordTag}`);
                 card.innerHTML = `
         <img class="service-image"
         src="${order.service?.service_image || 'https://i.imgur.com/placeholder.png'}">
