@@ -135,6 +135,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 30px;
+      align-items: stretch;
     }
 
     /* ================= CARD ================= */
@@ -148,11 +149,15 @@
       gap: 14px;
       box-shadow: 0 20px 55px rgba(0, 0, 0, .4);
       transition: var(--transition);
+      height: 100%;
+      min-height: 360px;
     }
 
     .service-card:hover {
       transform: translateY(-6px);
     }
+
+    /* ================= IMAGE ================= */
 
     .service-image {
       width: 100%;
@@ -160,21 +165,55 @@
       object-fit: cover;
       border-radius: var(--radius-sm);
       background: var(--box);
+      flex-shrink: 0;
     }
+
+    /* ================= TITLE ================= */
 
     .service-card h3 {
       margin: 0;
       font-size: 1.1rem;
+
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
+
+    /* ================= DESCRIPTION ================= */
 
     .service-card p {
       margin: 0;
       font-size: .9rem;
       color: var(--muted);
+
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .service-card strong {
       color: var(--text);
+    }
+
+    /* ================= META ROW ================= */
+
+    .service-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+      margin-top: 4px;
+    }
+
+    .service-meta span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 48%;
     }
 
     /* ================= BUTTON ================= */
@@ -198,20 +237,6 @@
     .service-card button:disabled {
       opacity: .6;
       cursor: not-allowed;
-    }
-
-    /* ================= META ROW ================= */
-
-    .service-meta {
-      display: flex;
-      justify-content: space-between;
-      padding-top: 6px;
-      border-top: 1px solid rgba(255, 255, 255, .06);
-      margin-top: 4px;
-    }
-
-    .service-meta span {
-      white-space: nowrap;
     }
 
     /* ================= EMPTY STATE ================= */
@@ -295,7 +320,6 @@
     /* ================= RESPONSIVE ================= */
 
     @media (max-width:768px) {
-
       .sidebar {
         transform: translateX(-100%);
       }
@@ -312,7 +336,6 @@
       .menu-btn {
         display: block;
       }
-
     }
 
     /* ================= POPUP BUTTONS ================= */
@@ -327,7 +350,6 @@
       min-width: 120px;
     }
 
-    /* Primary (Go to Settings) */
     .popup-btn.primary {
       background: var(--accent);
       color: white;
@@ -338,7 +360,6 @@
       box-shadow: 0 8px 20px rgba(79, 140, 255, 0.3);
     }
 
-    /* Secondary (Cancel) */
     .popup-btn.secondary {
       background: var(--box);
       color: var(--text);
@@ -350,11 +371,11 @@
       transform: translateY(-2px);
     }
 
-    /* Click effect */
     .popup-btn:active {
       transform: scale(0.96);
     }
   </style>
+
 </head>
 
 <body>
