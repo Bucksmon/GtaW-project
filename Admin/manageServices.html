@@ -455,7 +455,7 @@
             services.forEach(service => {
                 const card = document.createElement("div");
                 card.className = "service-card";
-
+                alert(`Services: ${service.service_sellerId}`);
                 card.innerHTML = `
             <img class="service-image"
                 src="${service.service_image || 'https://i.imgur.com/placeholder.png'}">
@@ -467,9 +467,8 @@
                 <span><strong>Price:</strong> <span style="color: var(--accent);">${service.service_price || 0}</span></span>
             </div>
             <div class="order-row">
-                <span><strong>Mobile Phone Number:</strong> ${service.service_sellerId?.mobileNumber || "Not Set"}</span>
+                <span><strong>Mobile Number:</strong> ${service.service_sellerId?.mobileNumber || "Not Set"}</span>
                 <span><strong>Discord Tag:</strong> ${service.service_sellerId?.discordTag || "Not Set"}</span>
-                            
             </div>
 
             <button class="delete-btn" data-id="${service._id}">
