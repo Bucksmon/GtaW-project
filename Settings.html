@@ -16,7 +16,7 @@
       --accent: #4f8cff;
 
       --radius: 16px;
-      --radius-sm: 12px;
+      --radius-sm: 10px;
       --transition: .25s ease;
     }
 
@@ -69,7 +69,6 @@
       border-radius: var(--radius-sm);
       text-decoration: none;
       color: var(--text);
-      transition: var(--transition);
     }
 
     .nav-links a:hover,
@@ -95,10 +94,8 @@
 
     .main {
       margin-left: 250px;
-      padding: 60px 40px;
+      padding: 50px 60px;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
     }
 
     /* ================= TOPBAR ================= */
@@ -119,30 +116,40 @@
       cursor: pointer;
     }
 
-    /* ================= CARD ================= */
+    /* ================= PAGE LAYOUT ================= */
 
-    .card {
-      background: var(--card);
-      padding: 30px;
-      border-radius: var(--radius);
-      width: 100%;
-      max-width: 520px;
+    .settings-container {
+      max-width: 700px;
       margin: 0 auto;
-      box-shadow: 0 20px 55px rgba(0, 0, 0, .4);
     }
 
-    /* ================= FORM ================= */
+    /* ================= SECTION ================= */
 
-    form {
+    .settings-section {
+      margin-bottom: 40px;
+    }
+
+    .settings-section h3 {
+      font-size: 1.1rem;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    /* ================= ROW ================= */
+
+    .settings-row {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 6px;
+      margin-bottom: 18px;
     }
 
-    label {
-      font-size: .85rem;
+    .settings-row label {
+      font-size: 0.8rem;
       color: var(--muted);
     }
+
+    /* ================= INPUT ================= */
 
     input,
     select {
@@ -160,47 +167,55 @@
       border-color: var(--accent);
     }
 
+    /* ================= BUTTON ================= */
+
     button {
-      margin-top: 10px;
+      margin-top: 20px;
       padding: 12px;
       background: var(--accent);
       border: none;
       border-radius: var(--radius-sm);
       color: white;
       cursor: pointer;
-      transition: var(--transition);
+      width: 200px;
     }
 
     button:hover {
       opacity: 0.9;
     }
 
+    /* ================= STATES ================= */
+
     .readonly {
-      opacity: 0.7;
+      opacity: 0.6;
       pointer-events: none;
     }
 
-    /* ================= RESPONSIVE ================= */
-
-    @media (max-width: 768px) {
-
-      .sidebar {
-        transform: translateX(-100%);
-      }
-
-      .sidebar.open {
-        transform: translateX(0);
-      }
-
-      .main {
-        margin-left: 0;
-        padding: 30px 20px;
-      }
-
-      .menu-btn {
-        display: block;
-      }
+    .error {
+      color: #ff4f4f;
+      font-size: 0.75rem;
+      min-height: 14px;
     }
+
+    input.invalid {
+      border-color: #ff4f4f;
+    }
+
+    .form-message {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .form-message.success {
+      color: #2ecc71;
+    }
+
+    .form-message.error {
+      color: #ff4f4f;
+    }
+
+    /* ================= LOADER ================= */
 
     .loader-overlay {
       position: fixed;
@@ -240,31 +255,37 @@
       }
     }
 
-    .error {
-      color: #ff4f4f;
-      font-size: 0.75rem;
-      min-height: 14px;
-    }
+    /* ================= RESPONSIVE ================= */
 
-    input.invalid {
-      border-color: #ff4f4f;
-    }
+    @media (max-width: 768px) {
 
-    .form-message {
-      margin-top: 10px;
-      font-size: 0.85rem;
-      text-align: center;
-      color: var(--muted);
-    }
+      .sidebar {
+        transform: translateX(-100%);
+      }
 
-    .form-message.success {
-      color: #2ecc71;
-    }
+      .sidebar.open {
+        transform: translateX(0);
+      }
 
-    .form-message.error {
-      color: #ff4f4f;
+      .main {
+        margin-left: 0;
+        padding: 30px 20px;
+      }
+
+      .menu-btn {
+        display: block;
+      }
+
+      .settings-container {
+        max-width: 100%;
+      }
+
+      button {
+        width: 100%;
+      }
     }
   </style>
+
 </head>
 
 <body>
