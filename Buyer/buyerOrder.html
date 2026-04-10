@@ -549,7 +549,8 @@
 
                 const card = document.createElement("div");
                 card.className = "service-card";
-
+                Alert(`Mobile number:${order.seller?.mobileNumber} and Buyer mobile: ${order.buyer?.mobileNumber}`);
+                Alert(`Mobile number:${order.seller?.discordTag} and Buyer discord: ${order.buyer?.discordTag}`);
                 card.innerHTML = `
         <img class="service-image"
         src="${order.service?.service_image || 'https://i.imgur.com/placeholder.png'}">
@@ -557,7 +558,7 @@
         <h3>${order.service?.service_title}</h3>
 
         <div class="order-row">
-            <span><strong>Seller:</strong> ${order.seller?.nickName || "Anonymous"}</span>
+            <span><strong>${activeTab === "buy" ? "Seller" : "Buyer"}:</strong> ${order.seller?.nickName || "Anonymous"}</span>
             <span><strong>Total:</strong> <span style="color: #2ecc71;">${order.totalPrice}</span></span>
         </div>
 
