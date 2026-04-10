@@ -14,11 +14,10 @@
       --text: #e6e9f2;
       --muted: #9aa4b8;
       --accent: #4f8cff;
-      --border: rgba(255, 255, 255, .08);
 
-      --radius: 14px;
-      --radius-sm: 8px;
-      --transition: .2s ease;
+      --radius: 16px;
+      --radius-sm: 12px;
+      --transition: .25s ease;
     }
 
     /* ================= BASE ================= */
@@ -32,6 +31,7 @@
       margin: 0;
       background: radial-gradient(circle at top, #111827, #0b0f1a 60%, #070a10);
       color: var(--text);
+      min-height: 100vh;
     }
 
     /* ================= SIDEBAR ================= */
@@ -43,8 +43,9 @@
       width: 250px;
       height: 100%;
       background: var(--panel);
-      border-right: 1px solid var(--border);
+      border-right: 1px solid rgba(255, 255, 255, .06);
       padding: 30px 0;
+      transition: transform var(--transition);
       z-index: 1000;
     }
 
@@ -59,12 +60,12 @@
     }
 
     .nav-links li {
-      margin: 6px 18px;
+      margin: 8px 18px;
     }
 
     .nav-links a {
       display: block;
-      padding: 10px 14px;
+      padding: 12px 16px;
       border-radius: var(--radius-sm);
       text-decoration: none;
       color: var(--text);
@@ -76,11 +77,28 @@
       background: rgba(255, 255, 255, .08);
     }
 
+    /* ================= OVERLAY ================= */
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .5);
+      display: none;
+      z-index: 900;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
     /* ================= MAIN ================= */
 
     .main {
       margin-left: 250px;
-      padding: 50px 60px;
+      padding: 60px 40px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     /* ================= TOPBAR ================= */
@@ -89,99 +107,88 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
     }
 
-    /* ================= SETTINGS LAYOUT ================= */
+    .menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    /* ================= PAGE CONTAINER ================= */
 
     .settings-container {
-      max-width: 850px;
+      max-width: 520px;
       margin: 0 auto;
+      width: 100%;
     }
 
-    /* ================= SECTION ================= */
+    /* ================= FORM ================= */
 
-    .settings-section {
-      margin-bottom: 40px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--border);
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
 
-    .settings-section h3 {
-      margin-bottom: 20px;
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
-
-    /* ================= ROW (PRO STYLE) ================= */
-
-    .settings-row {
-      display: grid;
-      grid-template-columns: 180px 1fr;
-      align-items: center;
-      gap: 20px;
-      padding: 12px 0;
-    }
-
-    .settings-row label {
-      font-size: 0.85rem;
+    label {
+      font-size: .85rem;
       color: var(--muted);
+      margin-top: 4px;
     }
-
-    /* ================= INPUT ================= */
 
     input,
     select {
-      width: 100%;
-      padding: 11px 12px;
+      padding: 12px;
       background: var(--box);
-      border: 1px solid var(--border);
+      border: 1px solid rgba(255, 255, 255, .08);
       border-radius: var(--radius-sm);
       color: var(--text);
       transition: var(--transition);
     }
 
     input:hover {
-      border-color: rgba(255, 255, 255, .2);
+      border-color: rgba(255, 255, 255, 0.15);
     }
 
     input:focus,
     select:focus {
       outline: none;
       border-color: var(--accent);
-      box-shadow: 0 0 0 2px rgba(79, 140, 255, .2);
     }
 
     /* ================= BUTTON ================= */
 
     button {
-      margin-top: 30px;
-      padding: 12px 20px;
+      margin-top: 16px;
+      padding: 12px;
       background: var(--accent);
       border: none;
       border-radius: var(--radius-sm);
       color: white;
       cursor: pointer;
-      font-weight: 500;
       transition: var(--transition);
     }
 
     button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 20px rgba(79, 140, 255, .3);
+      opacity: 0.9;
     }
 
     /* ================= STATES ================= */
 
     .readonly {
-      opacity: 0.6;
+      opacity: 0.7;
       pointer-events: none;
     }
 
     .error {
-      font-size: 0.7rem;
       color: #ff4f4f;
-      margin-top: 4px;
+      font-size: 0.75rem;
+      min-height: 14px;
     }
 
     input.invalid {
@@ -189,8 +196,9 @@
     }
 
     .form-message {
-      margin-top: 12px;
+      margin-top: 10px;
       font-size: 0.85rem;
+      text-align: center;
       color: var(--muted);
     }
 
@@ -220,7 +228,7 @@
 
     .popup {
       background: var(--card);
-      padding: 25px 30px;
+      padding: 30px;
       border-radius: var(--radius);
       display: flex;
       align-items: center;
@@ -228,8 +236,8 @@
     }
 
     .spinner {
-      width: 22px;
-      height: 22px;
+      width: 24px;
+      height: 24px;
       border: 3px solid rgba(255, 255, 255, .2);
       border-top: 3px solid var(--accent);
       border-radius: 50%;
@@ -246,19 +254,27 @@
 
     @media (max-width: 768px) {
 
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
       .main {
         margin-left: 0;
         padding: 30px 20px;
       }
 
-      .settings-row {
-        grid-template-columns: 1fr;
-        gap: 8px;
+      .menu-btn {
+        display: block;
       }
 
-      button {
-        width: 100%;
+      .settings-container {
+        max-width: 100%;
       }
+
     }
   </style>
 
