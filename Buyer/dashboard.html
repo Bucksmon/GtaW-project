@@ -537,7 +537,6 @@
       showLoader();
       try {
         try {
-          window.alert("service:", typeof serviceId);
           const res = await fetch(`${API_BASE}/orders/buyservice`, {
             method: "POST",
             headers: {
@@ -549,8 +548,6 @@
 
           const data = await res.json();
           if (!res.ok) return alert(data.error || "Purchase failed");
-
-          alert("Service purchased!");
           document.getElementById("creditsDisplay").innerHTML = `<span style="color:#2ecc71">${data.newCredits ?? 0}</span>`;
 
         } catch (err) {

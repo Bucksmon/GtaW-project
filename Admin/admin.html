@@ -516,7 +516,6 @@
                 });
                 const data = await res.json();
                 if (!res.ok) return alert(data.error);
-                alert("Role updated successfully");
                 loadUsers(currentPage);
             } finally { hideLoader(); }
         }
@@ -545,8 +544,6 @@
 
                 const data = await res.json();
                 if (!res.ok) return alert(data.error);
-
-                alert("Role updated successfully");
                 loadUsers(currentPage);
             } finally {
                 hideLoader();
