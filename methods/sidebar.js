@@ -59,7 +59,7 @@ export function renderSidebar() {
 
   sidebar.innerHTML = `
     <h2 class="logo-title">
-      <img src="../Royal Road.png" alt="Logo">
+      <img src="${BASE}/Royal Road.png" alt="Logo">
       Royal Road
     </h2>
     <ul class="nav-links">
