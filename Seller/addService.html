@@ -318,6 +318,43 @@
       }
     }
 
+    /* ================= POPUP BUTTONS ================= */
+
+    .popup-btn {
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      min-width: 120px;
+    }
+
+    .popup-btn.primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .popup-btn.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(79, 140, 255, 0.3);
+    }
+
+    .popup-btn.secondary {
+      background: var(--box);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .popup-btn.secondary:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .popup-btn:active {
+      transform: scale(0.96);
+    }
+
     /* ================= PROFILE POPUP ONLY ================= */
 
     #profilePopup .popup {
@@ -519,13 +556,13 @@
     };
 
     document.querySelector(".submit-btn").onclick = async () => {
-      
+
       const isMissing =
         !currentUser?.mobileNumber?.trim() ||
         !currentUser?.discordTag?.trim();
 
       if (isMissing) {
-        showProfilePopup(); 
+        showProfilePopup();
         return;
       }
 
