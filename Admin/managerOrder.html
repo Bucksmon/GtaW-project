@@ -418,7 +418,7 @@
         const loaderOverlay = document.getElementById("loaderOverlay");
         let currentPage = 1;
         const limit = 6;
-
+        let currentUser = null;
 
         function showLoader() {
             loaderOverlay.classList.add("show");
@@ -452,7 +452,13 @@
             showLoader();
 
             try {
-                const type = activeTab === "buy" ? "buyer" : "seller";
+                let type;
+
+                if (["superadmin", "admin"].includes(currentUser?.role)) {
+                    type = "all"; // 👑 admin sees everything
+                } else {
+                    type = activeTab === "buy" ? "buyer" : "seller";
+                }
 
                 const res = await fetch(
                     `${API_BASE}/orders?type=${type}&page=${page}&limit=${limit}`,
@@ -667,6 +673,8 @@
                 if (!res.ok) throw new Error();
 
                 const user = await res.json();
+
+                currentUser = user;
                 document.getElementById("creditsDisplay").innerHTML = `<span style="color:#2ecc71">${user.credits ?? 0}</span>`;
                 // ✅ Show site balance only for admins
                 if (["superadmin"].includes(user.role)) {
