@@ -368,6 +368,22 @@
       color: var(--muted);
       font-size: 0.9rem;
     }
+
+    .popup-box button {
+      margin-top: 15px;
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .popup-box button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(79, 140, 255, 0.3);
+    }
   </style>
 
 </head>
@@ -443,8 +459,12 @@
     const closeErrorPopup = document.getElementById("closeErrorPopup");
 
     function showErrorPopup(message) {
-      popupMessage.textContent = message;
+      popupMessage.innerHTML = `⚠ ${message}`;
       errorPopup.classList.add("active");
+
+      setTimeout(() => {
+        errorPopup.classList.remove("active");
+      }, 3000);
     }
 
     closeErrorPopup.addEventListener("click", () => {
@@ -697,7 +717,6 @@
 
         if (!res.ok) {
           showErrorPopup(data.error || "Something went wrong");
-          hideLoader();
           return;
         }
 
@@ -724,9 +743,7 @@
       sidebar.classList.remove("open");
       overlay.classList.remove("active");
     });
-    setTimeout(() => {
-      errorPopup.classList.remove("active");
-    }, 3000);
+
     document.addEventListener("DOMContentLoaded", () => {
       renderSidebar();
       loadUser();
