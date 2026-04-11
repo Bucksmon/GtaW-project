@@ -95,7 +95,7 @@
 
     .main {
       margin-left: 250px;
-      padding: 60px 40px;
+      padding: 40px 40px;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -277,28 +277,49 @@
 
     }
 
-    /* ================= FIELD WIDTH CONTROL (LEFT + CENTER BUTTON) ================= */
+    /* ================= FIELD WIDTH CONTROL (FULL CENTERED FORM) ================= */
 
     #settingsForm {
       max-width: 500px;
       width: 100%;
+      margin: 0 auto;
+      /* centers whole form */
+      text-align: center;
+      /* centers labels + text */
     }
 
-    /* Inputs: left aligned */
+    /* Labels centered */
+    #settingsForm label {
+      display: block;
+      text-align: center;
+    }
+
+    /* Inputs centered */
     #settingsForm input,
     #settingsForm select {
       max-width: 420px;
       width: 100%;
+      margin: 0 auto;
       display: block;
     }
 
-    /* Button: centered */
+    /* Error + message centered */
+    #settingsForm .error,
+    #settingsForm .form-message {
+      text-align: center;
+    }
+
+    /* Button centered */
     #settingsForm button {
       max-width: 250px;
       width: 100%;
       margin: 5px auto 0;
-      /* ✅ centers it */
       display: block;
+    }
+
+    #settingsForm label strong {
+      display: block;
+      margin-bottom: 4px;
     }
   </style>
 
