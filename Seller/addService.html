@@ -317,6 +317,44 @@
         display: block;
       }
     }
+
+    /* ================= PROFILE POPUP ONLY ================= */
+
+    #profilePopup .popup {
+      width: 90%;
+      max-width: 420px;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
+    #profilePopup .popup span {
+      white-space: normal;
+      word-break: break-word;
+    }
+
+    #profilePopup .popup>div {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    @media (max-width: 500px) {
+      #profilePopup .popup {
+        max-width: 300px;
+        padding: 18px;
+      }
+
+      #profilePopup .popup>div {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      #profilePopup .popup-btn {
+        width: 100%;
+        max-width: 220px;
+      }
+    }
   </style>
 </head>
 
@@ -336,6 +374,19 @@
     </div>
   </div>
 
+  <div id="profilePopup" class="loader-overlay">
+    <div class="popup" style="flex-direction: column; text-align: center;">
+      <span style="font-weight: 600;">Complete Your Profile</span>
+      <span style="font-size: 0.9rem; color: var(--muted);">
+        Please set your Mobile Number and Discord Tag before adding a service.
+      </span>
+
+      <div style="display: flex; gap: 10px; margin-top: 10px;">
+        <button id="goSettingsBtn" class="popup-btn primary">Go to Settings</button>
+        <button id="closePopupBtn" class="popup-btn secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
   <main class="main">
 
     <div class="topbar">
@@ -409,7 +460,28 @@
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("overlay");
     const menuBtn = document.getElementById("menuBtn");
+    let currentUser = null;
 
+    const profilePopup = document.getElementById("profilePopup");
+
+    function showProfilePopup() {
+      profilePopup.classList.add("show");
+    }
+
+    function hideProfilePopup() {
+      profilePopup.classList.remove("show");
+    }
+
+    document.getElementById("closePopupBtn").onclick = hideProfilePopup;
+
+    document.getElementById("goSettingsBtn").onclick = () => {
+      window.location.href = "../Settings.html";
+    };
+
+    // click outside to close
+    profilePopup.addEventListener("click", (e) => {
+      if (e.target === profilePopup) hideProfilePopup();
+    });
     menuBtn.addEventListener("click", () => {
       sidebar.classList.toggle("open");
       overlay.classList.toggle("active");
@@ -447,6 +519,16 @@
     };
 
     document.querySelector(".submit-btn").onclick = async () => {
+      
+      const isMissing =
+        !currentUser?.mobileNumber?.trim() ||
+        !currentUser?.discordTag?.trim();
+
+      if (isMissing) {
+        showProfilePopup(); 
+        return;
+      }
+
       const service_title = titleInput.value.trim();
       const service_description = descriptionInput.value.trim();
       const service_price = Number(priceInput.value);
@@ -580,7 +662,7 @@
       });
 
       const user = await res.json();
-
+      currentUser = user;
       document.getElementById("creditsDisplay").innerHTML =
         `<span style="color:#2ecc71">${user.credits ?? 0}</span>`;
     }
