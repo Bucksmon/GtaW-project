@@ -323,21 +323,18 @@
     <div class="card">
       <form id="settingsForm">
 
-        <!-- SITE TAX -->
         <div id="taxWrapper"></div>
 
         <label><strong>Nickname</strong></label>
         <input id="nickname" />
-        <small class="error" id="nicknameError"></small>
 
         <label><strong>Discord Tag</strong></label>
         <input id="discord" placeholder="angel_nunez4" />
-        <small class="error" id="discordError"></small>
 
-        <label><strong></strong>Mobile Number</strong></label>
+        <label><strong>Mobile Number</strong></label>
         <input id="mobile" />
-        <small class="error" id="mobileError"></small>
 
+        <!-- ✅ SINGLE MESSAGE FIELD -->
         <small id="formMessage" class="form-message"></small>
 
         <button type="submit">Save Settings</button>
@@ -402,17 +399,7 @@
     };
 
     // ================= ERROR HANDLING =================
-    function setError(input, message) {
-      const errorEl = document.getElementById(input.id + "Error");
-      input.classList.add("invalid");
-      errorEl.textContent = message;
-    }
 
-    function clearError(input) {
-      const errorEl = document.getElementById(input.id + "Error");
-      input.classList.remove("invalid");
-      errorEl.textContent = "";
-    }
 
     function showMessage(msg, type = "error") {
       formMessage.textContent = msg;
@@ -432,22 +419,28 @@
       const error = field.validate(value);
 
       if (error) {
-        setError(field.el, error);
-        return false;
+        field.el.classList.add("invalid"); // keep red border
+        return error;
       }
 
-      clearError(field.el);
-      return true;
+      field.el.classList.remove("invalid");
+      return "";
     }
 
     function validateAll() {
-      let isValid = true;
+      const errors = [];
 
       Object.keys(fields).forEach(key => {
-        if (!validateField(key)) isValid = false;
+        const error = validateField(key);
+        if (error) errors.push(error);
       });
 
-      return isValid;
+      if (errors.length > 0) {
+        showMessage(errors.join(" • "), "error"); // ✅ combined errors
+        return false;
+      }
+
+      return true;
     }
 
     // ================= REAL-TIME =================
