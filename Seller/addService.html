@@ -394,31 +394,49 @@
       }
     }
 
-    /* ================= SERVICE CARD CENTER ALIGN ================= */
+    /* ================= FIX OVERFLOW + STRUCTURE ================= */
 
     .service-card {
       align-items: center;
-      /* 🔥 center all children horizontally */
       text-align: center;
-      /* 🔥 center text */
+      overflow: hidden;
+      /* 🔥 prevent spill */
     }
 
-    /* Center description spacing */
+    /* Title */
+    .service-card h3 {
+      margin: 5px 0 0;
+      font-size: 1.1rem;
+    }
+
+    /* Description (IMPORTANT FIX) */
     .service-card p {
-      max-width: 90%;
-      margin: 0 auto;
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--muted);
+
+      max-width: 100%;
+      word-break: break-word;
+      /* 🔥 BREAK LONG TEXT */
+      overflow-wrap: anywhere;
+      /* 🔥 FORCE WRAP */
     }
 
-    /* Center meta row */
+    /* Meta row like orders */
     .service-meta {
       justify-content: center;
-      /* 🔥 instead of space-between */
       gap: 6px;
+      font-size: 0.9rem;
+      color: var(--muted);
     }
 
-    /* Center delete button */
+    .service-meta span {
+      font-weight: 600;
+    }
+
+    /* Button */
     .danger-btn {
-      margin-top: 8px;
+      margin-top: 10px;
       align-self: center;
     }
   </style>
@@ -672,10 +690,12 @@
         card.innerHTML = `
 <img class="service-image" src="${service.service_image || 'https://i.imgur.com/placeholder.png'}">
 <h3>${service.service_title}</h3>
-<p>${service.service_description}</p>
+<div class="order-row">
+  <span>${service.service_description}</span>
+</div>
 <div class="service-meta">
   Credits: 
-  <span style="color: #2ecc71">${service.service_price || 0}</span>
+  <span style="color: #r2ecc71">${service.service_price || 0}</span>
 </div>
 `;
 
