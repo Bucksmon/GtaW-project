@@ -20,8 +20,6 @@
       --transition: .25s ease;
     }
 
-    /* ================= BASE ================= */
-
     * {
       box-sizing: border-box;
       font-family: "Segoe UI", system-ui, sans-serif;
@@ -97,8 +95,6 @@
       margin-left: 250px;
       padding: 60px 40px;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
     }
 
     /* ================= TOPBAR ================= */
@@ -107,7 +103,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
 
     .menu-btn {
@@ -119,63 +115,59 @@
       cursor: pointer;
     }
 
-    /* ================= PAGE CONTAINER ================= */
+    /* ================= SETTINGS CARD ================= */
 
-    .settings-container {
-      max-width: 520px;
+    .card {
+      background: var(--card);
+      padding: 32px;
+      border-radius: var(--radius);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5);
+
+      max-width: 1000px;
       margin: 0 auto;
-      width: 100%;
     }
 
-    /* ================= FORM ================= */
+    /* ================= FORM GRID ================= */
 
     form {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px 26px;
+    }
+
+    /* full-width elements */
+    #taxWrapper,
+    .form-message,
+    button {
+      grid-column: 1 / -1;
     }
 
     label {
-      font-size: .85rem;
+      font-size: .8rem;
       color: var(--muted);
-      margin-top: 4px;
+      margin-bottom: -6px;
     }
 
     input,
     select {
-      padding: 12px;
+      padding: 14px;
       background: var(--box);
       border: 1px solid rgba(255, 255, 255, .08);
       border-radius: var(--radius-sm);
       color: var(--text);
       transition: var(--transition);
+      width: 100%;
     }
 
     input:hover {
-      border-color: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.2);
     }
 
     input:focus,
     select:focus {
       outline: none;
       border-color: var(--accent);
-    }
-
-    /* ================= BUTTON ================= */
-
-    button {
-      margin-top: 16px;
-      padding: 12px;
-      background: var(--accent);
-      border: none;
-      border-radius: var(--radius-sm);
-      color: white;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    button:hover {
-      opacity: 0.9;
+      box-shadow: 0 0 0 2px rgba(79, 140, 255, 0.25);
     }
 
     /* ================= STATES ================= */
@@ -188,6 +180,7 @@
     .error {
       color: #ff4f4f;
       font-size: 0.75rem;
+      margin-top: -8px;
       min-height: 14px;
     }
 
@@ -196,7 +189,7 @@
     }
 
     .form-message {
-      margin-top: 10px;
+      margin-top: 6px;
       font-size: 0.85rem;
       text-align: center;
       color: var(--muted);
@@ -208,6 +201,25 @@
 
     .form-message.error {
       color: #ff4f4f;
+    }
+
+    /* ================= BUTTON ================= */
+
+    button {
+      margin-top: 10px;
+      padding: 14px;
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius-sm);
+      color: white;
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(79, 140, 255, 0.3);
     }
 
     /* ================= LOADER ================= */
@@ -252,8 +264,17 @@
 
     /* ================= RESPONSIVE ================= */
 
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
+      form {
+        grid-template-columns: 1fr;
+      }
 
+      .card {
+        max-width: 600px;
+      }
+    }
+
+    @media (max-width: 768px) {
       .sidebar {
         transform: translateX(-100%);
       }
@@ -270,11 +291,16 @@
       .menu-btn {
         display: block;
       }
+    }
 
-      .settings-container {
-        max-width: 100%;
+    @media (max-width: 500px) {
+      .card {
+        padding: 20px;
       }
 
+      button {
+        width: 100%;
+      }
     }
   </style>
 
