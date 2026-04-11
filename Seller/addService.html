@@ -439,6 +439,34 @@
       margin-top: 10px;
       align-self: center;
     }
+
+    /* ================= ORDER-STYLE ROW (MISSING) ================= */
+
+    .order-row {
+      display: flex;
+      justify-content: center;
+      /* 🔥 center instead of space-between */
+      align-items: center;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--muted);
+
+      max-width: 90%;
+      margin: 0 auto;
+    }
+
+    .order-row span {
+      white-space: normal;
+      /* 🔥 allow wrapping */
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+
+    /* spacing like orders */
+    .order-row+.order-row {
+      padding-top: 6px;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+    }
   </style>
 </head>
 
@@ -695,7 +723,7 @@
 </div>
 <div class="service-meta">
   Credits: 
-  <span style="color: #r2ecc71">${service.service_price || 0}</span>
+  <span style="color: #2ecc71">${service.service_price || 0}</span>
 </div>
 `;
 
