@@ -52,6 +52,33 @@
       margin-bottom: 30px;
     }
 
+    /* ================= SIDEBAR LOGO FIX ================= */
+
+    .logo-title {
+      display: flex;
+      align-items: center;
+      /* 🔥 vertical alignment */
+      justify-content: center;
+      /* keep centered like your current UI */
+      gap: 10px;
+      /* space between logo & text */
+
+      margin-bottom: 30px;
+    }
+
+    /* override old rule */
+    .sidebar h2.logo-title {
+      text-align: center;
+      /* keep consistency */
+    }
+
+    /* logo sizing */
+    .logo-title img {
+      height: 34px;
+      width: 34px;
+      object-fit: contain;
+    }
+
     .nav-links {
       list-style: none;
       padding: 0;
@@ -502,14 +529,14 @@
       mobile: {
         el: document.getElementById("mobile"),
         validate: (val) => {
-         const regex = /^[0-9]{1,8}$/;
+          const regex = /^[0-9]{1,8}$/;
           return val && !regex.test(val) ? "Invalid number" : "";
         }
       },
       routingNumber: {
         el: document.getElementById("routingNumber"),
         validate: (val) => {
-          
+
           const regex = /^[0-9]{1,9}$/; // adjust based on your needs
           return val && !regex.test(val) ? "Invalid routing number" : "";
         }
