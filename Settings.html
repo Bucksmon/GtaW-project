@@ -304,6 +304,19 @@
         width: 100%;
       }
     }
+
+    /* ================= TAX DISPLAY ================= */
+
+    .tax-display {
+      background: var(--box);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 12px 14px;
+      color: var(--text);
+      font-weight: 500;
+
+      display: inline-block;
+    }
   </style>
 
 </head>
@@ -543,9 +556,11 @@
 
       } else {
         taxWrapper.innerHTML = `
-      <label>Site Tax</label>
-      <input class="readonly" value="${user.commissionRate ?? 0}" />
-    `;
+  <label>Site Tax</label>
+  <div class="tax-display">
+    ${user.commissionRate ?? 0}%
+  </div>
+`;
       }
     }
 
