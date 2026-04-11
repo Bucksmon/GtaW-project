@@ -396,6 +396,8 @@
       display: flex;
       gap: 10px;
       width: 100%;
+      justify-content: center;
+      /* ✅ center horizontally */
     }
 
     #profilePopup .popup span:first-child {
@@ -416,14 +418,16 @@
         padding: 18px;
       }
 
-      /* Stack buttons vertically */
       #profilePopup .popup>div {
         flex-direction: column;
+        align-items: center;
+        /* ✅ center vertically stacked buttons */
       }
 
-      /* Full width buttons */
       #profilePopup .popup-btn {
         width: 100%;
+        max-width: 220px;
+        /* optional: prevents ugly full stretch */
       }
     }
   </style>
