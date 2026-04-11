@@ -334,6 +334,40 @@
 
       display: inline-block;
     }
+
+    /* ================= ERROR POPUP ================= */
+
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 4000;
+    }
+
+    .popup-overlay.active {
+      display: flex;
+    }
+
+    .popup-box {
+      background: var(--card);
+      padding: 30px;
+      border-radius: var(--radius);
+      text-align: center;
+      max-width: 350px;
+      width: 90%;
+    }
+
+    .popup-box h3 {
+      margin-bottom: 10px;
+    }
+
+    .popup-box p {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
   </style>
 
 </head>
@@ -381,7 +415,13 @@
       <span>Loading...</span>
     </div>
   </div>
-
+  <div id="errorPopup" class="popup-overlay">
+    <div class="popup-box">
+      <h3>Error</h3>
+      <p id="popupMessage"></p>
+      <button id="closeErrorPopup">Close</button>
+    </div>
+  </div>
   <script type="module">
     import { renderSidebar } from "./methods/sidebar.js";
 
@@ -398,7 +438,25 @@
     const taxWrapper = document.getElementById("taxWrapper");
     const form = document.getElementById("settingsForm");
     const formMessage = document.getElementById("formMessage");
+    const errorPopup = document.getElementById("errorPopup");
+    const popupMessage = document.getElementById("popupMessage");
+    const closeErrorPopup = document.getElementById("closeErrorPopup");
 
+    function showErrorPopup(message) {
+      popupMessage.textContent = message;
+      errorPopup.classList.add("active");
+    }
+
+    closeErrorPopup.addEventListener("click", () => {
+      errorPopup.classList.remove("active");
+    });
+
+    // click outside to close
+    errorPopup.addEventListener("click", (e) => {
+      if (e.target === errorPopup) {
+        errorPopup.classList.remove("active");
+      }
+    });
     // ================= LOADER =================
     function showLoader() {
       loaderOverlay.classList.add("show");
@@ -637,7 +695,11 @@
 
         const data = await res.json();
 
-        if (!res.ok) throw new Error(data.error);
+        if (!res.ok) {
+          showErrorPopup(data.error || "Something went wrong");
+          hideLoader();
+          return;
+        }
 
         showMessage("Settings updated successfully", "success");
 
@@ -662,7 +724,9 @@
       sidebar.classList.remove("open");
       overlay.classList.remove("active");
     });
-
+    setTimeout(() => {
+      errorPopup.classList.remove("active");
+    }, 3000);
     document.addEventListener("DOMContentLoaded", () => {
       renderSidebar();
       loadUser();
