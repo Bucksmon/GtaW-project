@@ -374,6 +374,58 @@
     .popup-btn:active {
       transform: scale(0.96);
     }
+
+    /* ================= PROFILE POPUP ONLY ================= */
+
+    /* Make popup responsive (only this one) */
+    #profilePopup .popup {
+      width: 90%;
+      max-width: 420px;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
+    /* Allow text to wrap nicely */
+    #profilePopup .popup span {
+      white-space: normal;
+      word-break: break-word;
+    }
+
+    /* Target ONLY the button container (your inline div) */
+    #profilePopup .popup>div {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
+
+    #profilePopup .popup span:first-child {
+      font-size: 1.05rem;
+    }
+
+    #profilePopup .popup span:nth-child(2) {
+      line-height: 1.4;
+    }
+
+    /* ================= MOBILE BEHAVIOR ================= */
+
+    @media (max-width: 500px) {
+
+      /* Shrink popup more */
+      #profilePopup .popup {
+        max-width: 300px;
+        padding: 18px;
+      }
+
+      /* Stack buttons vertically */
+      #profilePopup .popup>div {
+        flex-direction: column;
+      }
+
+      /* Full width buttons */
+      #profilePopup .popup-btn {
+        width: 100%;
+      }
+    }
   </style>
 
 </head>
