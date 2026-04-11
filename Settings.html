@@ -277,29 +277,27 @@
 
     }
 
-    /* ================= FIELD WIDTH CONTROL ================= */
+    /* ================= FIELD WIDTH CONTROL (LEFT ALIGNED) ================= */
 
-    /* Center form content */
+    /* Keep form width controlled but NOT centered */
     #settingsForm {
       max-width: 500px;
-      margin: 0 auto;
       width: 100%;
     }
 
-    /* Reduce input width */
+    /* Inputs: smaller width, aligned left */
     #settingsForm input,
     #settingsForm select {
       max-width: 420px;
       width: 100%;
-      margin: 0 auto;
       display: block;
     }
 
-    /* Reduce button width */
+    /* Button: smaller width, aligned left */
     #settingsForm button {
       max-width: 250px;
       width: 100%;
-      margin: 10px auto 0;
+      margin-top: 10px;
       display: block;
     }
   </style>
