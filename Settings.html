@@ -446,7 +446,19 @@
     // ================= REAL-TIME =================
     Object.keys(fields).forEach(key => {
       fields[key].el.addEventListener("input", () => {
-        validateField(key);
+        const errors = [];
+
+        Object.keys(fields).forEach(k => {
+          const err = validateField(k);
+          if (err) errors.push(err);
+        });
+
+        if (errors.length > 0) {
+          const uniqueErrors = [...new Set(errors)];
+          showMessage("⚠ " + uniqueErrors.join(" • "), "error");
+        } else {
+          clearMessage(); // 🔥 THIS FIXES YOUR ISSUE
+        }
       });
     });
 
