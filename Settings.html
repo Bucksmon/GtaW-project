@@ -304,6 +304,10 @@
         width: 100%;
       }
     }
+
+    .error {
+      display: none;
+    }
   </style>
 
 </head>
@@ -432,22 +436,30 @@
       const error = field.validate(value);
 
       if (error) {
-        setError(field.el, error);
-        return false;
+        field.el.classList.add("invalid");
+        return error; // return error instead of setting it
       }
 
-      clearError(field.el);
-      return true;
+      field.el.classList.remove("invalid");
+      return "";
     }
 
     function validateAll() {
-      let isValid = true;
+      const errors = [];
 
       Object.keys(fields).forEach(key => {
-        if (!validateField(key)) isValid = false;
+        const error = validateField(key);
+        if (error) {
+          errors.push(error);
+        }
       });
 
-      return isValid;
+      if (errors.length > 0) {
+        showMessage(errors.join(" • "), "error"); // 🔥 all errors combined
+        return false;
+      }
+
+      return true;
     }
 
     // ================= REAL-TIME =================
