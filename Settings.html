@@ -107,7 +107,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 5px;
     }
 
     .menu-btn {
@@ -164,7 +164,7 @@
     /* ================= BUTTON ================= */
 
     button {
-      margin-top: 6px;
+      margin-top: 3px;
       padding: 12px;
       background: var(--accent);
       border: none;
@@ -196,7 +196,7 @@
     }
 
     .form-message {
-      margin-top: 4px;
+      margin-top: 2px;
       font-size: 0.85rem;
       text-align: center;
       color: var(--muted);
@@ -277,15 +277,14 @@
 
     }
 
-    /* ================= FIELD WIDTH CONTROL (LEFT ALIGNED) ================= */
+    /* ================= FIELD WIDTH CONTROL (LEFT + CENTER BUTTON) ================= */
 
-    /* Keep form width controlled but NOT centered */
     #settingsForm {
       max-width: 500px;
       width: 100%;
     }
 
-    /* Inputs: smaller width, aligned left */
+    /* Inputs: left aligned */
     #settingsForm input,
     #settingsForm select {
       max-width: 420px;
@@ -293,11 +292,12 @@
       display: block;
     }
 
-    /* Button: smaller width, aligned left */
+    /* Button: centered */
     #settingsForm button {
       max-width: 250px;
       width: 100%;
-      margin-top: 10px;
+      margin: 5px auto 0;
+      /* ✅ centers it */
       display: block;
     }
   </style>
