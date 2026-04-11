@@ -364,6 +364,8 @@
         <label><strong>Mobile Number</strong></label>
         <input id="mobile" />
 
+        <label><strong>Routing Number</strong></label>
+        <input id="routingNumber" placeholder="123456789" />
         <!-- ✅ SINGLE MESSAGE FIELD -->
         <small id="formMessage" class="form-message"></small>
 
@@ -424,6 +426,13 @@
         validate: (val) => {
           const regex = /^\+?[0-9]{10,15}$/;
           return val && !regex.test(val) ? "Invalid number" : "";
+        }
+      },
+      routingNumber: {
+        el: document.getElementById("routingNumber"),
+        validate: (val) => {
+          const regex = /^[0-9]{6,18}$/; // adjust based on your needs
+          return val && !regex.test(val) ? "Invalid routing number" : "";
         }
       }
     };
@@ -497,7 +506,8 @@
       const mapping = {
         nickname: user.nickName,
         discord: user.discordTag,
-        mobile: user.mobileNumber
+        mobile: user.mobileNumber,
+        routingNumber: user.routingNumber
       };
 
       Object.entries(mapping).forEach(([id, value]) => {
@@ -601,6 +611,7 @@
           if (key === "nickname") payload.nickName = value;
           if (key === "discord") payload.discordTag = value;
           if (key === "mobile") payload.mobileNumber = value;
+          if (key === "routingNumber") payload.routingNumber = value;
         }
       });
 

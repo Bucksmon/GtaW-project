@@ -323,6 +323,12 @@
         padding: 22px;
       }
     }
+
+    input.readonly {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background: #141c33;
+    }
   </style>
 </head>
 
@@ -441,6 +447,8 @@
       window.location.href = "../index.html";
     }
 
+    let currentUser = null;
+
     /* ================= SIDEBAR ================= */
 
     const menuBtn = document.getElementById("menuBtn");
@@ -481,6 +489,8 @@
         if (!res.ok) throw new Error();
 
         const user = await res.json();
+        currentUser = user; // ✅ store user
+        applyUserData(user); // 🔥 NEW FUNCTION
 
         document.getElementById("creditsDisplay").innerHTML =
           `<span style="color:#2ecc71">${user.credits ?? 0}</span>`;
@@ -500,7 +510,30 @@
       }
 
     }
+    function applyUserData(user) {
+      // BUY TAB
+      lockIfExists(document.getElementById("buyRouting"), user.routingNumber);
+      lockIfExists(document.getElementById("buyDiscord"), user.discordTag);
 
+      // SELL TAB
+      lockIfExists(document.getElementById("sellRouting"), user.routingNumber);
+      lockIfExists(document.getElementById("sellDiscord"), user.discordTag);
+    }
+
+    function lockIfExists(input, value) {
+      if (!input) return;
+
+      if (value && value.trim() !== "") {
+        input.value = value;
+
+        input.readOnly = true; // 🔥 lock it
+        input.classList.add("readonly");
+
+      } else {
+        input.readOnly = false;
+        input.classList.remove("readonly");
+      }
+    }
     /* ================= TABS ================= */
 
     const tabs = document.querySelectorAll(".tab");
@@ -760,7 +793,7 @@
         if (!res.ok) throw new Error();
 
         showPopup();
-        await loadCredits(); 
+        await loadCredits();
         e.target.reset();
         adminStatus.textContent = "";
 
