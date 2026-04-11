@@ -229,7 +229,24 @@
     #taxWrapper {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
+      /* match input spacing feel */
+    }
+
+    /* Make tax-display behave like input */
+    .tax-display {
+      width: 100%;
+      /* 🔥 IMPORTANT */
+      padding: 13px 14px;
+      /* match input */
+      border-radius: 10px;
+      background: var(--box);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      font-weight: 500;
+
+      display: block;
+      /* 🔥 remove inline-block */
     }
 
     /* ================= LOADER ================= */
@@ -557,7 +574,7 @@
       } else {
         taxWrapper.innerHTML = `
   <label><strong>Site Tax</strong></label>
-  <div class="tax-display" style="margin-top:2px">
+  <div class="tax-display">
     ${user.commissionRate ?? 0}%
   </div>
 `;
