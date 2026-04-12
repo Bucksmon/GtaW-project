@@ -495,7 +495,7 @@
 
                 activeTab = tab.dataset.tab;
 
-                showLoader(); // ✅ loader on tab switch
+                showLoader(); 
 
                 try {
                     await loadBuyerOrders(currentPage, true);
@@ -659,7 +659,6 @@
             document.querySelectorAll(".status-dropdown").forEach(select => {
                 const orderId = select.dataset.id;
 
-                // set initial color
                 updateDropdownColor(select);
 
                 select.addEventListener("change", async () => {
@@ -668,7 +667,7 @@
                     updateDropdownColor(select);
 
                     select.disabled = true; // prevent spam clicks
-                    showLoader(); // ✅ start loader
+                    showLoader(); 
 
                     try {
                         const res = await fetch(`${API_BASE}/orders/${orderId}/status`, {
@@ -682,16 +681,15 @@
 
                         if (!res.ok) throw new Error();
 
-                        // OPTIONAL: refresh orders to stay in sync
+                         
                         await loadBuyerOrders(currentPage, false);
 
                     } catch (err) {
                         console.log("Status update failed");
 
-                        // optional rollback (if needed)
                     } finally {
                         select.disabled = false;
-                        hideLoader(); // ✅ stop loader
+                        hideLoader(); 
                     }
                 });
             });

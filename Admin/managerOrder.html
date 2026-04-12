@@ -483,7 +483,7 @@
                 let type;
 
                 if (["superadmin", "admin"].includes(currentUser?.role)) {
-                    type = "all"; // 👑 admin sees everything
+                    type = "all"; // admin sees everything
                 } else {
                     type = activeTab === "buy" ? "buyer" : "seller";
                 }
@@ -622,16 +622,14 @@
 
             const previousStatus = dropdown.getAttribute("data-prev");
 
-            // 🚫 prevent spam clicking
             if (dropdown.disabled) return;
 
-            // 🔒 lock UI
             dropdown.disabled = true;
 
             try {
                 showLoader();
 
-                // ⚡ Optimistic UI (already changed visually)
+                // Optimistic UI (already changed visually)
 
                 const res = await fetch(`${API_BASE}/orders/${orderId}/status`, {
                     method: "PUT",
@@ -644,16 +642,13 @@
 
                 if (!res.ok) throw new Error();
 
-                // ✅ commit new state
                 dropdown.setAttribute("data-prev", newStatus);
 
-                // 🔥 OPTIONAL: update color instantly
                 dropdown.className = `status-dropdown ${newStatus}`;
 
             } catch (err) {
                 console.error("Update failed:", err);
 
-                // ❌ rollback UI
                 dropdown.value = previousStatus;
 
                 alert("Failed to update status");

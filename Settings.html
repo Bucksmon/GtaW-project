@@ -476,7 +476,6 @@
       window.location.href = "/GtaW-project/index.html";
     }
 
-    // ================= DOM =================
     const loaderOverlay = document.getElementById("loaderOverlay");
     const taxWrapper = document.getElementById("taxWrapper");
     const form = document.getElementById("settingsForm");
@@ -498,13 +497,13 @@
       errorPopup.classList.remove("active");
     });
 
-    // click outside to close
+
     errorPopup.addEventListener("click", (e) => {
       if (e.target === errorPopup) {
         errorPopup.classList.remove("active");
       }
     });
-    // ================= LOADER =================
+
     function showLoader() {
       loaderOverlay.classList.add("show");
     }
@@ -513,7 +512,7 @@
       loaderOverlay.classList.remove("show");
     }
 
-    // ================= FIELD CONFIG =================
+
     const fields = {
       nickname: {
         el: document.getElementById("nickname"),
@@ -537,13 +536,13 @@
         el: document.getElementById("routingNumber"),
         validate: (val) => {
 
-          const regex = /^[0-9]{1,9}$/; // adjust based on your needs
+          const regex = /^[0-9]{1,9}$/;
           return val && !regex.test(val) ? "Invalid routing number" : "";
         }
       }
     };
 
-    // ================= ERROR HANDLING =================
+
 
 
     function showMessage(msg, type = "error") {
@@ -556,7 +555,7 @@
       formMessage.className = "form-message";
     }
 
-    // ================= VALIDATION =================
+
     function validateField(key) {
       const field = fields[key];
       const value = field.el.value.trim();
@@ -564,7 +563,7 @@
       const error = field.validate(value);
 
       if (error) {
-        field.el.classList.add("invalid"); // keep red border
+        field.el.classList.add("invalid");
         return error;
       }
 
@@ -581,14 +580,14 @@
       });
 
       if (errors.length > 0) {
-        showMessage(errors.join(" • "), "error"); // ✅ combined errors
+        showMessage(errors.join(" • "), "error");
         return false;
       }
 
       return true;
     }
 
-    // ================= REAL-TIME =================
+
     Object.keys(fields).forEach(key => {
       fields[key].el.addEventListener("input", () => {
         const errors = [];
@@ -602,12 +601,12 @@
           const uniqueErrors = [...new Set(errors)];
           showMessage("⚠ " + uniqueErrors.join(" • "), "error");
         } else {
-          clearMessage(); // 🔥 THIS FIXES YOUR ISSUE
+          clearMessage();
         }
       });
     });
 
-    // ================= LOAD USER =================
+
     function populateForm(user = {}) {
       const mapping = {
         nickname: user.nickName,
@@ -643,7 +642,7 @@
       }
     }
 
-    // ================= TAX =================
+
     function renderTax(user) {
       if (user.role === "superadmin") {
         taxWrapper.innerHTML = `
@@ -697,7 +696,7 @@
       }
     }
 
-    // ================= SUBMIT =================
+
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       showLoader();
@@ -757,7 +756,6 @@
       }
     });
 
-    // ================= INIT =================
     const sidebar = document.getElementById("sidebar");
     const overlay = document.querySelector(".overlay");
     const menuBtn = document.getElementById("menuBtn");

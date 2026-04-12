@@ -213,14 +213,13 @@
           const box = document.createElement("div");
           box.className = "char-box";
 
-          const username = `${c.firstname}${c.lastname}`; // <-- username
+          const username = `${c.firstname}${c.lastname}`; 
 
           box.innerHTML = `
             <div class="name">${c.firstname} ${c.lastname}</div>
             <div class="tag">Character ${index + 1}</div>
           `;
 
-          // Click event
           box.addEventListener("click", () => {
             container.style.opacity = "0.5";
             overlay.classList.add("show");

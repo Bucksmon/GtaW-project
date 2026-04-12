@@ -516,13 +516,13 @@
         if (!res.ok) throw new Error();
 
         const user = await res.json();
-        currentUser = user; // ✅ store user
-        applyUserData(user); // 🔥 NEW FUNCTION
+        currentUser = user; //  store user
+        applyUserData(user); 
 
         document.getElementById("creditsDisplay").innerHTML =
           `<span style="color:#2ecc71">${user.credits ?? 0}</span>`;
-        // ✅ Show site balance only for admins
-        // ✅ SHOW ADMIN TAB
+        // Show site balance only for admins
+        // SHOW ADMIN TAB
         if (["superadmin"].includes(user.role)) {
           document.getElementById("adminTabBtn").style.display = "block";
 
@@ -553,7 +553,7 @@
       if (value && value.trim() !== "") {
         input.value = value;
 
-        input.readOnly = true; // 🔥 lock it
+        input.readOnly = true; // lock it
         input.classList.add("readonly");
 
       } else {
@@ -677,7 +677,7 @@
 
         showPopup();
 
-        await loadCredits(); // ✅ refresh
+        await loadCredits(); 
 
         e.target.reset();
         buySubmit.disabled = true;
@@ -746,7 +746,7 @@
 
         showPopup();
 
-        await loadCredits(); // ✅ refresh
+        await loadCredits(); 
 
         e.target.reset();
         sellSubmit.disabled = true;

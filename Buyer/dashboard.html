@@ -545,11 +545,11 @@
       profilePopup.classList.remove("show");
     }
 
-    // buttons
+    
     document.getElementById("closePopupBtn").onclick = hideProfilePopup;
 
     document.getElementById("goSettingsBtn").onclick = () => {
-      window.location.href = "../Settings.html"; // adjust if needed
+      window.location.href = "../Settings.html"; 
     };
 
     let currentPage = 1;
@@ -636,7 +636,7 @@
         !currentUser?.discordTag?.trim();
 
       if (isMissing) {
-        showProfilePopup(); // ✅ custom popup
+        showProfilePopup();  
         return;
       }
       showLoader();
