@@ -88,8 +88,8 @@ npm start
 
 ## Links
 
-- Live Website: *(Add your link here)*  
-- Repository: *(Current repo)*  
+- Live Website: *https://bucksmon.github.io/GtaW-project/*  
+- Repository: *https://github.com/Bucksmon/GtaW-project*  
 - GTA World: https://gta.world  
 
 ---
