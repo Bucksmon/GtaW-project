@@ -47,7 +47,7 @@ It aims to:
 
 ---
 
-## 🧱 Tech Stack
+## Tech Stack
 
 ### Frontend
 - HTML5  
