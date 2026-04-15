@@ -66,26 +66,6 @@ It aims to:
 
 ---
 
-## Getting Started
-
-### 1. Clone the repository
-```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
-cd YOUR_REPO
-```
-
-### 2. Install dependencies
-```bash
-npm install
-```
-
-### 3. Run the project
-```bash
-npm start
-```
-
----
-
 ## Links
 
 - Live Website: *https://bucksmon.github.io/GtaW-project/*  
@@ -94,7 +74,7 @@ npm start
 
 ---
 
-## 🧠 Future Improvements
+## Future Improvements
 
 - Real-time chat between users  
 - Advanced filtering and sorting  
@@ -113,7 +93,7 @@ Contributions are welcome.
 
 ---
 
-## 📄 License
+## License
 This project is intended for educational and roleplay enhancement purposes.  
 A formal license can be added based on future scope.
 
@@ -121,10 +101,10 @@ A formal license can be added based on future scope.
 
 ## Author
 
-**BuckSmon**  
+**Bucksmon**  
 
 
 ---
 
-## 💡 Final Note
+## Final Note
 This project represents a combination of **game design principles and software engineering**, aiming to bring structured systems into immersive roleplay environments.
