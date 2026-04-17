@@ -1,10 +1,10 @@
-# GTAW Marketplace  
+# Royal Road (GTAW Marketplace)  
 *A web-based marketplace for the GTA World roleplay community*
 
 ---
 
 ## Overview
-The **GTAW Marketplace** is a web platform designed to support trading, listings, and transactions within the **GTA World (GTAW)** roleplay server.
+The **Royal Road (GTAW Marketplace)** is a web platform designed to support trading, listings, and transactions within the **GTA World (GTAW)** roleplay server.
 
 It provides players with a centralized system to:
 - List items and services  
