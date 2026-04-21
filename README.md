@@ -5,6 +5,7 @@
 
 ## Overview
 The **Royal Road (GTAW Marketplace)** is a web platform designed to support trading, listings, and transactions within the **GTA World (GTAW)** roleplay server.
+It provides a role-based login which restricts normal users to view the marketplace and prompts them back to home page.
 
 It provides players with a centralized system to:
 - List items and services  
