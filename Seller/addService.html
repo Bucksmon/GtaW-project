@@ -671,7 +671,7 @@
 
       const service_title = titleInput.value.trim();
       const service_description = descriptionInput.value.trim();
-      const service_price = Number(priceInput.value.trim());
+      const service_price = Number(priceInput.value);
       const service_image = imageInput.value.trim();
 
       if (!service_title || !service_description || !service_price) {
@@ -808,7 +808,21 @@
       document.getElementById("creditsDisplay").innerHTML =
         `<span style="color:#2ecc71">${user.credits ?? 0}</span>`;
     }
+    
+    priceInput.addEventListener("input", () => {
+      const val = priceInput.value;
 
+      // Reject decimals
+      if (val.includes(".")) {
+        priceInput.value = Math.floor(Number(val));
+        return;
+      }
+
+      // Enforce min
+      if (Number(val) < 1) {
+        priceInput.value = "";
+      }
+    });
     document.addEventListener("DOMContentLoaded", () => {
       renderSidebar();
       loadCredits();
