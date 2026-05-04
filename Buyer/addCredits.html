@@ -421,7 +421,7 @@
             <input id="buyDiscord" placeholder="John_Doe4" />
 
             <label>Credit Amount</label>
-            <input id="buyCredits" type="number" min="1" step="1" inputmode="numeric" pattern="[0-9]*" />
+            <input id="buyCredits" type="number" min="0" step="1" inputmode="numeric" pattern="[0-9]*" />
 
             <button type="submit" id="buySubmit">Submit</button>
             <div id="buyStatus" class="status"></div>
@@ -691,7 +691,7 @@
         buyStatus.textContent = "";
 
       } catch (err) {
-        
+
         buyStatus.style.color = "red";
         buyStatus.textContent = "API error occurred.";
 
