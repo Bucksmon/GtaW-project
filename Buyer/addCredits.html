@@ -421,7 +421,7 @@
             <input id="buyDiscord" placeholder="John_Doe4" />
 
             <label>Credit Amount</label>
-            <input id="buyCredits" type="number" min="1" placeholder="100" />
+            <input id="buyCredits" type="number" min="1" step="1" inputmode="numeric" pattern="[0-9]*" />
 
             <button type="submit" id="buySubmit">Submit</button>
             <div id="buyStatus" class="status"></div>
@@ -517,7 +517,7 @@
 
         const user = await res.json();
         currentUser = user; //  store user
-        applyUserData(user); 
+        applyUserData(user);
 
         document.getElementById("creditsDisplay").innerHTML =
           `<span style="color:#2ecc71">${user.credits ?? 0}</span>`;
@@ -657,6 +657,13 @@
       showLoader();
       buySubmit.disabled = true;
 
+      const credits = Number(buyCredits.value);
+
+      if (!Number.isInteger(credits) || credits < 1) {
+        buyStatus.style.color = "red";
+        buyStatus.textContent = "Credits must be at least 1.";
+        return;
+      }
       try {
 
         const res = await fetch(`${API_BASE}/discord/credits-request`, {
@@ -677,14 +684,14 @@
 
         showPopup();
 
-        await loadCredits(); 
+        await loadCredits();
 
         e.target.reset();
         buySubmit.disabled = true;
         buyStatus.textContent = "";
 
       } catch (err) {
-
+        
         buyStatus.style.color = "red";
         buyStatus.textContent = "API error occurred.";
 
@@ -725,7 +732,14 @@
 
       showLoader();
       sellSubmit.disabled = true;
+      const credits = Number(sellCredits.value);
 
+      if (!Number.isInteger(credits) || credits < 1) {
+        sellStatus.style.color = "red";
+        sellStatus.textContent = "Credits must be at least 1.";
+        return;
+      }
+      
       try {
 
         const res = await fetch(`${API_BASE}/discord/credits-request`, {
@@ -746,7 +760,7 @@
 
         showPopup();
 
-        await loadCredits(); 
+        await loadCredits();
 
         e.target.reset();
         sellSubmit.disabled = true;
@@ -832,6 +846,11 @@
       } finally {
         hideLoader();
       }
+    });
+
+
+    buyCredits.addEventListener("input", () => {
+      if (buyCredits.value < 1) buyCredits.value = 1;
     });
     /* ================= INIT ================= */
 
