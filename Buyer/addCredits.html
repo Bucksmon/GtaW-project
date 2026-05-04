@@ -440,7 +440,7 @@
             <input id="sellDiscord" placeholder="angel_nunez4" />
 
             <label>Credit Amount</label>
-            <input id="sellCredits" type="number" min="1" placeholder="100" />
+            <input id="sellCredits" type="number" min="0" step="1" inputmode="numeric" pattern="[0-9]*" />
 
             <button type="submit" id="sellSubmit">Submit</button>
             <div id="sellStatus" class="status"></div>
@@ -453,7 +453,7 @@
           <form id="adminForm">
 
             <label>Credit Amount</label>
-            <input id="adminCredits" type="number" min="1" placeholder="100" />
+            <input id="adminCredits" type="number" min="0" step="1" inputmode="numeric" pattern="[0-9]*" />
 
             <button type="submit" id="adminSubmit">Send Credits</button>
             <div id="adminStatus" class="status"></div>
@@ -739,7 +739,7 @@
         sellStatus.textContent = "Credits must be at least 1.";
         return;
       }
-      
+
       try {
 
         const res = await fetch(`${API_BASE}/discord/credits-request`, {
