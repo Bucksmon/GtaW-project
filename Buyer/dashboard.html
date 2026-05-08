@@ -542,6 +542,19 @@
         /* optional: prevents ugly full stretch */
       }
     }
+
+    /* Remove number input arrows/spinners */
+
+    .quantity-box input::-webkit-outer-spin-button,
+    .quantity-box input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .quantity-box input[type=number] {
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
   </style>
 
 </head>
@@ -768,12 +781,12 @@
   <span>
     <strong>Price:</strong> 
     <span style="color: #2ecc71">
-      ${service.service_price || 0}
+     💰${service.service_price || 0}
     </span>
   </span>
 
   <span>
-    <strong>Seller:</strong> 
+    <strong>Seller:</strong> 👤
     ${service.service_sellerId?.nickName || "Anonymous"}
   </span>
 </div>
@@ -797,7 +810,7 @@ ${service.service_type === "quantity" ? `
     <span 
       id="checkout-price-${service._id}"
       style="color:#2ecc71;"
-    >
+    >💰
       ${service.service_price}
     </span>
   </span>
