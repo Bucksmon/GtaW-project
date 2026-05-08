@@ -526,6 +526,42 @@
       </div>
     </div>
   </div>
+
+  <div id="messagePopup" class="loader-overlay">
+
+    <div class="popup" style="
+      flex-direction: column;
+      text-align: center;
+      max-width: 420px;
+      width: 90%;
+    ">
+
+      <span id="messagePopupTitle" style="
+        font-weight: 700;
+        font-size: 1.1rem;
+      ">
+        Notice
+      </span>
+
+      <span id="messagePopupText" style="
+        color: var(--muted);
+        font-size: 0.95rem;
+        margin-top: 8px;
+      ">
+      </span>
+
+      <div id="messagePopupButtons" style="
+        display:flex;
+        gap:10px;
+        margin-top:20px;
+        justify-content:center;
+        flex-wrap:wrap;
+      ">
+      </div>
+
+    </div>
+
+  </div>
   <main class="main">
 
     <div class="topbar">
@@ -582,7 +618,7 @@
           <div class="form-group" id="quantityWrapper" style="display:none;">
             <label>Quantity</label>
 
-            <input id="quantityInput" type="number" min="1"" value=" 0" />
+            <input id="quantityInput" type="number" min="1"" value="0" />
           </div>
 
           <div class="form-group">
@@ -633,7 +669,52 @@
     function hideProfilePopup() {
       profilePopup.classList.remove("show");
     }
+    const messagePopup = document.getElementById("messagePopup");
+    const messagePopupTitle = document.getElementById("messagePopupTitle");
+    const messagePopupText = document.getElementById("messagePopupText");
+    const messagePopupButtons = document.getElementById("messagePopupButtons");
 
+    function closeMessagePopup() {
+      messagePopup.classList.remove("show");
+    }
+
+    function showPopup({
+      title = "Notice",
+      message = "",
+      buttons = []
+    }) {
+
+      messagePopupTitle.textContent = title;
+      messagePopupText.textContent = message;
+
+      messagePopupButtons.innerHTML = "";
+
+      buttons.forEach(btn => {
+
+        const button = document.createElement("button");
+
+        button.className =
+          `popup-btn ${btn.type || "primary"}`;
+
+        button.textContent = btn.text;
+
+        button.onclick = () => {
+
+          closeMessagePopup();
+
+          if (btn.onClick) {
+            btn.onClick();
+          }
+
+        };
+
+        messagePopupButtons.appendChild(button);
+
+      });
+
+      messagePopup.classList.add("show");
+
+    }
     document.getElementById("closePopupBtn").onclick = hideProfilePopup;
 
     document.getElementById("goSettingsBtn").onclick = () => {
@@ -643,6 +724,13 @@
     // click outside to close
     profilePopup.addEventListener("click", (e) => {
       if (e.target === profilePopup) hideProfilePopup();
+    });
+    messagePopup.addEventListener("click", (e) => {
+
+      if (e.target === messagePopup) {
+        closeMessagePopup();
+      }
+
     });
     menuBtn.addEventListener("click", () => {
       sidebar.classList.toggle("open");
@@ -712,7 +800,16 @@
       const service_type = serviceTypeInput.value;
       const quantity = Number(quantityInput.value);
       if (!service_title || !service_description || !service_price) {
-        alert("Fill required fields");
+        showPopup({
+          title: "Missing Information",
+          message: "Please complete all required service fields.",
+          buttons: [
+            {
+              text: "Okay",
+              type: "primary"
+            }
+          ]
+        });
         return;
       }
 
@@ -868,17 +965,91 @@ ${service.service_type === "quantity" ? `
     }
 
     async function deleteService(id) {
-      if (!confirm("Delete service?")) return;
 
-      showLoader();
+      showPopup({
+        title: "Delete Service",
+        message: "Are you sure you want to permanently delete this service?",
+        buttons: [
 
-      await fetch(`${API_BASE}/services/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` }
+          {
+            text: "Cancel",
+            type: "secondary"
+          },
+
+          {
+            text: "Delete",
+            type: "primary",
+
+            onClick: async () => {
+
+              showLoader();
+
+              try {
+
+                const res = await fetch(`${API_BASE}/services/${id}`, {
+                  method: "DELETE",
+                  headers: {
+                    Authorization: `Bearer ${token}`
+                  }
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+
+                  showPopup({
+                    title: "Delete Failed",
+                    message: data.error || "Failed to delete service.",
+                    buttons: [
+                      {
+                        text: "Close",
+                        type: "primary"
+                      }
+                    ]
+                  });
+
+                  return;
+                }
+
+                loadServices(currentPage);
+
+                showPopup({
+                  title: "Service Deleted",
+                  message: "Your service has been removed successfully.",
+                  buttons: [
+                    {
+                      text: "Okay",
+                      type: "primary"
+                    }
+                  ]
+                });
+
+              } catch (err) {
+
+                console.error(err);
+
+                showPopup({
+                  title: "Server Error",
+                  message: "Something went wrong while deleting.",
+                  buttons: [
+                    {
+                      text: "Close",
+                      type: "primary"
+                    }
+                  ]
+                });
+
+              }
+
+              hideLoader();
+
+            }
+
+          }
+
+        ]
       });
 
-      loadServices(currentPage);
-      hideLoader();
     }
 
     window.updateQuantity = async function (id) {
@@ -888,7 +1059,16 @@ ${service.service_type === "quantity" ? `
       const quantity = Number(input.value);
 
       if (!input.value || quantity < 1) {
-        alert("Quantity must be at least 1");
+        showPopup({
+          title: "Invalid Quantity",
+          message: "Quantity must be at least 1.",
+          buttons: [
+            {
+              text: "Okay",
+              type: "primary"
+            }
+          ]
+        });
         return;
       }
 
@@ -910,11 +1090,29 @@ ${service.service_type === "quantity" ? `
         const data = await res.json();
 
         if (!res.ok) {
-          alert(data.error || "Failed");
+          showPopup({
+            title: "Request Failed",
+            message: data.error || "Something went wrong.",
+            buttons: [
+              {
+                text: "Close",
+                type: "primary"
+              }
+            ]
+          });
           return;
         }
 
-        alert("Quantity updated");
+        showPopup({
+          title: "Success",
+          message: "Service quantity updated successfully.",
+          buttons: [
+            {
+              text: "Great",
+              type: "primary"
+            }
+          ]
+        });
 
       } catch (err) {
         console.error(err);
