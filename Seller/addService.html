@@ -560,7 +560,7 @@
           </div>
           <div class="form-group">
             <label>Price</label>
-            <input id="price" type="number" min="0" step="1" inputmode="numeric" pattern="[0-9]*" />
+            <input id="price" type="number" min="1" step="1" inputmode="numeric" pattern="[0-9]*" />
 
           </div>
 
@@ -582,7 +582,7 @@
           <div class="form-group" id="quantityWrapper" style="display:none;">
             <label>Quantity</label>
 
-            <input id="quantityInput" type="number" min="0" value="0" />
+            <input id="quantityInput" type="number" min="1"" value="0" />
           </div>
 
           <div class="form-group">
@@ -716,11 +716,15 @@
         return;
       }
 
-      if (service_type === "quantity" && quantity < 0) {
-        alert("Invalid quantity");
+      if (service_price < 1) {
+        priceInput.value = 1;
         return;
       }
 
+      if (service_type === "quantity" && quantity < 1) {
+        quantityInput.value = 1;
+        return;
+      }
       showLoader();
 
       try {
@@ -812,7 +816,7 @@ ${service.service_type === "quantity" ? `
 
   <input 
     type="number"
-    min="0"
+    min="1"
     value="${service.quantity || 0}"
     id="qty-${service._id}"
     style="
@@ -866,8 +870,8 @@ ${service.service_type === "quantity" ? `
 
       const quantity = Number(input.value);
 
-      if (quantity < 0) {
-        alert("Invalid quantity");
+      if (quantity < 1) {
+        input.value = 1;
         return;
       }
 
@@ -933,18 +937,47 @@ ${service.service_type === "quantity" ? `
     }
 
     priceInput.addEventListener("input", () => {
-      const val = priceInput.value;
 
-      // Reject decimals
-      if (val.includes(".")) {
-        priceInput.value = Math.floor(Number(val));
+      let val = Number(priceInput.value);
+
+      // Reject invalid numbers
+      if (isNaN(val)) {
+        priceInput.value = 1;
         return;
       }
 
-      // Enforce min
-      if (Number(val) < 1) {
-        priceInput.value = "";
+      // Remove decimals
+      val = Math.floor(val);
+
+      // Enforce minimum
+      if (val < 1) {
+        val = 1;
       }
+
+      priceInput.value = val;
+
+    });
+
+    quantityInput.addEventListener("input", () => {
+
+      let val = Number(quantityInput.value);
+
+      // Reject invalid numbers
+      if (isNaN(val)) {
+        quantityInput.value = 1;
+        return;
+      }
+
+      // Remove decimals
+      val = Math.floor(val);
+
+      // Enforce minimum
+      if (val < 1) {
+        val = 1;
+      }
+
+      quantityInput.value = val;
+
     });
     document.addEventListener("DOMContentLoaded", () => {
       renderSidebar();
