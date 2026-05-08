@@ -719,14 +719,28 @@
 
 ${service.service_type === "quantity" ? `
 <div class="service-meta">
+
   <span>
     <strong>Stock:</strong>
+
     <span style="
       color:${service.quantity > 0 ? '#2ecc71' : '#ff4f4f'}
     ">
       ${service.quantity || 0}
     </span>
   </span>
+
+  <span>
+    <strong>Checkout:</strong>
+
+    <span 
+      id="checkout-price-${service._id}"
+      style="color:#2ecc71;"
+    >
+      ${service.service_price}
+    </span>
+  </span>
+
 </div>
 ` : ""}
 
@@ -778,7 +792,48 @@ ${service.service_type === "quantity" ? `
 
         container.appendChild(card);
         const btn = card.querySelector(".buy-btn");
+        if (service.service_type === "quantity") {
 
+          const qtyInput =
+            document.getElementById(`buy-qty-${service._id}`);
+
+          const checkoutEl =
+            document.getElementById(`checkout-price-${service._id}`);
+
+          qtyInput.addEventListener("input", () => {
+
+            let qty = Number(qtyInput.value);
+
+            // Allow empty while typing
+            if (qtyInput.value === "") {
+              checkoutEl.textContent = "0";
+              return;
+            }
+
+            // Prevent invalid values
+            if (isNaN(qty) || qty < 0) {
+              qty = 0;
+            }
+
+            // Prevent exceeding stock
+            if (qty > service.quantity) {
+              qty = service.quantity;
+              qtyInput.value = qty;
+            }
+
+            // Remove decimals
+            qty = Math.floor(qty);
+
+            qtyInput.value = qty;
+
+            const total =
+              qty * service.service_price;
+
+            checkoutEl.textContent = total;
+
+          });
+
+        }
         if (btn) {
           btn.addEventListener("click", async () => {
 
