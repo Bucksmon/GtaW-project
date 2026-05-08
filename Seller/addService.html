@@ -574,9 +574,15 @@
     background: var(--box);
     color: var(--text);
   ">
-              <option value="repeatable">Repeatable</option>
+              <option value="repeat">Repeatable</option>
               <option value="quantity">Quantifiable</option>
             </select>
+          </div>
+
+          <div class="form-group" id="quantityWrapper" style="display:none;">
+            <label>Quantity</label>
+
+            <input id="quantityInput" type="number" min="0" value="0" />
           </div>
 
           <div class="form-group">
@@ -667,6 +673,8 @@
     const priceInput = document.getElementById("price");
     const imageInput = document.getElementById("imageInput");
     const serviceTypeInput = document.getElementById("serviceType");
+    const quantityInput = document.getElementById("quantityInput");
+    const quantityWrapper = document.getElementById("quantityWrapper");
     const preview = document.getElementById("preview");
 
     imageInput.oninput = () => {
@@ -674,6 +682,17 @@
       preview.style.display = url ? "block" : "none";
       preview.src = url;
     };
+
+    serviceTypeInput.addEventListener("change", () => {
+
+      if (serviceTypeInput.value === "quantity") {
+        quantityWrapper.style.display = "flex";
+      } else {
+        quantityWrapper.style.display = "none";
+        quantityInput.value = 0;
+      }
+
+    });
 
     document.querySelector(".submit-btn").onclick = async () => {
 
@@ -691,9 +710,14 @@
       const service_price = Number(priceInput.value);
       const service_image = imageInput.value.trim();
       const service_type = serviceTypeInput.value;
-
+      const quantity = Number(quantityInput.value);
       if (!service_title || !service_description || !service_price) {
         alert("Fill required fields");
+        return;
+      }
+
+      if (service_type === "quantity" && quantity < 0) {
+        alert("Invalid quantity");
         return;
       }
 
@@ -711,7 +735,8 @@
             service_description,
             service_price,
             service_image,
-            service_type
+            service_type,
+            quantity
           })
         });
 
@@ -723,6 +748,9 @@
         descriptionInput.value = "";
         priceInput.value = "";
         imageInput.value = "";
+        quantityInput.value = 0;
+        quantityWrapper.style.display = "none";
+        serviceTypeInput.value = "repeat";
         preview.style.display = "none";
 
       } catch (err) {
@@ -772,7 +800,12 @@
   Credits:
   <span style="color: #2ecc71">${service.service_price || 0}</span>
 </div>
-
+<div class="order-row">
+  <span>
+    Service Type: 
+    <strong>${service.service_type}</strong>
+  </span>
+</div>
 ${service.service_type === "quantity" ? `
 <div class="form-group" style="margin-top:10px;">
   <label>Quantity</label>
