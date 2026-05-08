@@ -582,7 +582,7 @@
           <div class="form-group" id="quantityWrapper" style="display:none;">
             <label>Quantity</label>
 
-            <input id="quantityInput" type="number" min="1"" value="0" />
+            <input id="quantityInput" type="number" min="1"" value=" 0" />
           </div>
 
           <div class="form-group">
@@ -817,8 +817,25 @@ ${service.service_type === "quantity" ? `
   <input 
     type="number"
     min="1"
-    value="${service.quantity || 0}"
+    value="${service.quantity || 1}"
     id="qty-${service._id}"
+
+    oninput="
+  if(this.value === '') return;
+
+  let val = Math.floor(Number(this.value));
+
+  if(isNaN(val)) {
+    this.value = '';
+    return;
+  }
+
+  if(val < 0) {
+    this.value = 0;
+  }
+
+  this.value = val;
+"
     style="
       padding: 12px;
       border-radius: 10px;
@@ -870,8 +887,8 @@ ${service.service_type === "quantity" ? `
 
       const quantity = Number(input.value);
 
-      if (quantity < 1) {
-        input.value = 1;
+      if (!input.value || quantity < 1) {
+        alert("Quantity must be at least 1");
         return;
       }
 
@@ -938,20 +955,25 @@ ${service.service_type === "quantity" ? `
 
     priceInput.addEventListener("input", () => {
 
+      // Allow empty input while typing
+      if (priceInput.value === "") {
+        return;
+      }
+
       let val = Number(priceInput.value);
 
-      // Reject invalid numbers
+      // Reject invalid values
       if (isNaN(val)) {
-        priceInput.value = 1;
+        priceInput.value = "";
         return;
       }
 
       // Remove decimals
       val = Math.floor(val);
 
-      // Enforce minimum
-      if (val < 1) {
-        val = 1;
+      // Prevent negatives only
+      if (val < 0) {
+        val = 0;
       }
 
       priceInput.value = val;
@@ -960,20 +982,25 @@ ${service.service_type === "quantity" ? `
 
     quantityInput.addEventListener("input", () => {
 
+      // Allow empty input while typing
+      if (quantityInput.value === "") {
+        return;
+      }
+
       let val = Number(quantityInput.value);
 
-      // Reject invalid numbers
+      // Reject invalid values
       if (isNaN(val)) {
-        quantityInput.value = 1;
+        quantityInput.value = "";
         return;
       }
 
       // Remove decimals
       val = Math.floor(val);
 
-      // Enforce minimum
-      if (val < 1) {
-        val = 1;
+      // Prevent negatives only
+      if (val < 0) {
+        val = 0;
       }
 
       quantityInput.value = val;
