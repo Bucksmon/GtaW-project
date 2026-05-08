@@ -585,13 +585,13 @@
 
         <div class="order-row">
             <span>
-        <strong>${activeTab === "buy" ? "Seller" : "Buyer"}:</strong>
+        <strong>${activeTab === "buy" ? "👤 Seller" : "👤 Buyer"}:</strong>
         ${activeTab === "buy"
                         ? (order.seller?.nickName || "Anonymous")
                         : (order.buyer?.nickName || "Anonymous")}
     </span>
 
-            <span><strong>Total:</strong> <span style="color: #2ecc71;">${order.totalPrice}</span></span>
+            <span><strong>💰 Total:</strong> <span style="color: #2ecc71;">${order.totalPrice}</span></span>
         </div>
 
         <div class="order-row">
@@ -623,7 +623,7 @@
         <div class="order-row">
             <span>
                 <strong>
-                    ${activeTab === "buy" ? "Seller Number" : "Buyer Number"}:
+                    ${activeTab === "buy" ? "📱Seller Number" : "📱Buyer Number"}:
                 </strong>
                 <span>
                     ${activeTab === "buy"
@@ -636,7 +636,7 @@
         <div class="order-row">
             <span>
                 <strong>
-                    Address:
+                   📍Address:
                 </strong>
                 <span>
                     Little Seoul import store, Palomino Avenue, Little Seoul
