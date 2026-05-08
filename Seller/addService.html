@@ -448,50 +448,52 @@
       }
     }
 
-    /* ================= FIX OVERFLOW + STRUCTURE ================= */
+    /* ================= IMPROVED CARD LAYOUT ================= */
 
     .service-card {
-      align-items: center;
-      text-align: center;
       overflow: hidden;
-      /* 🔥 prevent spill */
     }
 
-    /* Title */
     .service-card h3 {
-      margin: 5px 0 0;
-      font-size: 1.1rem;
+      margin: 0;
+
+      font-size: 1.2rem;
+      font-weight: 700;
+
+      text-align: left;
     }
 
-    /* Description (IMPORTANT FIX) */
     .service-card p {
       margin: 0;
-      font-size: 0.9rem;
+
+      font-size: .92rem;
+      line-height: 1.6;
+
       color: var(--muted);
 
-      max-width: 100%;
+      text-align: left;
+
       word-break: break-word;
-      /* 🔥 BREAK LONG TEXT */
       overflow-wrap: anywhere;
-      /* 🔥 FORCE WRAP */
     }
 
-    /* Meta row like orders */
-    .service-meta {
-      justify-content: center;
-      gap: 6px;
-      font-size: 0.9rem;
-      color: var(--muted);
+    .service-image {
+      height: 220px;
     }
 
-    .service-meta span {
-      font-weight: 600;
-    }
+    .service-footer {
+      display: flex;
 
-    /* Button */
-    .danger-btn {
-      margin-top: 10px;
-      align-self: center;
+      justify-content: space-between;
+      align-items: center;
+
+      gap: 12px;
+
+      margin-top: auto;
+      padding-top: 16px;
+
+      border-top:
+        1px solid rgba(255, 255, 255, .06);
     }
 
     /* ================= ORDER-STYLE ROW (MISSING) ================= */
@@ -525,19 +527,30 @@
     .service-grid {
       display: grid;
 
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
 
-      gap: 12px;
+      gap: 14px;
+
+      width: 100%;
     }
 
     .info-box {
-      background: rgba(255, 255, 255, .04);
+      background:
+        rgba(255, 255, 255, .035);
 
-      border: 1px solid rgba(255, 255, 255, .05);
+      border:
+        1px solid rgba(255, 255, 255, .06);
 
       border-radius: 14px;
 
-      padding: 12px;
+      padding: 14px;
+
+      min-height: 78px;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .info-label {
@@ -574,7 +587,12 @@
 
     .quantity-row {
       display: flex;
+
+      align-items: center;
+
       gap: 12px;
+
+      width: 100%;
     }
 
     .quantity-row input {
@@ -598,7 +616,10 @@
     .update-btn {
       margin: 0;
 
-      min-width: 130px;
+      min-width: 140px;
+      height: 50px;
+
+      flex-shrink: 0;
     }
   </style>
 </head>
@@ -1095,12 +1116,12 @@ ${service.service_type === "quantity"
 
         const del = document.createElement("button");
         del.className = "danger-btn";
-        del.textContent = "Delete";
+        del.textContent = "🗑 Delete";
         del.onclick = () => deleteService(service._id);
 
         const footer = document.createElement("div");
 
-        footer.style.marginTop = "8px";
+        footer.className = "service-footer";
 
         footer.appendChild(del);
 
