@@ -237,39 +237,12 @@
     }
 
     .service-card {
-      background: linear-gradient(180deg,
-          rgba(21, 30, 51, 0.98),
-          rgba(17, 24, 39, 0.98));
-
-      border: 1px solid rgba(255, 255, 255, .05);
-
-      padding: 20px;
-
+      background: var(--card);
+      padding: 22px;
       border-radius: var(--radius);
-
       display: flex;
       flex-direction: column;
-
-      gap: 16px;
-
-      overflow: hidden;
-
-      position: relative;
-
-      transition: var(--transition);
-
-      box-shadow:
-        0 12px 35px rgba(0, 0, 0, .35);
-    }
-
-    .service-card:hover {
-      transform: translateY(-4px);
-
-      border-color:
-        rgba(79, 140, 255, .25);
-
-      box-shadow:
-        0 18px 45px rgba(0, 0, 0, .45);
+      gap: 14px;
     }
 
     .service-image {
@@ -448,52 +421,50 @@
       }
     }
 
-    /* ================= IMPROVED CARD LAYOUT ================= */
+    /* ================= FIX OVERFLOW + STRUCTURE ================= */
 
     .service-card {
+      align-items: center;
+      text-align: center;
       overflow: hidden;
+      /* 🔥 prevent spill */
     }
 
+    /* Title */
     .service-card h3 {
-      margin: 0;
-
-      font-size: 1.2rem;
-      font-weight: 700;
-
-      text-align: left;
+      margin: 5px 0 0;
+      font-size: 1.1rem;
     }
 
+    /* Description (IMPORTANT FIX) */
     .service-card p {
       margin: 0;
-
-      font-size: .92rem;
-      line-height: 1.6;
-
+      font-size: 0.9rem;
       color: var(--muted);
 
-      text-align: left;
-
+      max-width: 100%;
       word-break: break-word;
+      /* 🔥 BREAK LONG TEXT */
       overflow-wrap: anywhere;
+      /* 🔥 FORCE WRAP */
     }
 
-    .service-image {
-      height: 220px;
+    /* Meta row like orders */
+    .service-meta {
+      justify-content: center;
+      gap: 6px;
+      font-size: 0.9rem;
+      color: var(--muted);
     }
 
-    .service-footer {
-      display: flex;
+    .service-meta span {
+      font-weight: 600;
+    }
 
-      justify-content: space-between;
-      align-items: center;
-
-      gap: 12px;
-
-      margin-top: auto;
-      padding-top: 16px;
-
-      border-top:
-        1px solid rgba(255, 255, 255, .06);
+    /* Button */
+    .danger-btn {
+      margin-top: 10px;
+      align-self: center;
     }
 
     /* ================= ORDER-STYLE ROW (MISSING) ================= */
@@ -522,104 +493,6 @@
     .order-row+.order-row {
       padding-top: 6px;
       border-top: 1px solid rgba(255, 255, 255, .06);
-    }
-
-    .service-grid {
-      display: grid;
-
-      grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-      gap: 14px;
-
-      width: 100%;
-    }
-
-    .info-box {
-      background:
-        rgba(255, 255, 255, .035);
-
-      border:
-        1px solid rgba(255, 255, 255, .06);
-
-      border-radius: 14px;
-
-      padding: 14px;
-
-      min-height: 78px;
-
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .info-label {
-      font-size: .75rem;
-      color: var(--muted);
-
-      margin-bottom: 6px;
-
-      display: block;
-
-      text-transform: uppercase;
-      letter-spacing: .5px;
-    }
-
-    .info-value {
-      font-weight: 700;
-      font-size: .95rem;
-    }
-
-    .quantity-editor {
-      margin-top: 4px;
-    }
-
-    .quantity-editor label {
-      display: block;
-
-      margin-bottom: 10px;
-
-      font-size: .85rem;
-      color: var(--muted);
-
-      font-weight: 600;
-    }
-
-    .quantity-row {
-      display: flex;
-
-      align-items: center;
-
-      gap: 12px;
-
-      width: 100%;
-    }
-
-    .quantity-row input {
-      flex: 1;
-
-      padding: 14px;
-
-      border-radius: 12px;
-
-      border: 1px solid rgba(255, 255, 255, .08);
-
-      background: var(--box);
-
-      color: white;
-
-      font-weight: 700;
-
-      text-align: center;
-    }
-
-    .update-btn {
-      margin: 0;
-
-      min-width: 140px;
-      height: 50px;
-
-      flex-shrink: 0;
     }
   </style>
 </head>
@@ -716,7 +589,7 @@
             <textarea id="description"></textarea>
           </div>
           <div class="form-group">
-            <label>📍 Address:(Not changeable)</label>
+            <label>Address:(Not changeable)</label>
             <p style="margin:0; color: var(--muted);">
               Little Seoul import store, Palomino Avenue, Little Seoul
             </p>
@@ -1019,113 +892,74 @@
         card.className = "service-card";
 
         card.innerHTML = `
-
-<img
-  class="service-image"
-  src="${service.service_image || 'https://i.imgur.com/placeholder.png'}"
->
-
-<h3>
-  ${service.service_title}
-</h3>
-
-<p>
-  ${service.service_description}
-</p>
-
-<div class="service-grid">
-
-  <div class="info-box">
-    <span class="info-label">
-      💰 Price
-    </span>
-
-    <div class="info-value" style="color:#2ecc71;">
-      ${service.service_price}
-    </div>
-  </div>
-
-  <div class="info-box">
-    <span class="info-label">
-      🧩 Type
-    </span>
-
-    <div class="info-value">
-      ${service.service_type}
-    </div>
-  </div>
-
-  ${service.service_type === "quantity"
-            ? `
-      <div class="info-box">
-        <span class="info-label">
-          📦 Stock
-        </span>
-
-        <div class="info-value">
-          ${service.quantity || 0}
-        </div>
-      </div>
-      `
-            : ""
-          }
-
-  <div class="info-box">
-    <span class="info-label">
-      📍 Location
-    </span>
-
-    <div class="info-value">
-      Little Seoul
-    </div>
-  </div>
-
+<img class="service-image" src="${service.service_image || 'https://i.imgur.com/placeholder.png'}">
+<h3>${service.service_title}</h3>
+<div class="order-row">
+  <span>${service.service_description}</span>
 </div>
+<div class="service-meta">
+  Credits:
+  <span style="color: #2ecc71">${service.service_price || 0}</span>
+</div>
+<div class="order-row">
+  <span>
+    Service Type: 
+    <strong>${service.service_type}</strong>
+  </span>
+</div>
+${service.service_type === "quantity" ? `
+<div class="form-group" style="margin-top:10px;">
+  <label>Quantity</label>
 
-${service.service_type === "quantity"
-            ? `
-    <div class="quantity-editor">
+  <input 
+    type="number"
+    min="1"
+    value="${service.quantity || 1}"
+    id="qty-${service._id}"
 
-      <label>
-        📦 Quantity
-      </label>
+    oninput="
+  if(this.value === '') return;
 
-      <div class="quantity-row">
+  let val = Math.floor(Number(this.value));
 
-        <input
-          type="number"
-          min="1"
-          value="${service.quantity || 1}"
-          id="qty-${service._id}"
-        />
+  if(isNaN(val)) {
+    this.value = '';
+    return;
+  }
 
-        <button
-          class="submit-btn update-btn"
-          onclick="updateQuantity('${service._id}')"
-        >
-          Update
-        </button>
+  if(val < 0) {
+    this.value = 0;
+  }
 
-      </div>
+  this.value = val;
+"
+    style="
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: var(--box);
+      color: white;
+      width: 100%;
+    "
+  />
 
-    </div>
-    `
-            : ""
-          }
+  <button 
+    class="submit-btn"
+    style="margin-top:10px;"
+    onclick="updateQuantity('${service._id}')"
+  >
+    Update Quantity
+  </button>
+</div>
+` : ""}
 `;
 
         const del = document.createElement("button");
         del.className = "danger-btn";
-        del.textContent = "🗑 Delete";
+        del.textContent = "Delete";
         del.onclick = () => deleteService(service._id);
 
-        const footer = document.createElement("div");
-
-        footer.className = "service-footer";
-
-        footer.appendChild(del);
-
-        card.appendChild(footer);
+        card.appendChild(del);
         container.appendChild(card);
       });
     }
