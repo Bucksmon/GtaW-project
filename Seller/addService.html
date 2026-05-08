@@ -618,7 +618,7 @@
           <div class="form-group" id="quantityWrapper" style="display:none;">
             <label>Quantity</label>
 
-            <input id="quantityInput" type="number" min="1"" value="0" />
+            <input id="quantityInput" type="number" min="1" value="0" />
           </div>
 
           <div class="form-group">
@@ -1102,7 +1102,8 @@ ${service.service_type === "quantity" ? `
           });
           return;
         }
-
+        input.value = quantity;
+        await loadServices(currentPage);
         showPopup({
           title: "Success",
           message: "Service quantity updated successfully.",
