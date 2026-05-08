@@ -749,36 +749,14 @@
             });
 
         }
-        
-        usersContainer.addEventListener("change", async (e) => {
+
+        usersContainer.addEventListener("change", (e) => {
             if (!e.target.classList.contains("role-select")) return;
 
             const userId = e.target.dataset.id;
             const role = e.target.value;
 
-            if (!confirm(`Change role to ${role}?`)) {
-                loadUsers(currentPage);
-                return;
-            }
-
-            showLoader();
-
-            try {
-                const res = await fetch(`${API_BASE}/users/role`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ userId, role })
-                });
-
-                const data = await res.json();
-                if (!res.ok) return alert(data.error);
-                loadUsers(currentPage);
-            } finally {
-                hideLoader();
-            }
+            updateRole(userId, role);
         });
         document.addEventListener("DOMContentLoaded", () => {
             renderSidebar();
