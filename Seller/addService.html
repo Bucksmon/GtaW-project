@@ -423,48 +423,172 @@
 
     /* ================= FIX OVERFLOW + STRUCTURE ================= */
 
+    /* ================= CARD ================= */
+
     .service-card {
-      align-items: center;
-      text-align: center;
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 20px 55px rgba(0, 0, 0, .4);
+      transition: var(--transition);
+      height: 100%;
+      min-height: 360px;
+      position: relative;
       overflow: hidden;
-      /* 🔥 prevent spill */
     }
 
-    /* Title */
+    .service-card:hover {
+      transform: translateY(-6px);
+    }
+
+    /* ================= IMAGE ================= */
+
+    .service-image {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      background: var(--box);
+      flex-shrink: 0;
+    }
+
+    /* ================= TITLE ================= */
+
     .service-card h3 {
-      margin: 5px 0 0;
+      margin: 0;
       font-size: 1.1rem;
+
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
-    /* Description (IMPORTANT FIX) */
+    /* ================= DESCRIPTION ================= */
+
     .service-card p {
       margin: 0;
-      font-size: 0.9rem;
+      font-size: .9rem;
       color: var(--muted);
 
-      max-width: 100%;
-      word-break: break-word;
-      /* 🔥 BREAK LONG TEXT */
-      overflow-wrap: anywhere;
-      /* 🔥 FORCE WRAP */
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
-    /* Meta row like orders */
+    .service-card strong {
+      color: var(--text);
+    }
+
+    /* ================= META ROW ================= */
+
     .service-meta {
-      justify-content: center;
-      gap: 6px;
-      font-size: 0.9rem;
-      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+      margin-top: 4px;
     }
 
     .service-meta span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 48%;
+    }
+
+    /* ================= BUTTON ================= */
+
+    .service-card button {
+      margin-top: auto;
+      padding: 12px;
+      border: none;
+      border-radius: var(--radius-sm);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .service-card button:hover {
+      opacity: .9;
+    }
+
+    .service-card button:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    .service-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 14px;
+
+      margin-top: auto;
+      padding-top: 12px;
+
+      border-top: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .quantity-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      background: rgba(255, 255, 255, .04);
+
+      padding: 8px 12px;
+
+      border-radius: 12px;
+    }
+
+    .quantity-box label {
+      font-size: .9rem;
+      color: var(--muted);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .quantity-box input {
+      width: 75px;
+
+      padding: 10px;
+
+      border: none;
+      outline: none;
+
+      border-radius: 10px;
+
+      background: var(--box);
+
+      color: white;
+
+      text-align: center;
+
       font-weight: 600;
     }
 
-    /* Button */
-    .danger-btn {
-      margin-top: 10px;
-      align-self: center;
+    .update-btn {
+      min-width: 160px;
+    }
+
+    .delete-btn {
+      background: var(--danger);
+    }
+
+    .services p {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: var(--muted);
+      font-size: 1rem;
     }
 
     /* ================= ORDER-STYLE ROW (MISSING) ================= */
@@ -879,89 +1003,126 @@
     }
 
     function renderServices(services) {
-      const container = document.getElementById("servicesContainer");
+
+      const container =
+        document.getElementById("servicesContainer");
+
       container.innerHTML = "";
 
       if (!services.length) {
-        container.innerHTML = "<p>No services found.</p>";
+
+        container.innerHTML =
+          "<p>No services found.</p>";
+
         return;
+
       }
 
       services.forEach(service => {
-        const card = document.createElement("div");
+
+        const card =
+          document.createElement("div");
+
         card.className = "service-card";
 
         card.innerHTML = `
-<img class="service-image" src="${service.service_image || 'https://i.imgur.com/placeholder.png'}">
-<h3>${service.service_title}</h3>
-<div class="order-row">
-  <span>${service.service_description}</span>
-</div>
+
+<img
+  class="service-image"
+  src="${service.service_image || 'https://i.imgur.com/placeholder.png'}"
+>
+
+<h3>
+  ${service.service_title}
+</h3>
+
+<p>
+  ${service.service_description}
+</p>
+
 <div class="service-meta">
-  Credits:
-  <span style="color: #2ecc71">${service.service_price || 0}</span>
-</div>
-<div class="order-row">
+
   <span>
-    Service Type: 
-    <strong>${service.service_type}</strong>
+    <strong>💰 Price:</strong>
+
+    <span style="color:#2ecc71">
+      ${service.service_price || 0}
+    </span>
   </span>
+
+  <span>
+    <strong>🧩 Type:</strong>
+
+    ${service.service_type}
+  </span>
+
 </div>
+
 ${service.service_type === "quantity" ? `
-<div class="form-group" style="margin-top:10px;">
-  <label>Quantity</label>
 
-  <input 
-    type="number"
-    min="1"
-    value="${service.quantity || 1}"
-    id="qty-${service._id}"
+<div class="service-meta">
 
-    oninput="
-  if(this.value === '') return;
+  <span>
+    <strong>📦 Stock:</strong>
 
-  let val = Math.floor(Number(this.value));
+    <span style="
+      color:${service.quantity > 0
+              ? '#2ecc71'
+              : '#ff4f4f'}
+    ">
+      ${service.quantity || 0}
+    </span>
+  </span>
 
-  if(isNaN(val)) {
-    this.value = '';
-    return;
-  }
+</div>
 
-  if(val < 0) {
-    this.value = 0;
-  }
+<div class="service-actions">
 
-  this.value = val;
-"
-    style="
-      padding: 12px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: var(--box);
-      color: white;
-      width: 100%;
-    "
-  />
+  <div class="quantity-box">
 
-  <button 
-    class="submit-btn"
-    style="margin-top:10px;"
+    <label>
+      📦 Qty
+    </label>
+
+    <input
+      type="number"
+      min="1"
+      value="${service.quantity || 1}"
+      id="qty-${service._id}"
+    />
+
+  </div>
+
+  <button
+    class="submit-btn update-btn"
     onclick="updateQuantity('${service._id}')"
   >
-    Update Quantity
+    Update
   </button>
+
 </div>
+
 ` : ""}
+
+<div class="service-actions">
+
+  <div></div>
+
+  <button
+    class="danger-btn delete-btn"
+    onclick="deleteService('${service._id}')"
+  >
+    🗑 Delete
+  </button>
+
+</div>
+
 `;
 
-        const del = document.createElement("button");
-        del.className = "danger-btn";
-        del.textContent = "Delete";
-        del.onclick = () => deleteService(service._id);
-
-        card.appendChild(del);
         container.appendChild(card);
+
       });
+
     }
 
     async function deleteService(id) {
