@@ -978,6 +978,9 @@ ${service.service_type === "quantity" ? `
 
             await buyService(service._id, quantity);
 
+            btn.disabled = false;
+            btn.textContent = "🛒 Buy";
+
           });
         }
       });
