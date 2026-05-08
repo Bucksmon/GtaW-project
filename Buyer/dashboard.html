@@ -513,6 +513,42 @@
       </div>
     </div>
   </div>
+
+  <div id="messagePopup" class="loader-overlay">
+
+    <div class="popup" style="
+    flex-direction: column;
+    text-align: center;
+    max-width: 420px;
+    width: 90%;
+  ">
+
+      <span id="messagePopupTitle" style="
+      font-weight: 700;
+      font-size: 1.1rem;
+    ">
+        Notice
+      </span>
+
+      <span id="messagePopupText" style="
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-top: 8px;
+    ">
+      </span>
+
+      <div id="messagePopupButtons" style="
+      display:flex;
+      gap:10px;
+      margin-top:20px;
+      justify-content:center;
+      flex-wrap:wrap;
+    ">
+      </div>
+
+    </div>
+
+  </div>
   <main class="main">
 
     <div class="topbar">
@@ -567,7 +603,52 @@
     function hideProfilePopup() {
       profilePopup.classList.remove("show");
     }
+    const messagePopup = document.getElementById("messagePopup");
+    const messagePopupTitle = document.getElementById("messagePopupTitle");
+    const messagePopupText = document.getElementById("messagePopupText");
+    const messagePopupButtons = document.getElementById("messagePopupButtons");
 
+    function closeMessagePopup() {
+      messagePopup.classList.remove("show");
+    }
+
+    function showPopup({
+      title = "Notice",
+      message = "",
+      buttons = []
+    }) {
+
+      messagePopupTitle.textContent = title;
+      messagePopupText.textContent = message;
+
+      messagePopupButtons.innerHTML = "";
+
+      buttons.forEach(btn => {
+
+        const button = document.createElement("button");
+
+        button.className =
+          `popup-btn ${btn.type || "primary"}`;
+
+        button.textContent = btn.text;
+
+        button.onclick = () => {
+
+          closeMessagePopup();
+
+          if (btn.onClick) {
+            btn.onClick();
+          }
+
+        };
+
+        messagePopupButtons.appendChild(button);
+
+      });
+
+      messagePopup.classList.add("show");
+
+    }
 
     document.getElementById("closePopupBtn").onclick = hideProfilePopup;
 
@@ -651,7 +732,39 @@ ${service.service_type === "quantity" ? `
 
   ${service.service_type === "quantity" && service.quantity <= 0
             ? ""
-            : `<button class="buy-btn" data-id="${service._id}">Buy</button>`
+            : `<div style="
+  display:flex;
+  gap:10px;
+  margin-top:auto;
+">
+
+  ${service.service_type === "quantity" ? `
+    <input
+      type="number"
+      min="1"
+      max="${service.quantity}"
+      value="1"
+      class="buy-qty"
+      id="buy-qty-${service._id}"
+      style="
+        width:90px;
+        padding:12px;
+        border:none;
+        border-radius:10px;
+        background:var(--box);
+        color:white;
+      "
+    />
+  ` : ""}
+
+  <button 
+    class="buy-btn"
+    data-id="${service._id}"
+  >
+    Buy
+  </button>
+
+</div>`
           }
   ${service.service_type === "quantity" && service.quantity <= 0
             ? `
@@ -667,7 +780,57 @@ ${service.service_type === "quantity" ? `
         const btn = card.querySelector(".buy-btn");
 
         if (btn) {
-          btn.addEventListener("click", () => buyService(service._id));
+          btn.addEventListener("click", async () => {
+
+            let quantity = 1;
+
+            if (service.service_type === "quantity") {
+
+              const qtyInput =
+                document.getElementById(`buy-qty-${service._id}`);
+
+              quantity = Number(qtyInput.value);
+
+              if (!qtyInput.value || quantity < 1) {
+
+                showPopup({
+                  title: "Invalid Quantity",
+                  message: "Quantity must be at least 1.",
+                  buttons: [
+                    {
+                      text: "Okay",
+                      type: "primary"
+                    }
+                  ]
+                });
+
+                return;
+              }
+
+              if (quantity > service.quantity) {
+
+                showPopup({
+                  title: "Insufficient Stock",
+                  message: `Only ${service.quantity} item(s) available.`,
+                  buttons: [
+                    {
+                      text: "Okay",
+                      type: "primary"
+                    }
+                  ]
+                });
+
+                return;
+              }
+
+            }
+
+            btn.disabled = true;
+            btn.textContent = "Processing...";
+
+            await buyService(service._id, quantity);
+
+          });
         }
       });
     }
@@ -688,7 +851,7 @@ ${service.service_type === "quantity" ? `
       }
     }
 
-    async function buyService(serviceId) {
+    async function buyService(serviceId, quantity = 1) {
 
       const isMissing =
         !currentUser?.mobileNumber?.trim() ||
@@ -707,12 +870,35 @@ ${service.service_type === "quantity" ? `
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ serviceId: serviceId })
+            body: JSON.stringify({
+              serviceId,
+              quantity
+            })
           });
 
           const data = await res.json();
-          if (!res.ok) return alert(data.error || "Purchase failed");
+          if (!res.ok) return showPopup({
+            title: "Purchase Failed",
+            message: data.error || "Something went wrong.",
+            buttons: [
+              {
+                text: "Close",
+                type: "primary"
+              }
+            ]
+          });
           document.getElementById("creditsDisplay").innerHTML = `<span style="color:#2ecc71">${data.newCredits ?? 0}</span>`;
+          await loadServices(currentPage);
+          showPopup({
+            title: "Purchase Successful",
+            message: `Successfully purchased ${quantity} item(s).`,
+            buttons: [
+              {
+                text: "Awesome",
+                type: "primary"
+              }
+            ]
+          });
 
         } catch (err) {
           console.error(err);
