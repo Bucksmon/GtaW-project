@@ -877,6 +877,27 @@ ${service.service_type === "quantity" ? `
 
                 return;
               }
+              const checkoutPrice =
+                quantity * service.service_price;
+
+              if (currentUser.credits < checkoutPrice) {
+
+                showPopup({
+                  title: "Insufficient Credits",
+
+                  message:
+                    `You need ${checkoutPrice} credits but only have ${currentUser.credits}.`,
+
+                  buttons: [
+                    {
+                      text: "Okay",
+                      type: "primary"
+                    }
+                  ]
+                });
+
+                return;
+              }
 
             }
 
