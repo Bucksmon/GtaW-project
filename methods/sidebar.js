@@ -20,7 +20,7 @@ function getMenuByRole(role) {
   ];
 
   const settingItem = {
-    label: "Setting",
+    label: "Settings",
     href: `${BASE}/Settings.html`,
     icon: "⚙️"
   };
