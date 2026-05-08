@@ -622,12 +622,12 @@
             <h3>${service.service_title}</h3>
 
             <div class="order-row">
-                <span><strong>Seller:</strong> ${service.service_sellerId?.username || "anonymous"}</span>
-                <span><strong>Price:</strong> <span style="color: var(--accent);">${service.service_price || 0}</span></span>
+                <span><strong>👤 Seller:</strong> ${service.service_sellerId?.username || "anonymous"}</span>
+                <span><strong>💰 Price:</strong> <span style="color:#2ecc71;">${service.service_price || 0}</span></span>
             </div>
             <div class="order-row">
-                <span><strong>Mobile Number:</strong> ${service.service_sellerId?.mobileNumber || "Not Set"}</span>
-                <span><strong>Discord Tag:</strong> ${service.service_sellerId?.discordTag || "Not Set"}</span>
+                <span><strong>📱 Mobile Number:</strong> ${service.service_sellerId?.mobileNumber || "Not Set"}</span>
+                <span><strong>🎮 Discord Tag:</strong> ${service.service_sellerId?.discordTag || "Not Set"}</span>
             </div>
 
             <button class="delete-btn" data-id="${service._id}">
