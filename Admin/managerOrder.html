@@ -679,13 +679,13 @@
 
         <div class="order-row">
            <span>
-                <strong>${activeTab === "buy" ? "Buyer:" : "Seller:"}</strong>
+                <strong>${activeTab === "buy" ? "👤 Buyer:" : "👤 Seller:"}</strong>
                 ${activeTab === "buy"
                         ? (order.buyer?.username || "Anonymous")
                         : (order.seller?.username || "Anonymous")
                     }
             </span>
-            <span><strong>Total Price:</strong> <span style="color:#2ecc71;">${order.totalPrice}</span></span>
+            <span><strong>💰 Total Price:</strong> <span style="color:#2ecc71;">${order.totalPrice}</span></span>
         </div>
 
         <div class="order-row">
@@ -713,7 +713,7 @@
         <div class="order-row">
             <span>
                 <strong>
-                    ${activeTab === "buy" ? "Seller Number" : "Buyer Number"}:
+                    ${activeTab === "buy" ? "📱Seller Number" : "📱Buyer Number"}:
                 </strong>
                 <span>
                     ${activeTab === "buy"
@@ -722,7 +722,7 @@
                 </span>
             </span>
             <span>
-                <strong>Discord:</strong>
+                <strong>🎮 Discord:</strong>
                 <span>
                     ${activeTab === "buy"
                         ? (order.seller?.discordTag || "Not Set")

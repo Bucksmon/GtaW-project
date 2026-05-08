@@ -432,16 +432,16 @@
 
         <div id="taxWrapper"></div>
 
-        <label><strong>Nickname</strong></label>
+        <label><strong>👤 Nickname</strong></label>
         <input id="nickname" />
 
-        <label><strong>Discord Tag</strong></label>
+        <label><strong>🎮 Discord Tag</strong></label>
         <input id="discord" placeholder="John_Doe4" />
 
-        <label><strong>Mobile Number</strong></label>
+        <label><strong>📱 Mobile Number</strong></label>
         <input id="mobile" placeholder="123456789"/>
 
-        <label><strong>Routing Number</strong></label>
+        <label><strong>💳 Routing Number</strong></label>
         <input id="routingNumber" placeholder="123456789" />
         <!-- ✅ SINGLE MESSAGE FIELD -->
         <small id="formMessage" class="form-message"></small>
@@ -646,7 +646,7 @@
     function renderTax(user) {
       if (user.role === "superadmin") {
         taxWrapper.innerHTML = `
-      <label>Site Tax for sellers</label>
+      <label>🏷️ Site Tax for sellers</label>
       <select id="taxSelect">
         <option value="10">10</option>
         <option value="15">15</option>
@@ -688,7 +688,7 @@
 
       } else {
         taxWrapper.innerHTML = `
-  <label><strong>Site Tax</strong></label>
+  <label><strong>🏷️ Site Tax</strong></label>
   <div class="tax-display">
     ${user.commissionRate ?? 0}%
   </div>
