@@ -322,6 +322,42 @@
             background: var(--accent);
             cursor: default;
         }
+
+        .popup-btn {
+            border: none;
+            padding: 12px 18px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .popup-btn.primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .popup-btn.primary:hover {
+            opacity: .9;
+        }
+
+        .popup-btn.secondary {
+            background: rgba(255, 255, 255, .08);
+            color: var(--text);
+        }
+
+        .popup-btn.secondary:hover {
+            background: rgba(255, 255, 255, .12);
+        }
+
+        .popup-btn.danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .popup-btn.danger:hover {
+            opacity: .9;
+        }
     </style>
 </head>
 
@@ -357,7 +393,41 @@
             <div>Loading...</div>
         </div>
     </div>
+    <div id="messagePopup" class="loader-overlay">
 
+        <div class="popup" style="
+      flex-direction: column;
+      text-align: center;
+      max-width: 420px;
+      width: 90%;
+    ">
+
+            <span id="messagePopupTitle" style="
+        font-weight: 700;
+        font-size: 1.1rem;
+      ">
+                Notice
+            </span>
+
+            <span id="messagePopupText" style="
+        color: var(--muted);
+        font-size: 0.95rem;
+        margin-top: 8px;
+      ">
+            </span>
+
+            <div id="messagePopupButtons" style="
+        display:flex;
+        gap:10px;
+        margin-top:20px;
+        justify-content:center;
+        flex-wrap:wrap;
+      ">
+            </div>
+
+        </div>
+
+    </div>
     <script type="module">
         import { renderSidebar } from "../methods/sidebar.js";
         const sidebar = document.getElementById("sidebar");
@@ -398,7 +468,68 @@
 
         function showLoader() { loaderOverlay.classList.add("show"); }
         function hideLoader() { loaderOverlay.classList.remove("show"); }
+        const messagePopup =
+            document.getElementById("messagePopup");
 
+        const messagePopupTitle =
+            document.getElementById("messagePopupTitle");
+
+        const messagePopupText =
+            document.getElementById("messagePopupText");
+
+        const messagePopupButtons =
+            document.getElementById("messagePopupButtons");
+
+        function closePopup() {
+            messagePopup.classList.remove("show");
+        }
+
+        function showPopup({
+            title = "Notice",
+            message = "",
+            buttons = []
+        }) {
+
+            messagePopupTitle.textContent = title;
+            messagePopupText.textContent = message;
+
+            messagePopupButtons.innerHTML = "";
+
+            buttons.forEach(btn => {
+
+                const button =
+                    document.createElement("button");
+
+                button.className =
+                    `popup-btn ${btn.type || "primary"}`;
+
+                button.textContent = btn.text;
+
+                button.onclick = () => {
+
+                    closePopup();
+
+                    if (btn.onClick) {
+                        btn.onClick();
+                    }
+
+                };
+
+                messagePopupButtons.appendChild(button);
+
+            });
+
+            messagePopup.classList.add("show");
+
+        }
+
+        messagePopup.addEventListener("click", (e) => {
+
+            if (e.target === messagePopup) {
+                closePopup();
+            }
+
+        });
         function toggleCreditVisibility() {
             creditsDisplay.style.display = "block"; // always show
         }
@@ -446,7 +577,16 @@
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 const data = await res.json();
-                if (!res.ok) return alert(data.error);
+                if (!res.ok) return showPopup({
+                    title: "Error",
+                    message: data.error || "Something went wrong.",
+                    buttons: [
+                        {
+                            text: "Close",
+                            type: "primary"
+                        }
+                    ]
+                });
                 currentPage = data.pagination.currentPage;
                 totalPages = data.pagination.totalPages;
                 renderUsers(data.users);
@@ -529,23 +669,87 @@
         function nextPage() { if (currentPage < totalPages) loadUsers(currentPage + 1); }
 
         async function updateRole(userId, role) {
+
             if (!role) return;
-            if (!confirm(`Change role to ${role}?`)) return;
-            showLoader();
-            try {
-                const res = await fetch(`${API_BASE}/users/role`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`
+
+            showPopup({
+                title: "Change Role",
+                message: `Are you sure you want to change this user's role to "${role}"?`,
+                buttons: [
+
+                    {
+                        text: "Cancel",
+                        type: "secondary"
                     },
-                    body: JSON.stringify({ userId, role })
-                });
-                const data = await res.json();
-                if (!res.ok) return alert(data.error);
-                loadUsers(currentPage);
-            } finally { hideLoader(); }
+
+                    {
+                        text: "Confirm",
+                        type: "primary",
+
+                        onClick: async () => {
+
+                            showLoader();
+
+                            try {
+
+                                const res = await fetch(`${API_BASE}/users/role`, {
+                                    method: "PUT",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        Authorization: `Bearer ${token}`
+                                    },
+                                    body: JSON.stringify({
+                                        userId,
+                                        role
+                                    })
+                                });
+
+                                const data = await res.json();
+
+                                if (!res.ok) {
+
+                                    showPopup({
+                                        title: "Update Failed",
+                                        message: data.error || "Failed to update role.",
+                                        buttons: [
+                                            {
+                                                text: "Close",
+                                                type: "primary"
+                                            }
+                                        ]
+                                    });
+
+                                    return;
+                                }
+
+                                await loadUsers(currentPage);
+
+                                showPopup({
+                                    title: "Success",
+                                    message: "User role updated successfully.",
+                                    buttons: [
+                                        {
+                                            text: "Great",
+                                            type: "primary"
+                                        }
+                                    ]
+                                });
+
+                            } finally {
+
+                                hideLoader();
+
+                            }
+
+                        }
+
+                    }
+
+                ]
+            });
+
         }
+        
         usersContainer.addEventListener("change", async (e) => {
             if (!e.target.classList.contains("role-select")) return;
 
