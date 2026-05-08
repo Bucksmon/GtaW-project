@@ -236,25 +236,6 @@
       gap: 30px;
     }
 
-    .service-card {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 22px;
-
-      display: flex;
-      flex-direction: column;
-
-      gap: 14px;
-
-      box-shadow: 0 20px 55px rgba(0, 0, 0, .4);
-
-      transition: var(--transition);
-
-      position: relative;
-      overflow: hidden;
-
-      align-self: start;
-    }
 
     .service-image {
       width: 100%;
@@ -438,17 +419,25 @@
 
     .service-card {
       background: var(--card);
+
       border-radius: var(--radius);
+
       padding: 22px;
+
       display: flex;
       flex-direction: column;
+
       gap: 14px;
+
       box-shadow: 0 20px 55px rgba(0, 0, 0, .4);
+
       transition: var(--transition);
-      height: 100%;
-      min-height: 360px;
+
       position: relative;
+
       overflow: hidden;
+
+      align-self: start;
     }
 
     .service-card:hover {
@@ -552,6 +541,11 @@
 
     .update-btn {
       margin-left: auto;
+    }
+
+    .service-actions .update-btn {
+      margin-left: auto;
+      margin-right: 0;
     }
 
     .quantity-box {
