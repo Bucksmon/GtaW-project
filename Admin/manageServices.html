@@ -378,6 +378,42 @@
             background: var(--accent);
             cursor: default;
         }
+
+        .popup-btn {
+            border: none;
+            padding: 12px 18px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .popup-btn.primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .popup-btn.primary:hover {
+            opacity: .9;
+        }
+
+        .popup-btn.secondary {
+            background: rgba(255, 255, 255, .08);
+            color: var(--text);
+        }
+
+        .popup-btn.secondary:hover {
+            background: rgba(255, 255, 255, .12);
+        }
+
+        .popup-btn.danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .popup-btn.danger:hover {
+            opacity: .9;
+        }
     </style>
 </head>
 
@@ -395,6 +431,41 @@
             <div class="spinner"></div>
             <span>Loading...</span>
         </div>
+    </div>
+    <div id="messagePopup" class="loader-overlay">
+
+        <div class="popup" style="
+      flex-direction: column;
+      text-align: center;
+      max-width: 420px;
+      width: 90%;
+    ">
+
+            <span id="messagePopupTitle" style="
+        font-weight: 700;
+        font-size: 1.1rem;
+      ">
+                Notice
+            </span>
+
+            <span id="messagePopupText" style="
+        color: var(--muted);
+        font-size: 0.95rem;
+        margin-top: 8px;
+      ">
+            </span>
+
+            <div id="messagePopupButtons" style="
+        display:flex;
+        gap:10px;
+        margin-top:20px;
+        justify-content:center;
+        flex-wrap:wrap;
+      ">
+            </div>
+
+        </div>
+
     </div>
     <main class="main">
 
@@ -425,7 +496,68 @@
         function hideLoader() {
             loaderOverlay.classList.remove("show");
         }
+        const messagePopup =
+            document.getElementById("messagePopup");
 
+        const messagePopupTitle =
+            document.getElementById("messagePopupTitle");
+
+        const messagePopupText =
+            document.getElementById("messagePopupText");
+
+        const messagePopupButtons =
+            document.getElementById("messagePopupButtons");
+
+        function closePopup() {
+            messagePopup.classList.remove("show");
+        }
+
+        function showPopup({
+            title = "Notice",
+            message = "",
+            buttons = []
+        }) {
+
+            messagePopupTitle.textContent = title;
+            messagePopupText.textContent = message;
+
+            messagePopupButtons.innerHTML = "";
+
+            buttons.forEach(btn => {
+
+                const button =
+                    document.createElement("button");
+
+                button.className =
+                    `popup-btn ${btn.type || "primary"}`;
+
+                button.textContent = btn.text;
+
+                button.onclick = () => {
+
+                    closePopup();
+
+                    if (btn.onClick) {
+                        btn.onClick();
+                    }
+
+                };
+
+                messagePopupButtons.appendChild(button);
+
+            });
+
+            messagePopup.classList.add("show");
+
+        }
+
+        messagePopup.addEventListener("click", (e) => {
+
+            if (e.target === messagePopup) {
+                closePopup();
+            }
+
+        });
         /* ================= SIDEBAR ================= */
 
         const sidebar = document.getElementById("sidebar");
@@ -512,39 +644,120 @@
         /* ================= DELETE SERVICE ================= */
 
         function attachDeleteEvents() {
-            document.querySelectorAll(".delete-btn").forEach(btn => {
-                btn.addEventListener("click", async () => {
-                    const serviceId = btn.dataset.id;
 
-                    if (!confirm("Are you sure you want to delete this service?")) return;
+            document.querySelectorAll(".delete-btn")
+                .forEach(btn => {
 
-                    showLoader();
+                    btn.addEventListener("click", async () => {
 
-                    try {
-                        const res = await fetch(
-                            `${API_BASE}/services/${serviceId}`,
-                            {
-                                method: "DELETE",
-                                headers: { Authorization: `Bearer ${token}` }
-                            }
-                        );
+                        const serviceId = btn.dataset.id;
 
-                        const data = await res.json();
+                        showPopup({
 
-                        if (!res.ok) {
-                            alert(data.error || "Failed to delete service");
-                            return;
-                        }
+                            title: "Delete Service",
 
-                        loadServices(currentPage);
+                            message:
+                                "Are you sure you want to permanently delete this service?",
 
-                    } catch (err) {
-                        console.error("Delete failed:", err);
-                    } finally {
-                        hideLoader();
-                    }
+                            buttons: [
+
+                                {
+                                    text: "Cancel",
+                                    type: "secondary"
+                                },
+
+                                {
+                                    text: "Delete",
+                                    type: "danger",
+
+                                    onClick: async () => {
+
+                                        showLoader();
+
+                                        try {
+
+                                            const res = await fetch(
+                                                `${API_BASE}/services/${serviceId}`,
+                                                {
+                                                    method: "DELETE",
+                                                    headers: {
+                                                        Authorization: `Bearer ${token}`
+                                                    }
+                                                }
+                                            );
+
+                                            const data =
+                                                await res.json();
+
+                                            if (!res.ok) {
+
+                                                showPopup({
+                                                    title: "Delete Failed",
+                                                    message:
+                                                        data.error ||
+                                                        "Failed to delete service.",
+                                                    buttons: [
+                                                        {
+                                                            text: "Close",
+                                                            type: "primary"
+                                                        }
+                                                    ]
+                                                });
+
+                                                return;
+                                            }
+
+                                            await loadServices(currentPage);
+
+                                            showPopup({
+                                                title: "Service Deleted",
+                                                message:
+                                                    "Service deleted successfully.",
+                                                buttons: [
+                                                    {
+                                                        text: "Okay",
+                                                        type: "primary"
+                                                    }
+                                                ]
+                                            });
+
+                                        } catch (err) {
+
+                                            console.error(
+                                                "Delete failed:",
+                                                err
+                                            );
+
+                                            showPopup({
+                                                title: "Server Error",
+                                                message:
+                                                    "Something went wrong while deleting the service.",
+                                                buttons: [
+                                                    {
+                                                        text: "Close",
+                                                        type: "primary"
+                                                    }
+                                                ]
+                                            });
+
+                                        } finally {
+
+                                            hideLoader();
+
+                                        }
+
+                                    }
+
+                                }
+
+                            ]
+
+                        });
+
+                    });
+
                 });
-            });
+
         }
 
 
