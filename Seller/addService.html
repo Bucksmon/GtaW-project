@@ -563,6 +563,22 @@
             <input id="price" type="number" min="0" step="1" inputmode="numeric" pattern="[0-9]*" />
 
           </div>
+
+          <div class="form-group">
+            <label>Service Type</label>
+
+            <select id="serviceType" style="
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255,255,255,.08);
+    background: var(--box);
+    color: var(--text);
+  ">
+              <option value="repeatable">Repeatable</option>
+              <option value="quantity">Quantifiable</option>
+            </select>
+          </div>
+
           <div class="form-group">
             <label>Image URL</label>
             <input id="imageInput" placeholder="https://i.imgur.com/bua2dNG.png">
@@ -650,6 +666,7 @@
     const descriptionInput = document.getElementById("description");
     const priceInput = document.getElementById("price");
     const imageInput = document.getElementById("imageInput");
+    const serviceTypeInput = document.getElementById("serviceType");
     const preview = document.getElementById("preview");
 
     imageInput.oninput = () => {
@@ -673,6 +690,7 @@
       const service_description = descriptionInput.value.trim();
       const service_price = Number(priceInput.value);
       const service_image = imageInput.value.trim();
+      const service_type = serviceTypeInput.value;
 
       if (!service_title || !service_description || !service_price) {
         alert("Fill required fields");
@@ -692,7 +710,8 @@
             service_title,
             service_description,
             service_price,
-            service_image
+            service_image,
+            service_type
           })
         });
 
@@ -750,9 +769,38 @@
   <span>${service.service_description}</span>
 </div>
 <div class="service-meta">
-  Credits: 
+  Credits:
   <span style="color: #2ecc71">${service.service_price || 0}</span>
 </div>
+
+${service.service_type === "quantity" ? `
+<div class="form-group" style="margin-top:10px;">
+  <label>Quantity</label>
+
+  <input 
+    type="number"
+    min="0"
+    value="${service.quantity || 0}"
+    id="qty-${service._id}"
+    style="
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: var(--box);
+      color: white;
+      width: 100%;
+    "
+  />
+
+  <button 
+    class="submit-btn"
+    style="margin-top:10px;"
+    onclick="updateQuantity('${service._id}')"
+  >
+    Update Quantity
+  </button>
+</div>
+` : ""}
 `;
 
         const del = document.createElement("button");
@@ -776,6 +824,48 @@
       });
 
       loadServices(currentPage);
+      hideLoader();
+    }
+
+    window.updateQuantity = async function (id) {
+
+      const input = document.getElementById(`qty-${id}`);
+
+      const quantity = Number(input.value);
+
+      if (quantity < 0) {
+        alert("Invalid quantity");
+        return;
+      }
+
+      showLoader();
+
+      try {
+
+        const res = await fetch(`${API_BASE}/services/${id}/quantity`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            quantity
+          })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          alert(data.error || "Failed");
+          return;
+        }
+
+        alert("Quantity updated");
+
+      } catch (err) {
+        console.error(err);
+      }
+
       hideLoader();
     }
 
@@ -808,7 +898,7 @@
       document.getElementById("creditsDisplay").innerHTML =
         `<span style="color:#2ecc71">${user.credits ?? 0}</span>`;
     }
-    
+
     priceInput.addEventListener("input", () => {
       const val = priceInput.value;
 
