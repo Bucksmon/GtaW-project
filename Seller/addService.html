@@ -238,11 +238,22 @@
 
     .service-card {
       background: var(--card);
-      padding: 22px;
       border-radius: var(--radius);
+      padding: 22px;
+
       display: flex;
       flex-direction: column;
+
       gap: 14px;
+
+      box-shadow: 0 20px 55px rgba(0, 0, 0, .4);
+
+      transition: var(--transition);
+
+      position: relative;
+      overflow: hidden;
+
+      align-self: start;
     }
 
     .service-image {
@@ -527,15 +538,20 @@
 
     .service-actions {
       display: flex;
+
       align-items: center;
       justify-content: space-between;
 
       gap: 14px;
 
-      margin-top: auto;
       padding-top: 12px;
 
-      border-top: 1px solid rgba(255, 255, 255, .06);
+      border-top:
+        1px solid rgba(255, 255, 255, .06);
+    }
+
+    .update-btn {
+      margin-left: auto;
     }
 
     .quantity-box {
@@ -617,6 +633,10 @@
     .order-row+.order-row {
       padding-top: 6px;
       border-top: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .delete-btn {
+      margin-left: auto;
     }
   </style>
 </head>
@@ -1104,9 +1124,9 @@ ${service.service_type === "quantity" ? `
 
 ` : ""}
 
-<div class="service-actions">
+<div class="service-actions" style="margin-top:0;">
 
-  <div></div>
+  <div style="flex:1;"></div>
 
   <button
     class="danger-btn delete-btn"
