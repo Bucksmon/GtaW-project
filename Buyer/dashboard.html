@@ -290,6 +290,67 @@
       cursor: not-allowed;
     }
 
+    .service-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 14px;
+
+      margin-top: auto;
+      padding-top: 12px;
+
+      border-top: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .quantity-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      background: rgba(255, 255, 255, .04);
+
+      padding: 8px 12px;
+
+      border-radius: 12px;
+    }
+
+    .quantity-box label {
+      font-size: .9rem;
+      color: var(--muted);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .quantity-box input {
+      width: 75px;
+
+      padding: 10px;
+
+      border: none;
+      outline: none;
+
+      border-radius: 10px;
+
+      background: var(--box);
+
+      color: white;
+
+      text-align: center;
+
+      font-weight: 600;
+    }
+
+    .buy-btn {
+      min-width: 140px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: 8px;
+    }
+
     /* ================= EMPTY STATE ================= */
 
     .services p {
@@ -731,7 +792,7 @@ ${service.service_type === "quantity" ? `
   </span>
 
   <span>
-    <strong>Checkout:</strong>
+    <strong>Total:</strong>
 
     <span 
       id="checkout-price-${service._id}"
@@ -746,36 +807,34 @@ ${service.service_type === "quantity" ? `
 
   ${service.service_type === "quantity" && service.quantity <= 0
             ? ""
-            : `<div style="
-  display:flex;
-  gap:10px;
-  margin-top:auto;
-">
+            : `<div class="service-actions">
 
   ${service.service_type === "quantity" ? `
-    <input
-      type="number"
-      min="1"
-      max="${service.quantity}"
-      value="1"
-      class="buy-qty"
-      id="buy-qty-${service._id}"
-      style="
-        width:90px;
-        padding:12px;
-        border:none;
-        border-radius:10px;
-        background:var(--box);
-        color:white;
-      "
-    />
-  ` : ""}
+
+    <div class="quantity-box">
+
+      <label for="buy-qty-${service._id}">
+        📦 Quantity
+      </label>
+
+      <input
+        type="number"
+        min="1"
+        max="${service.quantity}"
+        value="1"
+        class="buy-qty"
+        id="buy-qty-${service._id}"
+      />
+
+    </div>
+
+  ` : `<div></div>`}
 
   <button 
     class="buy-btn"
     data-id="${service._id}"
   >
-    Buy
+    🛒 Buy
   </button>
 
 </div>`
