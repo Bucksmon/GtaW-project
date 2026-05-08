@@ -179,6 +179,29 @@
       transition: var(--transition);
       height: 100%;
       min-height: 360px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sold-overlay {
+      position: absolute;
+      inset: 0;
+
+      background: rgba(255, 0, 0, 0.7);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      z-index: 20;
+
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 3px;
+      color: white;
+
+      backdrop-filter: blur(2px);
+      text-transform: uppercase;
     }
 
     .service-card:hover {
@@ -545,11 +568,11 @@
       profilePopup.classList.remove("show");
     }
 
-    
+
     document.getElementById("closePopupBtn").onclick = hideProfilePopup;
 
     document.getElementById("goSettingsBtn").onclick = () => {
-      window.location.href = "../Settings.html"; 
+      window.location.href = "../Settings.html";
     };
 
     let currentPage = 1;
@@ -600,16 +623,52 @@
   <p>${service.service_description || "No description"}</p>
 
   <div class="service-meta">
-    <span><strong>Price:</strong> <span style="color: #2ecc71">${service.service_price || 0}</span></span>
-    <span><strong>Seller:</strong> ${service.service_sellerId?.nickName || "Anonymous"}</span>
-  </div>
+  <span>
+    <strong>Price:</strong> 
+    <span style="color: #2ecc71">
+      ${service.service_price || 0}
+    </span>
+  </span>
 
-  <button class="buy-btn" data-id="${service._id}">Buy</button>
+  <span>
+    <strong>Seller:</strong> 
+    ${service.service_sellerId?.nickName || "Anonymous"}
+  </span>
+</div>
+
+${service.service_type === "quantity" ? `
+<div class="service-meta">
+  <span>
+    <strong>Stock:</strong>
+    <span style="
+      color:${service.quantity > 0 ? '#2ecc71' : '#ff4f4f'}
+    ">
+      ${service.quantity || 0}
+    </span>
+  </span>
+</div>
+` : ""}
+
+  ${service.service_type === "quantity" && service.quantity <= 0
+            ? ""
+            : `<button class="buy-btn" data-id="${service._id}">Buy</button>`
+          }
+  ${service.service_type === "quantity" && service.quantity <= 0
+            ? `
+    <div class="sold-overlay">
+      SOLD OUT
+    </div>
+  `
+            : ""
+          }
 `;
 
         container.appendChild(card);
         const btn = card.querySelector(".buy-btn");
-        btn.addEventListener("click", () => buyService(service._id));
+
+        if (btn) {
+          btn.addEventListener("click", () => buyService(service._id));
+        }
       });
     }
 
@@ -636,7 +695,7 @@
         !currentUser?.discordTag?.trim();
 
       if (isMissing) {
-        showProfilePopup();  
+        showProfilePopup();
         return;
       }
       showLoader();
