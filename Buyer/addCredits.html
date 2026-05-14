@@ -466,6 +466,9 @@
         <div id="sellTab" class="tab-content">
           <form id="sellForm">
 
+            <label style="color:red;">NOTE: </label>
+            <p> Money must first be transfered to 00000000 equal to the credit amount. Credits are equal to USD.
+              (example: You transfer $100 to get 100 credits)</p>
             <label>💳 Routing Number</label>
             <input id="sellRouting" placeholder="Numbers only" />
 
@@ -475,6 +478,21 @@
             <label>💳 Credit Amount</label>
             <input id="sellCredits" type="number" min="0" step="1" inputmode="numeric" pattern="[0-9]*" />
 
+            <label>📸 Proof</label>
+            <input id="buyProof" placeholder="https://i.imgur.com/example.png" />
+
+            <small style="color: var(--muted); font-size: 0.75rem;">
+              Example: https://i.imgur.com/example.png
+            </small>
+
+            <img id="buyProofPreview" style="
+    display:none;
+    width:100%;
+    margin-top:10px;
+    border-radius:10px;
+    max-height:250px;
+    object-fit:cover;
+  ">
             <button type="submit" id="sellSubmit">Submit</button>
             <div id="sellStatus" class="status"></div>
 
@@ -667,7 +685,19 @@
     const buyCredits = document.getElementById("buyCredits");
     const buyStatus = document.getElementById("buyStatus");
     const buySubmit = document.getElementById("buySubmit");
+    const buyProof = document.getElementById("buyProof");
+    const buyProofPreview = document.getElementById("buyProofPreview");
 
+    buyProof.addEventListener("input", () => {
+
+      const url = buyProof.value.trim();
+
+      buyProofPreview.style.display =
+        url ? "block" : "none";
+
+      buyProofPreview.src = url;
+
+    });
     buySubmit.disabled = true;
 
     buyRouting.addEventListener("input", () =>
@@ -709,7 +739,8 @@
             type: "buy",
             routing_number: buyRouting.value.trim(),
             amount_credits: Number(buyCredits.value.trim()),
-            discord_tag: buyDiscord.value.trim()
+            discord_tag: buyDiscord.value.trim(),
+            proof: buyProof.value.trim()
           })
         });
 
