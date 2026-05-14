@@ -447,6 +447,10 @@
         <div id="buyTab" class="tab-content active">
           <form id="buyForm">
 
+            <label style="color:red;">NOTE: </label>
+            <p> Money must first be transfered to 00000000 equal to the credit amount. Credits are equal to USD.
+              (example: You transfer $100 to get 100 credits)</p>
+
             <label>💳 Routing Number</label>
             <input id="buyRouting" placeholder="123456789" />
 
@@ -455,29 +459,7 @@
 
             <label>💳 Credit Amount</label>
             <input id="buyCredits" type="number" min="0" step="1" inputmode="numeric" pattern="[0-9]*" />
-
-            <button type="submit" id="buySubmit">Submit</button>
-            <div id="buyStatus" class="status"></div>
-
-          </form>
-        </div>
-
-        <!-- SELL CREDITS -->
-        <div id="sellTab" class="tab-content">
-          <form id="sellForm">
-
-            <label style="color:red;">NOTE: </label>
-            <p> Money must first be transfered to 00000000 equal to the credit amount. Credits are equal to USD.
-              (example: You transfer $100 to get 100 credits)</p>
-            <label>💳 Routing Number</label>
-            <input id="sellRouting" placeholder="Numbers only" />
-
-            <label>🎮 Discord Tag</label>
-            <input id="sellDiscord" placeholder="angel_nunez4" />
-
-            <label>💳 Credit Amount</label>
-            <input id="sellCredits" type="number" min="0" step="1" inputmode="numeric" pattern="[0-9]*" />
-
+            
             <label>📸 Proof</label>
             <input id="buyProof" placeholder="https://i.imgur.com/example.png" />
 
@@ -493,6 +475,25 @@
     max-height:250px;
     object-fit:cover;
   ">
+            <button type="submit" id="buySubmit">Submit</button>
+            <div id="buyStatus" class="status"></div>
+
+          </form>
+        </div>
+
+        <!-- SELL CREDITS -->
+        <div id="sellTab" class="tab-content">
+          <form id="sellForm">
+
+            <label>💳 Routing Number</label>
+            <input id="sellRouting" placeholder="Numbers only" />
+
+            <label>🎮 Discord Tag</label>
+            <input id="sellDiscord" placeholder="angel_nunez4" />
+
+            <label>💳 Credit Amount</label>
+            <input id="sellCredits" type="number" min="0" step="1" inputmode="numeric" pattern="[0-9]*" />
+
             <button type="submit" id="sellSubmit">Submit</button>
             <div id="sellStatus" class="status"></div>
 
