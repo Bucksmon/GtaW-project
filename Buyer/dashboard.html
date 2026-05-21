@@ -747,7 +747,10 @@
         if (!res.ok) throw new Error("Failed to load services");
 
         renderServices(data.services || []);
-        renderPagination(data.page || 1, data.totalPages || 1);
+        renderPagination(
+          data.pagination?.currentPage || 1,
+          data.pagination?.totalPages || 1
+        );
 
       } catch (err) {
         console.error(err);
