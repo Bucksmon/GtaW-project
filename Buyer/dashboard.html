@@ -380,13 +380,21 @@
       transition: var(--transition);
     }
 
+    /* Normal hover */
     #pagination button:hover {
-      background: var(--accent);
+      background: rgba(79, 140, 255, 0.25);
     }
 
-    #pagination button:disabled {
-      opacity: .5;
-      cursor: not-allowed;
+    /* ACTIVE PAGE */
+    #pagination button.active-page {
+      background: var(--accent);
+      color: white;
+      font-weight: 700;
+    }
+
+    /* Keep active page blue even on hover */
+    #pagination button.active-page:hover {
+      background: var(--accent);
     }
 
     /* ================= LOADER ================= */
