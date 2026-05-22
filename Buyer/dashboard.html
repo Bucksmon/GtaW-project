@@ -839,10 +839,7 @@ ${service.service_type === "quantity" ? `
 
 </div>
 ` : ""}
-
-  ${service.service_type === "quantity" && service.quantity <= 0
-            ? ""
-            : `<div class="service-actions">
+<div class="service-actions">
 
   ${service.service_type === "quantity" ? `
 
@@ -859,6 +856,7 @@ ${service.service_type === "quantity" ? `
         value="1"
         class="buy-qty"
         id="buy-qty-${service._id}"
+        ${service.quantity <= 0 ? "disabled" : ""}
       />
 
     </div>
@@ -868,20 +866,12 @@ ${service.service_type === "quantity" ? `
   <button 
     class="buy-btn"
     data-id="${service._id}"
+    ${service.quantity <= 0 ? "disabled" : ""}
   >
-    🛒 Buy
+    ${service.quantity <= 0 ? "Sold Out" : "🛒 Buy"}
   </button>
 
-</div>`
-          }
-  ${service.service_type === "quantity" && service.quantity <= 0
-            ? `
-    <div class="sold-overlay">
-      SOLD OUT
-    </div>
-  `
-            : ""
-          }
+</div>
 `;
 
         container.appendChild(card);
