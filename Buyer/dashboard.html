@@ -868,10 +868,19 @@ ${service.service_type === "quantity" ? `
     data-id="${service._id}"
     ${service.quantity <= 0 ? "disabled" : ""}
   >
-    ${service.quantity <= 0 ? "Sold Out" : "🛒 Buy"}
+    🛒 Buy
   </button>
 
 </div>
+
+${service.service_type === "quantity" && service.quantity <= 0
+            ? `
+    <div class="sold-overlay">
+      SOLD OUT
+    </div>
+  `
+            : ""
+          }
 `;
 
         container.appendChild(card);
