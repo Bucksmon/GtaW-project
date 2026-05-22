@@ -555,6 +555,12 @@
       -moz-appearance: textfield;
       appearance: textfield;
     }
+
+    #pagination button.active-page {
+      background: var(--accent);
+      color: white;
+      font-weight: 700;
+    }
   </style>
 
 </head>
@@ -999,11 +1005,8 @@ ${service.service_type === "quantity" ? `
 
         btn.textContent = i;
 
-        // Active page styling
         if (i === current) {
-          btn.style.background = "var(--accent)";
-          btn.style.color = "#fff";
-          btn.style.fontWeight = "700";
+          btn.classList.add("active-page");
         }
 
         btn.onclick = () => {
