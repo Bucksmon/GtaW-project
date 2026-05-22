@@ -993,16 +993,47 @@ ${service.service_type === "quantity" ? `
       const pagination = document.getElementById("pagination");
       pagination.innerHTML = "";
 
+      // Previous button
+      const prevBtn = document.createElement("button");
+      prevBtn.textContent = "← Prev";
+      prevBtn.disabled = current === 1;
+
+      prevBtn.onclick = () => {
+        currentPage--;
+        loadServices(currentPage);
+      };
+
+      pagination.appendChild(prevBtn);
+
+      // Page numbers
       for (let i = 1; i <= total; i++) {
         const btn = document.createElement("button");
+
         btn.textContent = i;
-        if (i === current) btn.disabled = true;
+
+        if (i === current) {
+          btn.style.background = "var(--accent)";
+        }
+
         btn.onclick = () => {
           currentPage = i;
           loadServices(i);
         };
+
         pagination.appendChild(btn);
       }
+
+      // Next button
+      const nextBtn = document.createElement("button");
+      nextBtn.textContent = "Next →";
+      nextBtn.disabled = current === total;
+
+      nextBtn.onclick = () => {
+        currentPage++;
+        loadServices(currentPage);
+      };
+
+      pagination.appendChild(nextBtn);
     }
 
     async function buyService(serviceId, quantity = 1) {
