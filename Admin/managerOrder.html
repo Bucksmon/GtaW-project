@@ -672,6 +672,7 @@
                 const card = document.createElement("div");
                 card.className = "service-card";
                 card.innerHTML = `
+                <h3>${order.orderNumber || "Something went wrong."}</h3>
         <img class="service-image"
             src="${order.service?.service_image || 'https://i.imgur.com/placeholder.png'}">
         
