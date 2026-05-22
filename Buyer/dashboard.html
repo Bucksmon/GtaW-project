@@ -733,29 +733,48 @@
     let currentPage = 1;
 
     async function loadServices(page = 1) {
+
+      currentPage = page;
+
       showLoader();
 
       try {
-        const res = await fetch(`${API_BASE}/services?page=${page}&limit=8`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          },
-          cache: "no-store"
-        });
+
+        const res = await fetch(
+          `${API_BASE}/services?page=${page}&limit=8`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
+            cache: "no-store"
+          }
+        );
 
         const data = await res.json();
-        if (!res.ok) throw new Error("Failed to load services");
+
+        if (!res.ok) {
+          throw new Error("Failed to load services");
+        }
+
+        console.log("PAGE:", page);
+        console.log("SERVICES:", data.services.length);
+        console.log("PAGINATION:", data.pagination);
 
         renderServices(data.services || []);
+
         renderPagination(
-          data.pagination?.currentPage || 1,
+          currentPage,
           data.pagination?.totalPages || 1
         );
 
       } catch (err) {
+
         console.error(err);
+
       } finally {
+
         hideLoader();
+
       }
     }
 
@@ -990,17 +1009,28 @@ ${service.service_type === "quantity" ? `
     }
 
     function renderPagination(current, total) {
-      const pagination = document.getElementById("pagination");
+
+      const pagination =
+        document.getElementById("pagination");
+
       pagination.innerHTML = "";
 
       for (let i = 1; i <= total; i++) {
-        const btn = document.createElement("button");
+
+        const btn =
+          document.createElement("button");
+
         btn.textContent = i;
-        if (i === current) btn.disabled = true;
+
+        if (i === current) {
+          btn.style.background = "var(--accent)";
+          btn.style.color = "#fff";
+        }
+
         btn.onclick = () => {
-          currentPage = i;
           loadServices(i);
         };
+
         pagination.appendChild(btn);
       }
     }
