@@ -446,8 +446,9 @@
         <!-- BUY CREDITS -->
         <div id="buyTab" class="tab-content active">
           <form id="buyForm">
-           
-            <p> <strong style="color:red;">NOTE: </strong> Money must first be transfered to 030135057 equal to the credit amount. Credits are equal to USD.
+
+            <p> <strong style="color:red;">NOTE: </strong> Money must first be transfered to 030135057 equal to the
+              credit amount. Credits are equal to USD.
               (example: You transfer $100 to get 100 credits)</p>
 
             <label>💳 Routing Number</label>
@@ -801,6 +802,18 @@
       if (!Number.isInteger(credits) || credits < 1) {
         sellStatus.style.color = "red";
         sellStatus.textContent = "Credits must be at least 1.";
+        return;
+      }
+
+      // FRONTEND CREDIT CHECK
+      if (credits > (currentUser?.credits || 0)) {
+        hideLoader();
+
+        sellStatus.style.color = "red";
+        sellStatus.textContent = "You do not have enough credits.";
+
+        sellSubmit.disabled = false;
+
         return;
       }
 
