@@ -380,21 +380,13 @@
       transition: var(--transition);
     }
 
-    /* Normal hover */
     #pagination button:hover {
-      background: rgba(79, 140, 255, 0.25);
+      background: var(--accent);
     }
 
-    /* ACTIVE PAGE */
-    #pagination button.active-page {
-      background: var(--accent);
-      color: white;
-      font-weight: 700;
-    }
-
-    /* Keep active page blue even on hover */
-    #pagination button.active-page:hover {
-      background: var(--accent);
+    #pagination button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
     }
 
     /* ================= LOADER ================= */
@@ -562,12 +554,6 @@
     .quantity-box input[type=number] {
       -moz-appearance: textfield;
       appearance: textfield;
-    }
-
-    #pagination button.active-page {
-      background: var(--accent);
-      color: white;
-      font-weight: 700;
     }
   </style>
 
@@ -1008,20 +994,13 @@ ${service.service_type === "quantity" ? `
       pagination.innerHTML = "";
 
       for (let i = 1; i <= total; i++) {
-
         const btn = document.createElement("button");
-
         btn.textContent = i;
-
-        if (i === current) {
-          btn.classList.add("active-page");
-        }
-
+        if (i === current) btn.disabled = true;
         btn.onclick = () => {
           currentPage = i;
           loadServices(i);
         };
-
         pagination.appendChild(btn);
       }
     }
