@@ -221,10 +221,20 @@
     .service-image {
       width: 100%;
       height: 180px;
+
+      display: block;
+
       object-fit: cover;
+
       border-radius: var(--radius-sm);
+
       background: var(--box);
+
       flex-shrink: 0;
+
+      transition:
+        filter .25s ease,
+        transform .25s ease;
     }
 
     /* ================= TITLE ================= */
@@ -988,7 +998,10 @@ ${service.service_type === "quantity" && service.quantity <= 0
 `;
 
         container.appendChild(card);
-        if (service.service_isAdult) {
+        if (
+          service.service_isAdult === true ||
+          service.service_isAdult === "true"
+        ) {
 
           const image =
             card.querySelector(".service-image");
