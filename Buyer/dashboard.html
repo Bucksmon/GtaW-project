@@ -875,7 +875,9 @@
         card.innerHTML = `
   <div class="service-image-wrapper">
 
-  ${service.service_isAdult ? `
+  ${service.service_isAdult === true ||
+            service.service_isAdult === "true"
+            ? `
     <div class="adult-badge">
       18+
     </div>
@@ -889,7 +891,9 @@
     alt="Service Image"
   >
 
-  ${service.service_isAdult ? `
+  ${service.service_isAdult === true ||
+            service.service_isAdult === "true"
+            ? `
     <button class="show-content-btn">
       Show Content
     </button>
