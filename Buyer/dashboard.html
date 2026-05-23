@@ -226,7 +226,7 @@
 
       object-fit: cover;
 
-      border-radius: var(--radius-sm);
+      
 
       background: var(--box);
 
@@ -236,6 +236,7 @@
         filter .25s ease,
         transform .25s ease;
     }
+
     /* ================= TITLE ================= */
 
     .service-card h3 {
@@ -584,8 +585,14 @@
     }
 
     .service-image.blur {
-      filter: blur(20px) brightness(.5);
-      transform: scale(1.08);
+      filter:
+        blur(50px) brightness(.35);
+
+      transform: scale(1.15);
+
+      pointer-events: none;
+
+      user-select: none;
     }
 
     .show-content-btn {
@@ -615,6 +622,21 @@
       backdrop-filter: blur(10px);
 
       transition: .25s ease;
+    }
+
+    .show-content-btn {
+      margin-top: 0 !important;
+
+      position: absolute !important;
+
+      top: 50% !important;
+      left: 50% !important;
+
+      transform: translate(-50%, -50%) !important;
+
+      width: auto !important;
+
+      z-index: 30;
     }
 
     .show-content-btn:hover {
