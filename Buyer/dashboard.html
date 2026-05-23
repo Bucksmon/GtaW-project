@@ -564,6 +564,77 @@
       -moz-appearance: textfield;
       appearance: textfield;
     }
+
+    /* ================= ADULT CONTENT ================= */
+
+    .service-image-wrapper {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      border-radius: var(--radius-sm);
+    }
+
+    .service-image.blur {
+      filter: blur(20px) brightness(.5);
+      transform: scale(1.08);
+    }
+
+    .show-content-btn {
+      position: absolute;
+
+      top: 50%;
+      left: 50%;
+
+      transform: translate(-50%, -50%);
+
+      z-index: 15;
+
+      padding: 10px 18px;
+
+      border: none;
+      border-radius: 999px;
+
+      background: rgba(0, 0, 0, .7);
+
+      color: white;
+
+      font-size: .85rem;
+      font-weight: 600;
+
+      cursor: pointer;
+
+      backdrop-filter: blur(10px);
+
+      transition: .25s ease;
+    }
+
+    .show-content-btn:hover {
+      background: rgba(0, 0, 0, .85);
+    }
+
+    .adult-badge {
+      position: absolute;
+
+      top: 12px;
+      right: 12px;
+
+      z-index: 25;
+
+      background: rgba(255, 79, 79, .95);
+
+      color: white;
+
+      padding: 6px 10px;
+
+      border-radius: 999px;
+
+      font-size: .72rem;
+      font-weight: 800;
+
+      letter-spacing: .5px;
+
+      box-shadow: 0 4px 15px rgba(0, 0, 0, .3);
+    }
   </style>
 
 </head>
@@ -802,9 +873,27 @@
         card.className = "service-card";
 
         card.innerHTML = `
-  <img class="service-image"
-       src="${service.service_image || 'https://i.imgur.com/placeholder.png'}"
-       alt="Service Image">
+  <div class="service-image-wrapper">
+
+  ${service.service_isAdult ? `
+    <div class="adult-badge">
+      18+
+    </div>
+  ` : ""}
+
+  <img
+    class="service-image ${service.service_isAdult ? "blur" : ""}"
+    src="${service.service_image || 'https://i.imgur.com/placeholder.png'}"
+    alt="Service Image"
+  >
+
+  ${service.service_isAdult ? `
+    <button class="show-content-btn">
+      Show Content
+    </button>
+  ` : ""}
+
+</div>
   <h3>${service.service_title || "No title"}</h3>
   <p>${service.service_description || "No description"}</p>
 
@@ -893,6 +982,37 @@ ${service.service_type === "quantity" && service.quantity <= 0
 `;
 
         container.appendChild(card);
+        if (service.service_isAdult) {
+
+          const image =
+            card.querySelector(".service-image");
+
+          const revealBtn =
+            card.querySelector(".show-content-btn");
+
+          revealBtn.addEventListener("click", (e) => {
+
+            e.stopPropagation();
+
+            image.classList.remove("blur");
+
+            revealBtn.style.display = "none";
+
+          });
+
+          document.addEventListener("click", (e) => {
+
+            if (!card.contains(e.target)) {
+
+              image.classList.add("blur");
+
+              revealBtn.style.display = "block";
+
+            }
+
+          });
+
+        }
         const btn = card.querySelector(".buy-btn");
         if (service.service_type === "quantity") {
 
