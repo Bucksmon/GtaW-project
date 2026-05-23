@@ -882,7 +882,9 @@
   ` : ""}
 
   <img
-    class="service-image ${service.service_isAdult ? "blur" : ""}"
+    class="service-image ${service.service_isAdult === true || service.service_isAdult === "true"
+            ? "blur"
+            : ""}"
     src="${service.service_image || 'https://i.imgur.com/placeholder.png'}"
     alt="Service Image"
   >
