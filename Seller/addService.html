@@ -643,7 +643,7 @@
       -moz-appearance: textfield;
       appearance: textfield;
     }
-    
+
     #price::-webkit-outer-spin-button,
     #price::-webkit-inner-spin-button {
       -webkit-appearance: none;
@@ -665,7 +665,67 @@
       -moz-appearance: textfield;
       appearance: textfield;
     }
-    
+
+    .adult-toggle-wrapper {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+    }
+
+    .adult-toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .adult-toggle input {
+      display: none;
+    }
+
+    .slider {
+      width: 52px;
+      height: 28px;
+
+      background: var(--box);
+
+      border-radius: 999px;
+
+      position: relative;
+
+      transition: .25s ease;
+    }
+
+    .slider::before {
+      content: "";
+
+      position: absolute;
+
+      width: 22px;
+      height: 22px;
+
+      left: 3px;
+      top: 3px;
+
+      border-radius: 50%;
+
+      background: white;
+
+      transition: .25s ease;
+    }
+
+    .adult-toggle input:checked+.slider {
+      background: #ff4f4f;
+    }
+
+    .adult-toggle input:checked+.slider::before {
+      transform: translateX(24px);
+    }
+
+    .adult-label {
+      font-weight: 700;
+      color: #ff8b8b;
+    }
   </style>
 </head>
 
@@ -752,6 +812,19 @@
     <div id="add" class="tab-content active">
       <div class="add-wrapper">
         <div class="form-card">
+          <div class="adult-toggle-wrapper">
+
+            <label class="adult-toggle">
+
+              <input type="checkbox" id="adultToggle">
+
+              <span class="slider"></span>
+
+              <span class="adult-label">18+</span>
+
+            </label>
+
+          </div>
           <div class="form-group">
             <label>Service Title</label>
             <input id="title">
@@ -971,7 +1044,9 @@
       const service_image = imageInput.value.trim();
       const service_type = serviceTypeInput.value;
       const quantity = Number(quantityInput.value);
-      if (!service_title || !service_description || !service_price) {
+      const adultToggle =
+        document.getElementById("adultToggle");
+      if (!service_title || !service_description || !service_image || !service_price) {
         showPopup({
           title: "Missing Information",
           message: "Please complete all required service fields.",
@@ -1009,7 +1084,8 @@
             service_price,
             service_image,
             service_type,
-            quantity
+            quantity,
+            service_isAdult: adultToggle.checked
           })
         });
 
@@ -1025,7 +1101,7 @@
         quantityWrapper.style.display = "none";
         serviceTypeInput.value = "repeat";
         preview.style.display = "none";
-
+        adultToggle.checked = false;
       } catch (err) {
         console.error(err);
       }
