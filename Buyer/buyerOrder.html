@@ -387,12 +387,6 @@
             font-size: 0.85rem;
         }
 
-        /* dynamic colors */
-        .status-dropdown.completed {
-            color: var(--success);
-            /* #2ecc71 */
-        }
-
         .status-dropdown.cancelled {
             color: var(--danger);
             /* reddish */
@@ -495,7 +489,7 @@
 
                 activeTab = tab.dataset.tab;
 
-                showLoader(); 
+                showLoader();
 
                 try {
                     await loadBuyerOrders(currentPage, true);
@@ -605,7 +599,7 @@
                             ? `
       <select class="status-dropdown" data-id="${order._id}">
        <option value="pending" ${order.status === "pending" ? "selected" : ""}>Pending</option>
-        <option value="completed" ${order.status === "completed" ? "selected" : ""}>Completed</option>
+        
         <option value="cancelled" ${order.status === "cancelled" ? "selected" : ""}>Cancelled</option>
       </select>
     `
@@ -622,16 +616,6 @@
                     } 
         </div>
         <div class="order-row">
-            <span>
-                <strong>
-                    ${activeTab === "buy" ? "📱Seller Number" : "📱Buyer Number"}:
-                </strong>
-                <span>
-                    ${activeTab === "buy"
-                        ? (order.seller?.mobileNumber || "Not Set")
-                        : (order.buyer?.mobileNumber || "Not Set")}
-                </span>
-            </span>
             <span><strong>📦 Quantity:</strong> <span>${order.quantity}</span></span>
         </div>
 
@@ -661,7 +645,7 @@
                     updateDropdownColor(select);
 
                     select.disabled = true; // prevent spam clicks
-                    showLoader(); 
+                    showLoader();
 
                     try {
                         const res = await fetch(`${API_BASE}/orders/${orderId}/status`, {
@@ -675,7 +659,7 @@
 
                         if (!res.ok) throw new Error();
 
-                         
+
                         await loadBuyerOrders(currentPage, false);
 
                     } catch (err) {
@@ -683,7 +667,7 @@
 
                     } finally {
                         select.disabled = false;
-                        hideLoader(); 
+                        hideLoader();
                     }
                 });
             });
@@ -691,11 +675,7 @@
         function updateDropdownColor(select) {
             const value = select.value.toLowerCase();
 
-            select.classList.remove("completed", "cancelled");
-
-            if (value === "completed") {
-                select.classList.add("completed");
-            }
+            select.classList.remove("cancelled");
 
             if (value === "cancelled") {
                 select.classList.add("cancelled");
