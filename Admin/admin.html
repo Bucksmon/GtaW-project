@@ -380,7 +380,13 @@
                 </span>
             </div>
         </div>
-
+        <div style="margin-bottom:20px;">
+            <select id="sortSelect" class="role-select">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="credits">Highest Credits</option>
+            </select>
+        </div>
         <div class="content">
             <div id="usersContainer"></div>
             <div id="pagination"></div>
@@ -433,7 +439,7 @@
         const sidebar = document.getElementById("sidebar");
         const overlay = document.querySelector(".overlay");
         const menuBtn = document.getElementById("menuBtn");
-
+        let currentSort = "newest";
         /* Mobile Sidebar Toggle */
         menuBtn.addEventListener("click", () => {
             sidebar.classList.toggle("open");
@@ -573,9 +579,14 @@
         async function loadUsers(page = 1) {
             showLoader();
             try {
-                const res = await fetch(`${API_BASE}/users?page=${page}&limit=${LIMIT}`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                const res = await fetch(
+                    `${API_BASE}/users?page=${page}&limit=${LIMIT}&sortBy=${currentSort}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
                 const data = await res.json();
                 if (!res.ok) return showPopup({
                     title: "Error",
@@ -593,7 +604,15 @@
                 renderPagination();
             } finally { hideLoader(); }
         }
+        document
+            .getElementById("sortSelect")
+            .addEventListener("change", (e) => {
 
+                currentSort = e.target.value;
+                currentPage = 1;
+                loadUsers(1);
+
+            });
         const usersContainer = document.getElementById("usersContainer");
         const paginationContainer = document.getElementById("pagination");
 
