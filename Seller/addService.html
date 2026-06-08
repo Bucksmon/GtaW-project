@@ -726,6 +726,50 @@
       font-weight: 700;
       color: #ff8b8b;
     }
+
+    .service-options-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+
+      margin-bottom: 20px;
+    }
+
+    .category-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .category-btn {
+      border: none;
+
+      padding: 8px 14px;
+
+      border-radius: 999px;
+
+      background: var(--box);
+
+      color: var(--text);
+
+      cursor: pointer;
+
+      transition: .2s ease;
+
+      font-size: .85rem;
+
+      font-weight: 600;
+    }
+
+    .category-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .category-btn.active {
+      background: var(--accent);
+      color: white;
+    }
   </style>
 </head>
 
@@ -817,7 +861,31 @@
             numbers, names, addresses etc. Any posted service can and will be removed if found against the stated
             condition.
           </p>
-          <div class="adult-toggle-wrapper">
+          <div class="service-options-row">
+
+            <div class="category-selector">
+
+              <button type="button" class="category-btn active" data-category="Weapons">
+                🔫 Weapons
+              </button>
+
+              <button type="button" class="category-btn" data-category="Electronics">
+                💻 Electronics
+              </button>
+
+              <button type="button" class="category-btn" data-category="Drugs">
+                🏠 Drugs
+              </button>
+
+              <button type="button" class="category-btn" data-category="Services">
+                🛠 Services
+              </button>
+
+              <button type="button" class="category-btn" data-category="Misc">
+                🛠 Misc
+              </button>
+
+            </div>
 
             <label class="adult-toggle">
 
@@ -910,7 +978,7 @@
     const overlay = document.getElementById("overlay");
     const menuBtn = document.getElementById("menuBtn");
     let currentUser = null;
-
+    let selectedCategory = "Misc";
     const profilePopup = document.getElementById("profilePopup");
 
     function showProfilePopup() {
@@ -1091,7 +1159,8 @@
             service_image,
             service_type,
             quantity,
-            service_isAdult: adultToggle.checked
+            service_isAdult: adultToggle.checked,
+            service_category: selectedCategory
           })
         });
 
@@ -1500,6 +1569,25 @@ ${service.service_type === "quantity" ? `
       quantityInput.value = val;
 
     });
+
+    document
+      .querySelectorAll(".category-btn")
+      .forEach(btn => {
+
+        btn.addEventListener("click", () => {
+
+          document
+            .querySelectorAll(".category-btn")
+            .forEach(b => b.classList.remove("active"));
+
+          btn.classList.add("active");
+
+          selectedCategory =
+            btn.dataset.category;
+
+        });
+
+      });
     document.addEventListener("DOMContentLoaded", () => {
       renderSidebar();
       loadCredits();
