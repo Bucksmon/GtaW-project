@@ -666,6 +666,55 @@
 
       box-shadow: 0 4px 15px rgba(0, 0, 0, .3);
     }
+
+    .category-filters {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+
+      margin-bottom: 30px;
+
+      padding: 18px;
+
+      background: var(--card);
+
+      border-radius: var(--radius);
+
+      border: 1px solid rgba(255, 255, 255, .05);
+    }
+
+    .filter-btn {
+      border: none;
+
+      background: var(--box);
+
+      color: var(--text);
+
+      padding: 10px 18px;
+
+      border-radius: 999px;
+
+      cursor: pointer;
+
+      font-weight: 600;
+
+      transition: .2s ease;
+    }
+
+    .filter-btn:hover {
+      transform: translateY(-2px);
+
+      background: rgba(79, 140, 255, .15);
+    }
+
+    .filter-btn.active {
+      background: var(--accent);
+
+      color: white;
+
+      box-shadow:
+        0 8px 25px rgba(79, 140, 255, .35);
+    }
   </style>
 
 </head>
@@ -879,8 +928,8 @@
       try {
 
         const res = await fetch(
-         `${API_BASE}/services?page=${page}&limit=8&category=${selectedCategory}`,          
-         {
+          `${API_BASE}/services?page=${page}&limit=8&category=${selectedCategory}`,
+          {
             headers: {
               Authorization: `Bearer ${token}`
             },
