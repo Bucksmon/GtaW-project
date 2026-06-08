@@ -938,7 +938,9 @@
         );
 
         const data = await res.json();
-
+        updateCategoryCounts(
+          data.categoryCounts || []
+        );
         if (!res.ok) {
           throw new Error("Failed to load services");
         }
@@ -1364,6 +1366,40 @@ ${service.service_type === "quantity" && service.quantity <= 0
         hideProfilePopup();
       }
     });
+
+    function updateCategoryCounts(counts) {
+
+      const map = {};
+
+      counts.forEach(item => {
+        map[item._id] = item.count;
+      });
+
+      document.getElementById(
+        "count-weapons"
+      ).textContent =
+        `Weapons (${map.Weapons || 0})`;
+
+      document.getElementById(
+        "count-drugs"
+      ).textContent =
+        `Drugs (${map.Drugs || 0})`;
+
+      document.getElementById(
+        "count-electronics"
+      ).textContent =
+        `Electronics (${map.Electronics || 0})`;
+
+      document.getElementById(
+        "count-services"
+      ).textContent =
+        `Services (${map.Services || 0})`;
+
+      document.getElementById(
+        "count-misc"
+      ).textContent =
+        `Misc (${map.Misc || 0})`;
+    }
 
     document
       .querySelectorAll(".filter-btn")
