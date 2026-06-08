@@ -1,111 +1,312 @@
-# Royal Road (GTAW Marketplace)  
-*A web-based marketplace for the GTA World roleplay community*
+# Royal Road (GTAW Marketplace)
+
+
+
+A web-based marketplace platform designed for the GTA World roleplay community.
+
+
 
 ---
+
+
 
 ## Overview
-The **Royal Road (GTAW Marketplace)** is a web platform designed to support trading, listings, and transactions within the **GTA World (GTAW)** roleplay server.
-It provides a role-based login which restricts normal users to view the marketplace and prompts them back to home page.
 
-It provides players with a centralized system to:
-- List items and services  
-- Browse available offers  
-- Connect with other players  
-- Simulate a realistic in-game economy outside the game  
 
-This project bridges the gap between **in-game roleplay** and **modern web systems**, enhancing immersion and usability.
+
+Royal Road is a marketplace application built to support player-driven commerce within the GTA World roleplay environment.
+
+
+
+The platform provides a structured space where players can create listings, browse available offers, and participate in in-character (IC) economic activities that complement gameplay on the GTA World server.
+
+
+
+All listings, services, and transactions represented on the platform are intended solely for roleplay purposes within the GTA World community.
+
+
 
 ---
+
+
+
+## Disclaimer
+
+
+
+This project is a fan-made roleplay utility and is not affiliated with, endorsed by, or sponsored by Rockstar Games, Take-Two Interactive, or GTA World.
+
+
+
+The platform does not facilitate the sale, purchase, exchange, or distribution of real-world goods, services, regulated items, controlled substances, weapons, or illegal products.
+
+
+
+Any categories, listings, or transactions displayed on the platform represent fictional in-character roleplay content within a game environment.
+
+
+
+---
+
+
 
 ## Purpose
-The goal of this project is to build a **scalable, user-friendly marketplace system** tailored specifically for a **text-based roleplay environment**.
 
-It aims to:
-- Improve player-to-player interaction  
-- Organize trading in a structured way  
-- Provide a persistent, accessible platform outside the game  
+
+
+The goal of Royal Road is to provide a centralized and user-friendly marketplace experience that enhances roleplay interactions and supports a player-driven economy.
+
+
+
+Key objectives include:
+
+
+
+* Supporting player-to-player commerce
+
+* Improving organization of marketplace activity
+
+* Providing persistent listing management
+
+* Extending roleplay experiences beyond the game client
+
+* Creating a scalable platform for future roleplay systems
+
+
 
 ---
+
+
 
 ## Features
 
-### Marketplace System
-- Create and manage listings  
+
+
+### Marketplace
+
+
+
+* Create and manage service listings
+
+* Browse available marketplace offers
+
+* Category-based filtering
+
+* Listing management tools
+
+* Quantity-based and repeatable services
+
+
 
 ### User System
-- User authentication  
-- Profile management  
-- Persistent user data  
+
+
+
+* Authentication and authorization
+
+* Role-based access control
+
+* Profile management
+
+* Persistent user data
+
+
 
 ### Roleplay Integration
-- Designed for GTAW economy and RP flow  
-- Supports in-character transactions  
 
-### Web Experience
-- Responsive UI  
-- Fast and lightweight  
-- Accessible from any device  
+
+
+* Designed specifically for GTA World roleplay
+
+* Supports fictional in-character transactions
+
+* Complements server economy systems
+
+* Enhances player interaction and immersion
+
+
+
+### User Experience
+
+
+
+* Responsive interface
+
+* Mobile-friendly design
+
+* Lightweight frontend
+
+* Fast page loading and navigation
+
+
 
 ---
 
-## Tech Stack
+
+
+## Technology Stack
+
+
 
 ### Frontend
-- HTML5  
-- CSS3  
-- JavaScript  
+
+
+
+* HTML5
+
+* CSS3
+
+* JavaScript
+
+
 
 ### Backend
-- Node.js  
+
+
+
+* Node.js
+
+* Express.js
+
+
 
 ### Database
-- MongoDB  
 
-### Tools & Deployment
-- GitHub  
-- Vercel  
+
+
+* MongoDB
+
+
+
+### Deployment & Tools
+
+
+
+* GitHub
+
+* Vercel
+
+
+
+---
+
+
+
+## Project Links
+
+
+
+### Live Website
+
+
+
+https://bucksmon.github.io/GtaW-project/
+
+
+
+### Source Code
+
+
+
+https://github.com/Bucksmon/GtaW-project
+
+
+
+### GTA World
+
+
+
+https://gta.world
+
+
 
 ---
 
-## Links
 
-- Live Website: *https://bucksmon.github.io/GtaW-project/*  
-- Repository: *https://github.com/Bucksmon/GtaW-project*  
-- GTA World: https://gta.world  
+
+## Future Development
+
+
+
+Planned improvements include:
+
+
+
+* Real-time messaging
+
+* Advanced marketplace filtering
+
+* Transaction tracking systems
+
+* Marketplace analytics
+
+* Notification systems
+
+* Mobile application support
+
+
 
 ---
 
-## Future Improvements
 
-- Real-time chat between users  
-- Advanced filtering and sorting  
-- Transaction and payment simulation system  
-- Mobile app integration  
-
----
 
 ## Contributing
 
+
+
 Contributions are welcome.
 
-1. Fork the repository  
-2. Create a new branch  
-3. Submit a pull request  
+
+
+1. Fork the repository
+
+2. Create a feature branch
+
+3. Commit your changes
+
+4. Submit a pull request
+
+
 
 ---
+
+
 
 ## License
-This project is intended for educational and roleplay enhancement purposes.  
-A formal license can be added based on future scope.
+
+
+
+This project is provided for educational, development, and roleplay enhancement purposes.
+
+
+
+A formal open-source license may be added in future releases.
+
+
 
 ---
+
+
 
 ## Author
 
-**Bucksmon**  
+
+
+**Bucksmon**
+
 
 
 ---
 
-## Final Note
-This project represents a combination of **game design principles and software engineering**, aiming to bring structured systems into immersive roleplay environments.
+
+
+## Acknowledgements
+
+
+
+Special thanks to the GTA World community for providing the roleplay environment that inspired this project.
+
+
+
+
+
