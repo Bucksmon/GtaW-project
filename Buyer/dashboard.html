@@ -740,7 +740,33 @@
       <button class="menu-btn" id="menuBtn">☰</button>
       <h2>Credits: <span style="color:#2ecc71" id="creditsDisplay">0</span></h2>
     </div>
+    <div class="category-filters">
 
+      <button class="filter-btn active" data-category="All">
+        All
+      </button>
+
+      <button class="filter-btn" data-category="Weapons">
+        Weapons
+      </button>
+
+      <button class="filter-btn" data-category="Drugs">
+        Drugs
+      </button>
+
+      <button class="filter-btn" data-category="Electronics">
+        Electronics
+      </button>
+
+      <button class="filter-btn" data-category="Services">
+        Services
+      </button>
+
+      <button class="filter-btn" data-category="Misc">
+        Misc
+      </button>
+
+    </div>
     <div id="servicesContainer" class="services"></div>
     <div id="pagination"></div>
 
@@ -768,6 +794,7 @@
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("overlay");
     const menuBtn = document.getElementById("menuBtn");
+    let selectedCategory = "All";
 
     menuBtn.addEventListener("click", () => {
       sidebar.classList.toggle("open");
@@ -852,8 +879,7 @@
       try {
 
         const res = await fetch(
-          `${API_BASE}/services?page=${page}&limit=8`,
-          {
+         `${API_BASE}/services?page=${page}&limit=8&category=${selectedCategory}`          {
             headers: {
               Authorization: `Bearer ${token}`
             },
@@ -1288,6 +1314,30 @@ ${service.service_type === "quantity" && service.quantity <= 0
         hideProfilePopup();
       }
     });
+
+    document
+      .querySelectorAll(".filter-btn")
+      .forEach(btn => {
+
+        btn.addEventListener("click", () => {
+
+          document
+            .querySelectorAll(".filter-btn")
+            .forEach(b =>
+              b.classList.remove("active")
+            );
+
+          btn.classList.add("active");
+
+          selectedCategory =
+            btn.dataset.category;
+
+          loadServices(1);
+
+        });
+
+      });
+
     document.addEventListener("DOMContentLoaded", () => {
       renderSidebar();
       loadServices(currentPage);
