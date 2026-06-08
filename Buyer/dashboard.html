@@ -791,27 +791,27 @@
     </div>
     <div class="category-filters">
 
-      <button class="filter-btn active" data-category="All">
+      <button id="count-all" class="filter-btn active" data-category="All">
         All
       </button>
 
-      <button class="filter-btn" data-category="Weapons">
+      <button id="count-weapons" class="filter-btn" data-category="Weapons">
         Weapons
       </button>
 
-      <button class="filter-btn" data-category="Drugs">
+      <button id="count-drugs" class="filter-btn" data-category="Drugs">
         Drugs
       </button>
 
-      <button class="filter-btn" data-category="Electronics">
+      <button id="count-electronics" class="filter-btn" data-category="Electronics">
         Electronics
       </button>
 
-      <button class="filter-btn" data-category="Services">
+      <button id="count-services" class="filter-btn" data-category="Services">
         Services
       </button>
 
-      <button class="filter-btn" data-category="Misc">
+      <button id="count-misc" class="filter-btn" data-category="Misc">
         Misc
       </button>
 
@@ -1374,7 +1374,17 @@ ${service.service_type === "quantity" && service.quantity <= 0
       counts.forEach(item => {
         map[item._id] = item.count;
       });
+      const total =
+        counts.reduce(
+          (sum, item) => sum + item.count,
+          0
+        );
 
+      document.getElementById(
+        "count-all"
+      ).textContent =
+        `All (${total})`;
+        
       document.getElementById(
         "count-weapons"
       ).textContent =
