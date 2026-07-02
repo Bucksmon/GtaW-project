@@ -655,11 +655,18 @@
 
     /* ================= VALIDATION ================= */
 
-    function validateForm(routingInput, discordInput, creditsInput, status, submitBtn) {
-
+    function validateForm(
+      routingInput,
+      discordInput,
+      creditsInput,
+      proofInput,
+      status,
+      submitBtn
+    ) {
       const routing = routingInput.value.trim();
       const discord = discordInput.value.trim();
       const credits = Number(creditsInput.value.trim());
+      const proof = proofInput.value.trim();
 
       submitBtn.disabled = true;
       status.style.color = "red";
@@ -673,9 +680,11 @@
       if (isNaN(credits) || credits <= 0)
         return status.textContent = "Invalid credit amount.";
 
+      if (!proof)
+        return status.textContent = "Proof is required.";
+
       status.style.color = "limegreen";
       status.textContent = "All fields valid ✓";
-
       submitBtn.disabled = false;
     }
 
@@ -702,15 +711,19 @@
     buySubmit.disabled = true;
 
     buyRouting.addEventListener("input", () =>
-      validateForm(buyRouting, buyDiscord, buyCredits, buyStatus, buySubmit)
+      validateForm(buyRouting, buyDiscord, buyCredits, buyProof, buyStatus, buySubmit)
     );
 
     buyDiscord.addEventListener("input", () =>
-      validateForm(buyRouting, buyDiscord, buyCredits, buyStatus, buySubmit)
+      validateForm(buyRouting, buyDiscord, buyCredits, buyProof, buyStatus, buySubmit)
     );
 
     buyCredits.addEventListener("input", () =>
-      validateForm(buyRouting, buyDiscord, buyCredits, buyStatus, buySubmit)
+      validateForm(buyRouting, buyDiscord, buyCredits, buyProof, buyStatus, buySubmit)
+    );
+
+    buyProof.addEventListener("input", () =>
+      validateForm(buyRouting, buyDiscord, buyCredits, buyProof, buyStatus, buySubmit)
     );
 
     document.getElementById("buyForm").addEventListener("submit", async (e) => {
