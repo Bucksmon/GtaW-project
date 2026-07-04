@@ -666,7 +666,9 @@
       const routing = routingInput.value.trim();
       const discord = discordInput.value.trim();
       const credits = Number(creditsInput.value.trim());
-      const proof = proofInput.value.trim();
+
+      // Only read proof if a proof input was provided
+      const proof = proofInput ? proofInput.value.trim() : "";
 
       submitBtn.disabled = true;
       status.style.color = "red";
@@ -680,7 +682,8 @@
       if (isNaN(credits) || credits <= 0)
         return status.textContent = "Invalid credit amount.";
 
-      if (!proof)
+      // Only require proof if the form actually has a proof field
+      if (proofInput && !proof)
         return status.textContent = "Proof is required.";
 
       status.style.color = "limegreen";
@@ -792,17 +795,17 @@
     sellSubmit.disabled = true;
 
     sellRouting.addEventListener("input", () =>
-      validateForm(sellRouting, sellDiscord, sellCredits, sellStatus, sellSubmit)
+      validateForm(sellRouting, sellDiscord, sellCredits, null, sellStatus, sellSubmit)
     );
 
     sellDiscord.addEventListener("input", () =>
-      validateForm(sellRouting, sellDiscord, sellCredits, sellStatus, sellSubmit)
+      validateForm(sellRouting, sellDiscord, sellCredits, null, sellStatus, sellSubmit)
     );
 
     sellCredits.addEventListener("input", () =>
-      validateForm(sellRouting, sellDiscord, sellCredits, sellStatus, sellSubmit)
+      validateForm(sellRouting, sellDiscord, sellCredits, null, sellStatus, sellSubmit)
     );
-
+    
     document.getElementById("sellForm").addEventListener("submit", async (e) => {
 
       e.preventDefault();
